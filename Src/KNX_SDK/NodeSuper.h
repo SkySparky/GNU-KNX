@@ -1,6 +1,13 @@
 #ifndef KNX_SDK_NODE
 #define KNX_SDK_NODE
 
+#include "Defs.h"
+
+/*
+Contains important information for 
+external libraries
+
+*/
 typedef struct baseNode
 {
 //connections
@@ -10,11 +17,17 @@ struct baseNode**children;
 unsigned numChildren;
 
 //state
-unsigned long long hash;//acting id
+llui handle;//acting id
 
 //bitfield switches
 bool prntErr : 1;
 bool prntWrn : 1;
+
+//methods
 } baseNode;
+
+bool addChild(baseNode*);
+bool removeChild(baseNode*);
+bool setParent(baseNode*);
 
 #endif
