@@ -1,7 +1,9 @@
 #include <stdio.h>
 
-#include "KNX.h"
 #include "Node.h"
+#include "State.h"
+
+#define TEST false
 
 //determine initial/default settings
 //return command to node if found
@@ -15,8 +17,19 @@ return NULL;
 
 int main(int argc, char**argv)
 {
+
+if (TEST)
+{
+printf("%u\n",primeList[65]);
+return 0;
+}
+
+state*sys=genState();
+printf("%d\n",sys->registered);
 //jump into node0 without creating new thread
-nodeProc(NULL, parseCMD(argc,argv));
+nodeProc(sys,NULL, parseCMD(argc,argv));
+
+printf("Weelle!");
 
 return 0;
 }

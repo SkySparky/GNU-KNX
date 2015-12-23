@@ -17,7 +17,8 @@ struct baseNode**children;
 unsigned numChildren;
 
 //state
-llui handle;//acting id
+unsigned handle;//acting id
+bool active;
 
 //bitfield switches
 bool prntErr : 1;
