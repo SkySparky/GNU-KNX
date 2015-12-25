@@ -29,7 +29,5 @@ printf("%d\n",sys->registered);
 //jump into node0 without creating new thread
 nodeProc(sys,NULL, parseCMD(argc,argv));
 
-printf("Weelle!");
-
 return 0;
 }

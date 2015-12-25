@@ -24,7 +24,7 @@ bool active;
 bool prntErr : 1;
 bool prntWrn : 1;
 
-//methods
+
 } baseNode;
 
 bool addChild(baseNode*);
