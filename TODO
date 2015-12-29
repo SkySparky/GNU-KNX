@@ -1,4 +1,10 @@
 Tasks to complete in order
 
-finish state skeletal code
-implement registrar functions
+add tokens/ bytecode objects
+tokenizer
+resolver
+executer
+build in functionality
+runtime DLL loading
+DLL object type (library)
+DLL bytecode sequences
