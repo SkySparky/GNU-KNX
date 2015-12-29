@@ -44,7 +44,7 @@ state*genState();
 //register new node
 _node* validateNode(state*,_node*);
 //deregister node
-_node* invalidateNode(state*, _node*);
+bool invalidateNode(state*, _node*);
 //print node data on record
 void printRegistrar(state*);
 

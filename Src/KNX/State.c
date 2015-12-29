@@ -19,13 +19,77 @@ return ret;
 //register new node
 node* validateNode(state*st,node*parent)
 {
-return NULL;
+if (st==NULL || st->registered==st->maxNodes)
+	return NULL;
+	
+node*curr = nodeGen();
+if (curr==NULL)
+	return NULL;
+	
+node**tmpReg = st->registrar;
+
+//reallocate memory
+realloc(tmpReg,st->registered+1 * sizeof(node*));
+if (tmpReg==NULL)
+	return NULL;
+
+st->registrar=tmpReg;
+++st->registered;
+
+//assign handle
+bool validID=false;
+unsigned idIndex=0;
+for (;idIndex<st->maxNodes && !validID; ++idIndex)
+{
+	validID=true;
+	if (primeList[idIndex]==st->registrar[idIndex]->nb.handle)
+		{
+		validID=false;
+		continue;
+		}
+}
+
+curr->nb.handle=primeList[idIndex];
+curr->nb.parent=parent==NULL?NULL:(baseNode*)parent;
+
+//check for root control
+st->stdin_hndle=st->stdin_hndle==NULL?curr:NULL;
+
+st->registrar[st->registered-1]=curr;
+
+return curr;
 }
 
 //deregister node
-node* invalidateNode(state*st, node*target)
+bool invalidateNode(state*st, node*target)
 {
-return NULL;
+if (st==NULL)
+	return false;
+	
+for (unsigned x=0; x<st->registered; ++x)
+{
+	if (st->prntSys)
+		printf("%p _>>_ %p\n", target, st->registrar[x]);
+	if (st->registrar[x]==target)
+	{
+		//deregister all children
+		for (unsigned c=0; c<target->nb.numChildren; ++c)
+			if (!invalidateNode(st, (node*)target->nb.children[c]))
+				printf("Node at location %p failed to collapsed\n",target->nb.children[c]);
+		
+		free(target);
+		for (unsigned y=x+1; y<st->registered-1; ++y)//shift nodes down
+			st->registrar[y-1]=st->registrar[y];
+		--st->registered;
+		node**tmpReg = st->registrar;
+		realloc(tmpReg, st->registered*sizeof(node*));
+		if (tmpReg==NULL)
+			return false;
+		break;
+	}
+}
+
+return true;
 }
 
 void printRegistrar(state*st)
@@ -35,24 +99,6 @@ if (st==NULL)
 
 printf("\t\tREGISTRAR : %d\n\n",st->registered);
 for (unsigned x=0; x<st->registered; ++x)
-{
-if (st->stdin_hndle==NULL)
-	printf("STDIN : NULL >> %p\n",st->stdin_hndle);
-else
-	printf("STDIN : %d >> %p\n",st->stdin_hndle->nb.handle, st->stdin_hndle);
+	printf("\t\t\t%u\n", st->registrar[x]->nb.handle);
 
-node*curr = st->registrar[x];
-if (curr==NULL)
-	{
-	printf("NULL");
-	continue;
-	}
-//handle, number of children, prntErr, prntWrn, active
-printf("Node %u\t|%u\t|%d\t|%d\t|%d\n",curr->nb.handle,curr->nb.numChildren, curr->nb.prntErr, curr->nb.prntWrn, curr->nb.active);
-for (unsigned y=0; y<curr->nb.numChildren; ++y)
-	if (curr->nb.children[y]!=NULL)
-		printf("\t\tCHILD >> %u %p\n",curr->nb.children[y]->handle, curr->nb.children[y]);
-	else
-		printf("\t\tCHILD >> NULL\n");
-}
 }

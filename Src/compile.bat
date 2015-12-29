@@ -15,7 +15,7 @@ ar rcs libKNX_SDK.a KNX_SDK.o
 cd ..
 if errorLevel 1 goto houston
 cd KNX
-gcc -Wall -static Launcher.c Node.c State.c ../KNX_SDK/libKNX_SDK.a -o KNX %COMP_LEVEL% %COMP_IGNORE%
+gcc -Wall -static Launcher.c Node.c State.c Interpreter.c ../KNX_SDK/libKNX_SDK.a -o KNX %COMP_LEVEL% %COMP_IGNORE%
 cd..
 if errorLevel 1 goto houston
 goto success

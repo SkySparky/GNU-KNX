@@ -21,6 +21,9 @@ Sets up important macros
 #endif
 #endif
 
+//system interrupt
+#define INTERRUPT	0x7
+
 #ifndef KNX_SDK_MACROS
 #define KNX_SDK_MACROS
 
