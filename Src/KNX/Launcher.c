@@ -3,7 +3,7 @@
 #include "Node.h"
 #include "State.h"
 
-#define TEST false
+#define TEST true
 
 //determine initial/default settings
 //return command to node if found
@@ -11,16 +11,14 @@
 char*parseCMD(int argc, char**argv)
 {
 
-
 return NULL;
 }
 
 int main(int argc, char**argv)
 {
-
 if (TEST)
 {
-printf("%u\n",primeList[65]);
+printf("hash >> %llu\n",FNV_1a("hello"));
 return 0;
 }
 
