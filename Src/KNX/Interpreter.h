@@ -7,10 +7,17 @@
 typedef struct state _state_;
 typedef struct node _node_;
 
+//caches code blocks for execution
+typedef struct
+{
+
+}cacheBlock;
+
 typedef struct
 {
 _state_*st;
 _node_*nd;
+
 }interpreter;
 
 interpreter*genInterpreter(_state_ *,_node_ *);

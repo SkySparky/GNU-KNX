@@ -4,5 +4,6 @@
 #include "Defs.h"
 #include "Util.h"
 #include "NodeSuper.h"
+#include "Error.h"
 
 #endif

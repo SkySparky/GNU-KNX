@@ -15,7 +15,8 @@ Sets up important macros
 	#else
 		#define BITMODE 32
 	#endif
-#elif __linux___
+#endif
+#ifdef __linux
 	#define PLATFORM PLATFORM_LINUX
 	#ifdef __x86_64__
 		#define BITMODE 64

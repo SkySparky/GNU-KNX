@@ -73,12 +73,12 @@ int chr = fgetc(stdin);
 		interpret(string,length,intr);
 		//clear buffer
 		length=0;
-		realloc(string,0);
+		string = realloc(string,0);
 		activeReading=false;
 	}else if (chr==INTERRUPT)
 	{
 		length=0;
-		realloc(string,0);
+		string = realloc(string,0);
 		//listen for second command
 		chr=getchar();
 		//switch activity

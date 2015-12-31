@@ -29,7 +29,7 @@ if (curr==NULL)
 node**tmpReg = st->registrar;
 
 //reallocate memory
-realloc(tmpReg,st->registered+1 * sizeof(node*));
+tmpReg=realloc(tmpReg,st->registered+1 * sizeof(node*));
 if (tmpReg==NULL)
 	return NULL;
 
@@ -82,8 +82,8 @@ for (unsigned x=0; x<st->registered; ++x)
 			st->registrar[y-1]=st->registrar[y];
 		--st->registered;
 		node**tmpReg = st->registrar;
-		realloc(tmpReg, st->registered*sizeof(node*));
-		if (tmpReg==NULL)
+		tmpReg=realloc(tmpReg, st->registered*sizeof(node*));
+		if (tmpReg==NULL && st->registered==0)
 			return false;
 		break;
 	}
