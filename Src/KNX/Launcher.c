@@ -3,7 +3,7 @@
 #include "Node.h"
 #include "State.h"
 
-#define TEST true
+#define TEST false
 
 //determine initial/default settings
 //return command to node if found
@@ -21,6 +21,11 @@ if (TEST)
 printf("hash >> %llu\n",FNV_1a("hello"));
 return 0;
 }
+
+if (PLATFORM==PLATFORM_WINDOWS)
+	printf("%d bit windows detected\n", BITMODE);
+if (PLATFORM==PLATFORM_LINUX)
+	printf("%d bit linux detected\n", BITMODE);
 
 state*sys=genState();
 printf("%d\n",sys->registered);

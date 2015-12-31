@@ -1,25 +1,29 @@
+#include <stdio.h>
+
 /*
 Sets up important macros
 */
 
 //Determine bit version and platform
-#if _WIN32 || _WIN64
-#define PLATFORM_WINDOWS
-#if _WIN64
-#define ENVIORNMENT64
-#else
-#define ENVIORNMENT32
-#endif
+#define PLATFORM_WINDOWS 	1
+#define PLATFORM_LINUX		2
+
+#ifdef _WIN32
+	#define PLATFORM PLATFORM_WINDOWS
+	#ifdef _WIN64
+		#define BITMODE 64
+	#else
+		#define BITMODE 32
+	#endif
+#elif __linux___
+	#define PLATFORM PLATFORM_LINUX
+	#ifdef __x86_64__
+		#define BITMODE 64
+	#else
+		#define BITMODE 32
+	#endif
 #endif
 
-#if __GNUC__
-#define PLATFORM_LINUX
-#if __x86_64__ || __ppc64__
-#define ENVIORNMENT64
-#else
-#define ENVIORNMENT32
-#endif
-#endif
 
 //system interrupt
 #define INTERRUPT	0x7
