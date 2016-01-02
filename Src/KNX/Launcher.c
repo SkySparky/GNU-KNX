@@ -3,7 +3,7 @@
 #include "Node.h"
 #include "State.h"
 
-#define TEST false
+#define TEST true
 
 //determine initial/default settings
 //return command to node if found

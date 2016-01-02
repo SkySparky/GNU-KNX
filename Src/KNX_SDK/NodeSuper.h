@@ -27,6 +27,10 @@ bool prntWrn : 1;
 
 } baseNode;
 
+bool setupBaseNode(baseNode*);
+baseNode*genBaseNode();
+bool freeBaseNode(baseNode*);
+
 bool addChild(baseNode*);
 bool removeChild(baseNode*);
 bool setParent(baseNode*);

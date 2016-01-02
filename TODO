@@ -1,10 +1,7 @@
 Tasks to complete in order
 
-add tokens/ bytecode objects
-tokenizer
-resolver
-executer
-build in functionality
-runtime DLL loading
-DLL object type (library)
-DLL bytecode sequences
+implement tokens
+implement token tree
+implement tokenizer and scanner
+implement built-in functions
+implement DLL protocol

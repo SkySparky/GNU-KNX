@@ -1,35 +1,75 @@
 #include "NodeSuper.h"
 
+#include <stdlib.h>
 
-bool addChild(nodeBase*nb)
+typedef struct baseNode _bNode;
+
+_bNode*genBaseNode()
 {
-if (nb==NULL)
-	return false;
+_bNode*curr = malloc (sizeof(_bNode));
 
-//create temporary buffer
-baseNode**tmp = baseNode*[numChildren];
-//copy contents
-for (unsigned x=0; x<numChildren; ++x)
-	tmp[x]=children[x];
-tmp[numChildren]=nb;
-children=tmp;
-++numChildren;
+if (curr==NULL)
+	return NULL;
+
+curr->parent=NULL;
+curr->children=(_bNode**)malloc(0);
+curr->numChildren=0;
+curr->handle=0;
+curr->active=true;
+curr->prntErr=true;
+curr->prntWrn=true;
+
+return curr;
+}
+
+bool setupBaseNode(_bNode*curr)
+{
+curr = malloc (sizeof(_bNode));
+
+curr->parent=NULL;
+curr->children=(_bNode**)malloc(0);
+curr->numChildren=0;
+curr->handle=0;
+curr->active=true;
+curr->prntErr=true;
+curr->prntWrn=true;
+
 return true;
 }
 
-bool removeChild(nodeBase*nb)
+bool freeBaseNode(baseNode*target)
+{
+
+if (target==NULL)
+	return true;
+
+bool scc=true;
+//free all children
+for (unsigned x=0; x<target->numChildren; ++x)
+	if (!freeBaseNode(target->children[x]))
+		scc=false;
+
+if (scc)
+	free(target);
+
+return scc;
+}
+
+bool addChild(baseNode*target)
 {
 
 return true;
 }
 
-bool setParent(nodeBase*nb)
+bool removeChild(baseNode*target)
 {
-//parents are immutable after generation
-if (parent!=NULL || nb==NULL)
-	return false;
 
-parent=nb;
+return true;
+}
+
+
+bool setParent(baseNode*target)
+{
 
 return true;
 }

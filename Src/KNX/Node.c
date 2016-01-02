@@ -13,16 +13,7 @@ if (ret==NULL)
 	}
 
 //construct super class
-ret->nb.parent=NULL;
-ret->nb.children=NULL;
-
-ret->nb.numChildren=0;
-
-ret->nb.handle=0;
-ret->nb.active=true;
-
-ret->nb.prntErr=true;
-ret->nb.prntWrn=true;
+genBaseNode(&ret->nb);
 
 //construct base class
 if (ret!=NULL)
