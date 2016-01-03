@@ -1,5 +1,6 @@
 #include "Util.h"
-#include "Defs.h"
+
+//typedef struct token _token;
 
 #include <string.h>
 
@@ -39,4 +40,42 @@ unsigned val=3, dex=2;
 
 return 0;
 
+}
+
+//0=non numeric, 1=integer 2=floating
+unsigned isNumeric(char*string, unsigned length)
+{
+bool decimal=false;
+
+for (unsigned x=0; x<length; ++x)
+	if (string[x]>='0' && string[x]<='9')
+		continue;
+	else if (string[x]=='.')
+		if (decimal)
+			return 0;
+		else
+		decimal=true;
+	else
+		return 0;
+
+return decimal?2:1;
+}
+
+//return 0 if div/0 or invalid token
+bool math(token*start, unsigned length)
+{
+if (start==NULL)
+	return false;
+
+char**values;
+char*operators;
+unsigned valueIndex=0;
+unsigned operatorIndex;
+
+//sort into lists
+
+//begin calculation
+
+
+return true;
 }

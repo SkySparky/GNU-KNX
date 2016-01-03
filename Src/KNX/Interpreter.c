@@ -1,5 +1,7 @@
 #include "Interpreter.h"
 
+#include <string.h>
+
 comNode*genComeNode(comNode*parent)
 {
 comNode*ret = malloc(sizeof(comNode));
@@ -10,7 +12,7 @@ ret->parent=parent;
 ret->parameters=NULL;
 ret->success=NULL;
 ret->failure=NULL;
-ret->data=genToken();
+ret->data=genToken(NULL);
 
 return ret;
 }
@@ -53,7 +55,7 @@ comTree*genComTree()
 comTree*ret = malloc(sizeof(comTree));
 if (ret==NULL)
 	return NULL;
-ret->roots = (comNode**) malloc(0);
+ret->root = (comNode**) malloc(0);
 ret->level=0;
 
 return ret;
@@ -63,8 +65,8 @@ void clearComTree(comTree*target)
 {
 //clear branches
 while(--target->level>=0)
-	freeComNode(target->roots[target->level]);
-realloc(target->roots, 0);
+	freeComNode(target->root[target->level]);
+realloc(target->root, 0);
 }
 
 void freeComTree(comTree*target)
@@ -74,7 +76,7 @@ if (target==NULL)
 //free branches
 clearComTree(target);
 //delete self
-free(target->roots);
+free(target->root);
 free(target);
 }
 
@@ -83,6 +85,52 @@ byteSequence*createCommand(comNode*target)
 {
 
 return NULL;
+}
+
+
+//identify symbolic identifiers
+token* identify(char*string, unsigned length, interpreter*intr, token*tail)
+{
+token*curr=genToken(tail);
+tail=curr;
+
+
+
+
+return tail;
+}
+
+void tokenize(char* string,unsigned length,interpreter*intr)
+{
+unsigned lIndex=0;
+
+//0=normal, 1=string, 2=comment
+unsigned readMode=0;
+token*head=genToken(NULL);
+token*tail=NULL;
+
+for (unsigned x=0; x<=length; ++x)
+{
+//ending value
+	if (x==length)
+	{
+		if (lIndex==length)
+			break;
+		if (readMode==1)
+		{
+			token*curr=genToken(tail);
+			tail=curr;
+			
+			tail->raw=true;
+			tail->type=_mStr;
+			tail->data=malloc((x-lIndex));
+			strncpy(tail->data,string+lIndex, lIndex-x);
+			((char*)tail->data)[x-lIndex]=(char)0;
+			break;
+		}
+	}
+}
+
 }
 
 void interpret(char* string,unsigned length,interpreter*intr)
@@ -96,25 +144,6 @@ if (length==0)
 if (intr->st->prntSys==true)
 	printf("\t\t%.*s\n", length, string);
 	
-//find and parse heirarchies
-for (unsigned x=0; x<length; ++x)
-	{
-		if (string[x]=='\\')//preserve next item
-		{
-			++x;
-			break;
-		}
-		else if (string[x]=='\"')
-			intr->litOp = !intr->litOp;
-		else if (string[x]=='(')
-			++intr->listOp;
-		else if (string[x]==')')
-			--intr->listOp;
-		else if (string[x]=='{')
-			++intr->blockOp;
-		else if (string[x]=='}')
-			--intr->blockOp;
-	}
 //determine whether or not to continue waiting
 intr->pending=!intr->litOp && !intr->listOp && !intr->blockOp? false: true;
 }

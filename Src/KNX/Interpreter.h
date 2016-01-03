@@ -35,7 +35,7 @@ and processes parameters
 */
 typedef struct
 {
-comNode**roots;
+comNode**root;
 
 unsigned level;//number of root nodes
 

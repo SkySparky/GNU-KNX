@@ -2,6 +2,7 @@
 #define KNX_SDK_UTIL
 
 #include "Defs.h"
+#include "Data.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,5 +11,9 @@
 long long unsigned FNV_1a(char*str);
 //Generate Prime number >2 at starting point
 unsigned long long prime(unsigned long long);//deprecated until further notice
+//0=non numeric, 1=integer 2=floating
+unsigned isNumeric(char*string, unsigned length);
+//return false if div/0
+bool math(token*start, unsigned length);
 
 #endif
