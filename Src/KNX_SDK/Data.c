@@ -2,6 +2,19 @@
 
 #include <stdlib.h>
 
+token*getHead(token*target)
+{
+if (target==NULL)
+	return NULL;
+
+token*head=target;
+
+while (head->previous!=NULL)
+	head=head->previous;
+
+return head;
+}
+
 token*getTail(token*target)
 {
 if (target==NULL)

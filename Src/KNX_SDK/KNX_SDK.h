@@ -6,5 +6,6 @@
 #include "NodeSuper.h"
 #include "Error.h"
 #include "Data.h"
+#include "Debug.h"
 
 #endif

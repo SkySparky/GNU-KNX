@@ -13,26 +13,26 @@ modules
 
 typedef enum {
 //Memory
-_mInt=1, _mShort, _mLong,
-_mBool,
-_mDbl,
-_mChar, _mStr,
-_mFile, _mScript, _mFunction,
-_mStruct,
+_mInt=1, _mShort, _mLong,//int, short, long long
+_mBool,//unsigned char
+_mDbl,//double
+_mChar, _mStr,//char, char*
+_mFile, _mScript, _mFunction,//...managed
+_mStruct,//...managed
 //Lexile
-_sOpParanth=20, _sClParanth,
-_sOpBrack, _sClBrack,
-_sOpBrace, _sClBrace,
-_sList,
+_sOpParanth=20, _sClParanth,//( )
+_sOpBrack, _sClBrack,//[ ]
+_sOpBrace, _sClBrace,//{ }
+_sList, _sMember,//, .
 //Logic
-_lAnd=40, _lOr, _lNot,
-_lNand, _lNor, _Xnor, _lXor,
+_lAnd=40, _lOr, _lNot,//& | !
+_lNand, _lNor, _Xnor, _lXor,//!& !| |! ||
 //Comparison
-_cEqu=50, _cNequ,
+_cEqu=50, _cNequ,//== !=
 //Assignment
-_aSet=60, _aOp,//_aOp=general mathematics operator
+_aSet=60, _aOp,//= _aOp=general mathematics operator
 //Math
-_eAdd=70, _eSub, _eMult, _eDiv, _eMod, _ePow, _eRoot
+_eAdd=70, _eSub, _eMult, _eDiv, _eMod//+= -= *= /= %=
 }tCode;
 
 //typedef struct token _token;
@@ -48,9 +48,11 @@ struct token*next;
 struct token*previous;
 }token;
 
+token*getHead(token*);
 token*getTail(token*);
 token*genToken(token*);
-void freeToken(token*);
+
+void freeToken(token*);//add specific memory deletions for raw values
 
 
 //tokenized line
