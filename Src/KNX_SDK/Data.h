@@ -19,6 +19,7 @@ _mDbl,//double
 _mChar, _mStr,//char, char*
 _mFile, _mScript, _mFunction,//...managed
 _mStruct,//...managed
+_mVoid,//void
 //Lexile
 _sOpParanth=20, _sClParanth,//( )
 _sOpBrack, _sClBrack,//[ ]
@@ -28,9 +29,9 @@ _sList, _sMember,//, .
 _lAnd=40, _lOr, _lNot,//& | !
 _lNand, _lNor, _Xnor, _lXor,//!& !| |! ||
 //Comparison
-_cEqu=50, _cNequ,//== !=
+_cEqu=50, _cNequ, _cQst,//== != ?
 //Assignment
-_aSet=60, _aOp,//= _aOp=general mathematics operator
+_aSet=60, _aAdd, _aSub, _aMult, _aDiv, _aPow, _aRoot, _aMod,//= _aOp=general mathematics operator
 //Math
 _eAdd=70, _eSub, _eMult, _eDiv, _eMod//+= -= *= /= %=
 }tCode;

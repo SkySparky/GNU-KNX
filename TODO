@@ -3,5 +3,6 @@ Tasks to complete in order
 implement tokens
 implement token tree
 implement tokenizer and scanner
+add token deconstructor deletions for literals
 implement built-in functions
 implement DLL protocol

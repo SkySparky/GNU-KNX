@@ -44,8 +44,9 @@ if (intr==NULL)
 	}
 //begin loop procedure
 bool activeReading = false;
-unsigned length = 0;
+unsigned length = 0, maxLength=10;
 char * string = malloc (10);
+string[0]='\0';
 
 while (current->nb.active)
 {
@@ -64,7 +65,10 @@ int chr = fgetc(stdin);
 		interpret(string,length,intr);
 		//clear buffer
 		length=0;
-		string = realloc(string,0);
+		free(string);
+		string=malloc(10);
+		maxLength=10;
+		string[0]='0';
 		activeReading=false;
 	}else if (chr==INTERRUPT)
 	{
@@ -75,9 +79,17 @@ int chr = fgetc(stdin);
 		//switch activity
 	}else
 	{
-		//if ((length+1)%10==0)
-		//	realloc(string, length+11);
+		if (length+1 == maxLength)//adjust allocated size
+			{
+			char*tmpbuff=realloc(string, length*2);
+			maxLength*=2;
+			if (tmpbuff!=NULL)
+				string=tmpbuff;
+			else
+				printf("Error: buffer resize failure\n");
+			}
 		string[length]=(char)chr;
+		string[length+1]='\0';
 		++length;
 	}
 }

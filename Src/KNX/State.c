@@ -10,6 +10,7 @@ ret->registered=0;
 ret->prntWrn=1;
 ret->prntErr=1;
 ret->prntSys=1;
+ret->prntEcho=1;
 ret->maxNodes=SYSTEM_MAX_NODES;
 ret->stdin_hndle=NULL;
 ret->sizeLevel=0;

@@ -27,9 +27,12 @@ void prntTokens(token*target)
 {
 if (target==NULL)
 	return;
+	
+unsigned cnt=0;
 do
 {
-printf("%d %u \n",target->type, target->raw);
+printf("%u : %d %u \n",cnt ,target->type, target->raw);
 target=target->next;
+++cnt;
 }while(target!=NULL);
 }

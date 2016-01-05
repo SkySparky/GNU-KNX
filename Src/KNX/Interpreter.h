@@ -55,6 +55,7 @@ comTree cTree;
 
 //states
 bool pending;
+bool waitLn;// backslash
 bool litOp;//"
 int listOp;//()
 int blockOp;//{}

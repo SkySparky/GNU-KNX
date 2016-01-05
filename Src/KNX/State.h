@@ -33,6 +33,7 @@ _node*stdin_hndle;//standard input handle
 bool prntWrn : 1;
 bool prntErr : 1;
 bool prntSys : 1;
+bool prntEcho: 1;
 
 //constraints
 unsigned maxNodes;

@@ -1,5 +1,7 @@
 #include "Util.h"
 
+#include "limits.h"
+
 //typedef struct token _token;
 
 #include <string.h>
@@ -42,9 +44,12 @@ return 0;
 
 }
 
-//0=non numeric, 1=integer 2=floating
+//0=non numeric, 1=floating 2=short 3=integer 4=long long
 unsigned isNumeric(char*string, unsigned length)
 {
+if (string==NULL)
+	return 0;
+
 bool decimal=false;
 
 for (unsigned x=0; x<length; ++x)
@@ -54,11 +59,23 @@ for (unsigned x=0; x<length; ++x)
 		if (decimal)
 			return 0;
 		else
+		{
 		decimal=true;
+		}
+			
 	else
 		return 0;
 
-return decimal?2:1;
+if (decimal)
+	return 1;
+	
+long long chk = atoll(string);
+
+if (chk<=SHRT_MAX)
+	return 2;
+if (chk<=INT_MAX)
+	return 3;
+return 4;
 }
 
 //return 0 if div/0 or invalid token
