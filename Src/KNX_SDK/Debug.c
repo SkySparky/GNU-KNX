@@ -7,6 +7,7 @@ void prntMemory()
 
 void _prntTree(baseNode*target, unsigned short level)
 {
+
 for (unsigned x=0; x<level; ++x)
 	printf("\t");
 printf("%u %p\n", target->handle, target);
@@ -17,6 +18,7 @@ for (unsigned x=0; x<target->numChildren; ++x)
 
 void prntTree(baseNode*target)
 {
+	printf("DEBUG::TREE VIEW\n");
 if (target==NULL)
 	return;
 
@@ -27,7 +29,7 @@ void prntTokens(token*target)
 {
 if (target==NULL)
 	return;
-	
+
 unsigned cnt=0;
 do
 {

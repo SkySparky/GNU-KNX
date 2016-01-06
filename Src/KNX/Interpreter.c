@@ -74,7 +74,7 @@ void clearComTree(comTree*target)
 //clear branches
 while(--target->level>=0)
 	freeComNode(target->root[target->level]);
-realloc(target->root, 0);
+target->root=realloc(target->root, 0);
 }
 
 void freeComTree(comTree*target)
@@ -137,7 +137,7 @@ token* identify(char*string, unsigned length, interpreter*intr, token*tail)
 void*data=NULL;
 tCode type=0;
 bool raw=true;
-if (intr->st->prntSys)
+if (intr->st->options.prntDbg)
 	printf("identifying: %s\n", string);
 
 switch (isNumeric(string, length))
@@ -185,7 +185,7 @@ if (intr->waitLn)
 	{
 	intr->waitLn=false;
 	}
-	
+
 for (unsigned x=0; x<=length; ++x)
 {
 //ending value
@@ -197,8 +197,7 @@ for (unsigned x=0; x<=length; ++x)
 			break;
 		if (readMode==1)
 		{
-			if (intr->st->prntWrn)
-				printf("Warning: Unclosed quotation\n");
+			prntError(string, WRN_UNBOUND_STR, intr->st->options);
 			char*buff = malloc((x-lIndex)+1);
 			strncpy(buff, string+lIndex, x-lIndex);
 			buff[x-lIndex]='\0';
@@ -211,7 +210,7 @@ for (unsigned x=0; x<=length; ++x)
 			break;
 		}
 	}
-	
+
 	//mode switches
 	if (readMode==1)
 		{
@@ -224,11 +223,8 @@ for (unsigned x=0; x<=length; ++x)
 						string[x]=string[x+1];
 					string [x]=getEscape(string[x]);
 					char*tmpStr = realloc(string, length-1);
-					if (tmpStr)
-					{
-						if (intr->st->prntSys)
-							printf("System Error: Parse string failed to reallocate memory (%s)\n", string);
-					}
+					if (tmpStr==NULL)
+							prntError(string, ERR_REALLOC, intr->st->options);
 					else
 						string=tmpStr;
 					--length;
@@ -246,20 +242,20 @@ for (unsigned x=0; x<=length; ++x)
 					lIndex=x+1;
 					current=addToken(current,(void*) nVar, _mStr, true);
 				}
-					
+
 		}
 	else if (readMode==2)
 		{
-		
+
 		}
 	else if (readMode==3)
 		{
-		
+
 		}
 	else if (isOp(string[x])){
 		if (x!=lIndex)
 			current = identify(string+lIndex, x-lIndex, intr, current);
-	
+
 		switch (string[x])
 		{
 		//mode switches
@@ -316,7 +312,7 @@ for (unsigned x=0; x<=length; ++x)
 			current=addToken(current,NULL,_lNot,true);//NOT
 		break;
 		//comparitive
-		
+
 		//assignment
 		case '=':
 		if (x+1==length)
@@ -402,11 +398,11 @@ for (unsigned x=0; x<=length; ++x)
 		break;
 		}
 		lIndex=x+1;
-		bypass:
+		bypass:;
 	}
 }
 current=getHead(current);
-if (intr->st->prntSys)
+if (intr->st->options.prntSys)
 	prntTokens(current);
 return current;
 }
@@ -418,15 +414,12 @@ if (length==0)
 	length=strlen(string);
 if (length==0)
 	return;
-	
-if (intr->st->prntEcho)
+
+if (intr->st->options.prntEcho)
 	printf("\t\t>> %s\n", string);
 
-if (intr->st->prntSys==true)
-	printf("\t\t%.*s\n", length, string);
-	
 token*tokenStream=tokenize(string, length, intr);
-	
+
 //determine whether or not to continue waiting
 intr->pending=!intr->litOp && !intr->listOp && !intr->blockOp? false: true;
 

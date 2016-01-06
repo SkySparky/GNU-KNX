@@ -1,26 +1,14 @@
 #include "Node.h"
 #include "Interpreter.h"
 #include <stdlib.h>
+#include "KNX.h"
 
 node*nodeGen()
 {
 node*ret = (node*) malloc(sizeof(node));
-
-if (ret==NULL)
-	{
-	printf("Node Gen Failed\n");
-	return NULL;
-	}
-
 //construct super class
-genBaseNode(&ret->nb);
-
-//construct base class
-if (ret!=NULL)
-	printf("Alloc at %p\n", ret);
-else printf("NULL CONSTRUCT\n");
-
-
+if (!setupBaseNode(&ret->nb))
+	printf("Fail\n");
 return ret;
 };
 
@@ -28,11 +16,15 @@ int nodeProc(state*sys, node*parent, char*cmd)
 {
 //validate node
 node*current=validateNode(sys,parent);
-if (current!=NULL)
-	printf("Node %u registered\n",current->nb.handle);
-else{
-	printf("Registration failed\n");
-return -1;
+if (sys->options.prntSys)
+{
+	if (current!=NULL)
+		printf("Node %u registered\n",current->nb.handle);
+	else
+	{
+		printf("Registration failed\n");
+		return -1;
+	}
 }
 
 printRegistrar(sys);
@@ -48,13 +40,14 @@ unsigned length = 0, maxLength=10;
 char * string = malloc (10);
 string[0]='\0';
 
+printf("%u\n",current->nb.active);
 while (current->nb.active)
 {
 if (sys->stdin_hndle==current)
 {
 	if (!activeReading)
 	{
-	printf("%u >> ",current->nb.handle);
+	printf("@%u >> ",current->nb.handle);
 	activeReading=true;
 	}
 int chr = fgetc(stdin);
@@ -86,7 +79,7 @@ int chr = fgetc(stdin);
 			if (tmpbuff!=NULL)
 				string=tmpbuff;
 			else
-				printf("Error: buffer resize failure\n");
+				prntError("System Error: std-io terminal buffer failure\n",-1,sys->options);
 			}
 		string[length]=(char)chr;
 		string[length+1]='\0';
@@ -99,7 +92,7 @@ unsigned rec = current->nb.handle;
 //invalidate loop
 do{
 if (!invalidateNode(sys,current))
-	if (sys->prntSys)
+	if (sys->options.prntSys)
 		printf("Deregistration failed\n");
 //implement attempt to resolve invalidation
 

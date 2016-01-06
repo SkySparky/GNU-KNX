@@ -3,6 +3,8 @@
 #include "Node.h"
 #include "State.h"
 
+#include "KNX.h"
+
 #define TEST false
 
 //determine initial/default settings
@@ -18,7 +20,6 @@ int main(int argc, char**argv)
 {
 if (TEST)
 {
-printf("hash >> %llu\n",FNV_1a("hello"));
 return 0;
 }
 

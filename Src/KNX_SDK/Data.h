@@ -65,5 +65,14 @@ token*sequence;
 byteSequence*genByteSequence();
 bool freeByteSequence(byteSequence*);
 
+typedef struct
+{
+  //defaults
+  bool prntWrn : 1;
+  bool prntErr : 1;
+  bool prntSys : 1;
+  bool prntEcho: 1;
+  bool prntDbg : 1;
+}settings;
 
 #endif

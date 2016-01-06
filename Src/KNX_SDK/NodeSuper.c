@@ -24,7 +24,8 @@ return curr;
 
 bool setupBaseNode(_bNode*curr)
 {
-curr = malloc (sizeof(_bNode));
+if (curr==NULL)
+	return false;
 
 curr->parent=NULL;
 curr->children=(_bNode**)malloc(0);
