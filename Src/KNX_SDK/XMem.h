@@ -1,33 +1,36 @@
 #ifndef KNX_SDK_MEM
 #define KNX_SDK_MEM
 
-/*
-Defines all memory types
-*/
+#include "Data.h"
 
-enum memTypes{__bool, __uint, __llint, __double, __char, __string, __port, __pipe, __struct};
-
-typedef struct object
+typedef struct
 {
+tCode type;
+long long unsigned hash;
+}object;
 
-}object,*_object;
-
-//boolean
-typedef struct _bool_ : public object
+typedef struct
 {
-
-}_bool_;
-
-//unsigned integer
-typedef struct _integer_ : public object
-{
-
+  object obj;
+  int value;
 }_integer_;
 
-//string object
-typedef struct _string_ : public object
+typedef struct
 {
-
+  object obj;
+  char*value;
 }_string_;
+
+typedef struct
+{
+  object obj;
+  object**members;
+  unsigned numMembers;
+}_struct_;
+
+
+
+object*genObject(tCode, char*name);
+bool freeObject(object*);
 
 #endif

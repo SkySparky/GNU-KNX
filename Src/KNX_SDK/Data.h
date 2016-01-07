@@ -27,13 +27,20 @@ _sOpBrace, _sClBrace,//{ }
 _sList, _sMember,//, .
 //Logic
 _lAnd=40, _lOr, _lNot,//& | !
-_lNand, _lNor, _Xnor, _lXor,//!& !| |! ||
+_lNand, _lNor, _lXnor, _lXor,//!& !| |! ||
 //Comparison
-_cEqu=50, _cNequ, _cQst,//== != ?
-//Assignment
-_aSet=60, _aAdd, _aSub, _aMult, _aDiv, _aPow, _aRoot, _aMod,//= _aOp=general mathematics operator
+_cEqu=50, _cNequ, _cQst, _cLss, _cGtr, _cLssEqu, _cGtrEqu,//== != ?
 //Math
-_eAdd=70, _eSub, _eMult, _eDiv, _eMod//+= -= *= /= %=
+_aAdd=60, _aSub, _aMult, _aDiv, _aPow, _aRoot, _aMod,//= _aOp=general mathematics operator
+//Assignment
+_eSet=70, _eAdd, _eSub, _eMult, _eDiv, _eMod,//+= -= *= /= %=
+//Keywords
+_kExit=80, _kXNode, _kTerm, _kDel, _kSwtch, _kBreak,
+_kImport, _kReturn, _kMsg, _kIf, _kElse, _kWhile, _kFrEach,
+_kTry, _kCatch, _kCast,
+//Other
+_oFlag=100
+
 }tCode;
 
 //typedef struct token _token;
@@ -54,16 +61,6 @@ token*getTail(token*);
 token*genToken(token*);
 
 void freeToken(token*);//add specific memory deletions for raw values
-
-
-//tokenized line
-typedef struct
-{
-token*sequence;
-}byteSequence;
-
-byteSequence*genByteSequence();
-bool freeByteSequence(byteSequence*);
 
 typedef struct
 {

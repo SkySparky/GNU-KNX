@@ -54,6 +54,4 @@ if (target!=NULL)
 		freeToken(target->next);
 	free(target);
 }
-	
-		
 }

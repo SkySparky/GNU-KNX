@@ -9,25 +9,25 @@
 //Get FNV-1a hash
 long long unsigned FNV_1a(char*str)
 {
-printf(">> %s\n",str);
-#ifdef ENVIORNMENT64
-unsigned long long _offset=0xcbf29ce484222325;
-unsigned long long _prime=0x100000001b3;
-printf("x32 %llu\n",_offset);
+#if BITMODE==64
+long long unsigned _offset=14695981039346656037ULL;
+long long unsigned _prime=0xb3;
+//printf("x64 %llu\n",_offset);
 #else//32 bit
-unsigned long long _offset=0x811C9DC5;
+unsigned long long _offset=2166136261;
 unsigned long long _prime=0x93;
-printf("x32 %llu\n",_offset);
+//printf("x32 %llu\n",_offset);
 #endif
 
 unsigned long long hash=_offset;
 
 unsigned len = strlen(str);
-
 for (unsigned x=0; x<len; ++x)
 	{
-	hash = hash^str[x];
-	hash *= _prime;
+		hash^=(unsigned long long)(*str++);
+		hash += (hash << 1) + (hash << 4) + (hash << 5) +
+            (hash << 7) + (hash << 8) + (hash << 40);
+		//hash=(str[x]^hash)*_prime;
 	}
 
 	return hash;
@@ -62,13 +62,13 @@ for (unsigned x=0; x<length; ++x)
 		{
 		decimal=true;
 		}
-			
+
 	else
 		return 0;
 
 if (decimal)
 	return 1;
-	
+
 long long chk = atoll(string);
 
 if (chk<=SHRT_MAX)

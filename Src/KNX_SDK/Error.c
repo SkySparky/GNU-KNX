@@ -23,7 +23,7 @@ char*clr=NULL;
 switch(mode)
 {
 case PRNT_NORM: clr=ANSI_WHITE; printf("%sMessage: \n\t>> %s\n", clr, line); break;
-case PRNT_ERR: clr=ANSI_RED; printf("%sError (%d): %s\n\t>> %s\n", clr, code, err, line); break;
+case PRNT_ERR: clr=ANSI_RED; printf("%sError (%#08x): %s\n\t>> %s\n", clr, code, err, line); break;
 //case GREEN: clr=ANSI_GREEN; break;
 case PRNT_WRN: clr=ANSI_YELLOW; printf("%sWarning (%#08x): %s\n\t>>%s\n", clr, code, err, line); break;
 case PRNT_MISC: clr=ANSI_CYAN; printf("%s (%#08x): %s \n", clr, code, line); break;
@@ -82,7 +82,12 @@ case ERR_LIB_OPEN: printc("Could not open library\n",line,PRNT_ERR, code); break
 
 //Warnings
 case WRN_UNBOUND_STR: printc("Unbound string",line,PRNT_WRN, code); break;
+case WRN_UNBOUND_CHR: printc("Unbound character",line,PRNT_WRN, code); break;
+case WRN_NO_EFFECT: printc("Character has no effect",line,PRNT_WRN, code); break;
+
 case WRN_IMPLICIT_CAST: printc("Implicit cast",line,PRNT_WRN, code); break;
+case WRN_INV_FLAG: printc("Invlalid flag format",line,PRNT_WRN, code); break;
+
 
 default:
 printc("",line,PRNT_MISC, code); break;

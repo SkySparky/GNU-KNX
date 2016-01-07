@@ -9,35 +9,6 @@
 ((c<'0' || c>'9') && (c<'a' || c>'z') && (c<'A' || c>'Z'))\
 && (c!='_' && c!='.'))
 
-
-comNode*genComeNode(comNode*parent)
-{
-comNode*ret = malloc(sizeof(comNode));
-if (ret==NULL)
-	return NULL;
-
-ret->parent=parent;
-ret->parameters=NULL;
-ret->success=NULL;
-ret->failure=NULL;
-ret->data=genToken(NULL);
-
-return ret;
-}
-
-void freeComNode(comNode*target)
-{
-if (target->data!=NULL)
-	free(target->data);
-if (target->parent!=NULL)
-	freeComNode(target->parent);
-if (target->success!=NULL)
-	freeComNode(target->success);
-if (target->failure!=NULL)
-	freeComNode(target->failure);
-free(target);
-}
-
 interpreter*genInterpreter(_state_ * st,_node_ * nd)
 {
 interpreter*ret = (interpreter*) malloc(sizeof(interpreter));
@@ -57,49 +28,12 @@ ret->buffer=malloc(0);
 return ret;
 }
 
-
-comTree*genComTree()
-{
-comTree*ret = malloc(sizeof(comTree));
-if (ret==NULL)
-	return NULL;
-ret->root = (comNode**) malloc(0);
-ret->level=0;
-
-return ret;
-}
-
-void clearComTree(comTree*target)
-{
-//clear branches
-while(--target->level>=0)
-	freeComNode(target->root[target->level]);
-target->root=realloc(target->root, 0);
-}
-
-void freeComTree(comTree*target)
-{
-if (target==NULL)
-	return;
-//free branches
-clearComTree(target);
-//delete self
-free(target->root);
-free(target);
-}
-
-//converts node into executable statement
-byteSequence*createCommand(comNode*target)
-{
-
-return NULL;
-}
-
-
 char getEscape(char input)
 {
 switch (input)
 {
+case '0':
+	return '\0';
 case 'n':
 	return '\n';
 case 't':
@@ -191,6 +125,23 @@ for (unsigned x=0; x<=length; ++x)
 //ending value
 	if (x==length)
 	{
+		if (readMode==3)
+			{
+				printf("%d %d\n", x, lIndex);
+				prntError(string, WRN_UNBOUND_STR, intr->st->options);
+				if (x-lIndex>1)
+					prntError(string, ERR_EXS_CHR, intr->st->options);
+				else if (x-lIndex==0)
+					prntError(string, ERR_BLNK_CHR, intr->st->options);
+				else
+				{
+					char*chr = malloc(1);
+					*chr=string[x-1];
+					current=addToken(current,(void*) chr, _mChar, true);
+				}
+
+				break;
+			}
 		if (lIndex==length)
 			break;
 		if (readMode==2)
@@ -246,11 +197,27 @@ for (unsigned x=0; x<=length; ++x)
 		}
 	else if (readMode==2)
 		{
-
+				if (string[x]=='#')
+					readMode=0;
+				lIndex=x+1;
 		}
 	else if (readMode==3)
 		{
-
+			if (string[x]=='\''){
+				printf(">> %d %d\n", x, lIndex);
+				if (x-lIndex>1)
+					prntError(string, ERR_EXS_CHR, intr->st->options);
+				else if (x-lIndex==0)
+					prntError(string, ERR_BLNK_CHR, intr->st->options);
+				else
+				{
+					char*chr = malloc(1);
+					*chr=string[x-1];
+					current=addToken(current,(void*) chr, _mChar, true);
+				}
+			readMode=0;
+			lIndex=x+1;
+			}
 		}
 	else if (isOp(string[x])){
 		if (x!=lIndex)
@@ -312,12 +279,33 @@ for (unsigned x=0; x<=length; ++x)
 			current=addToken(current,NULL,_lNot,true);//NOT
 		break;
 		//comparitive
-
+		case '<':
+			if (x+1==length)
+				current=addToken(current,NULL,_cLss,true);
+			else if (string[x+1]=='=')
+				{
+					current=addToken(current,NULL,_cLssEqu,true);
+					++x;
+				}
+			else
+				current=addToken(current,NULL,_cLss,true);
+		break;
+		case '>':
+			if (x+1==length)
+				current=addToken(current,NULL,_cGtr,true);
+			else if (string[x+1]=='=')
+				{
+					current=addToken(current,NULL,_cGtrEqu,true);
+					++x;
+				}
+			else
+				current=addToken(current,NULL,_cGtr,true);
+		break;
 		//assignment
 		case '=':
 		if (x+1==length)
 			{
-				current=addToken(current,NULL,_aSet,true);//SET
+				current=addToken(current,NULL,_eSet,true);//SET
 				break;
 			}
 		else if (string[x+1]=='=')
@@ -326,7 +314,7 @@ for (unsigned x=0; x<=length; ++x)
 				++x;
 			}
 		else
-			current=addToken(current,NULL,_aSet,true);
+			current=addToken(current,NULL,_eSet,true);
 		break;
 		case '?':
 			current=addToken(current,NULL,_cQst,true);
@@ -335,7 +323,7 @@ for (unsigned x=0; x<=length; ++x)
 		case '+':
 			if (x+1==length)
 				current=addToken(current,NULL,_aAdd,true);
-			else if (string[x+1]==length)
+			else if (string[x+1]=='=')
 			{
 				current=addToken(current,NULL,_eAdd,true);
 				++x;
@@ -345,7 +333,7 @@ for (unsigned x=0; x<=length; ++x)
 		case '-':
 		if (x+1==length)
 				current=addToken(current,NULL,_aSub,true);
-			else if (string[x+1]==length)
+			else if (string[x+1]=='=')
 			{
 				current=addToken(current,NULL,_eSub,true);//SET
 				++x;
@@ -355,7 +343,7 @@ for (unsigned x=0; x<=length; ++x)
 		case '*':
 		if (x+1==length)
 				current=addToken(current,NULL,_aMult,true);
-			else if (string[x+1]==length)
+			else if (string[x+1]=='=')
 			{
 				current=addToken(current,NULL,_eMult,true);
 				++x;
@@ -365,7 +353,7 @@ for (unsigned x=0; x<=length; ++x)
 		case '/':
 		if (x+1==length)
 				current=addToken(current,NULL,_aDiv,true);
-			else if (string[x+1]==length)
+			else if (string[x+1]=='=')
 			{
 				current=addToken(current,NULL,_eDiv,true);
 				++x;
@@ -375,7 +363,7 @@ for (unsigned x=0; x<=length; ++x)
 		case '%':
 		if (x+1==length)
 				current=addToken(current,NULL,_aMod,true);
-			else if (string[x+1]==length)
+			else if (string[x+1]=='=')
 			{
 				current=addToken(current,NULL,_eMod,true);
 				++x;
@@ -392,13 +380,22 @@ for (unsigned x=0; x<=length; ++x)
 		if (x+1==length)
 			intr->waitLn=true;
 		else
+				prntError(string, WRN_NO_EFFECT,intr->st->options);
+		break;
+		case '~':
+		if (x+1==length)
+			prntError(string, WRN_INV_FLAG, intr->st->options);
+		else if ((string[x+1]<'a' || string[x+1]>'z') &&
+						 (string[x+1]<'A' || string[x+1]>'Z'))
+			prntError(string, WRN_INV_FLAG, intr->st->options);
+		else
 			{
-			//invalid use
+				current=addToken(current,NULL,_oFlag,true);
+				++x;
 			}
 		break;
 		}
 		lIndex=x+1;
-		bypass:;
 	}
 }
 current=getHead(current);

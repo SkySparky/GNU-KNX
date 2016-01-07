@@ -19,7 +19,8 @@ return NULL;
 int main(int argc, char**argv)
 {
 if (TEST)
-{
+{//%#010x
+printf("%llx\n", FNV_1a("hello world"));
 return 0;
 }
 

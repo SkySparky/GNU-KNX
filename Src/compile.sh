@@ -10,7 +10,6 @@ COMP_MODE=-m64
 # static library first
 
 cd KNX_SDK
-# gcc -Wall -static Util.c NodeSuper.c -l KNX_SDK -o SDK.o $COMP_LEVEL
 gcc -Wall -c Util.c -c Error.c -c NodeSuper.c -c Data.c -c Debug.c $COMP_LEVEL $COMP_IGNORE
 ar rcs libKNX_SDK.a Util.o Error.o NodeSuper.o Data.o Debug.o
 cd ../

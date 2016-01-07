@@ -1,8 +1,9 @@
 Tasks to complete in order
 
 implement tokens
-implement token tree
+implement token tree (maybe not)
 implement tokenizer and scanner
 add token deconstructor deletions for literals
 implement built-in functions
+finish keyword hash list (use http://www.nitrxgen.net/hashgen/), as its compatible with the KNX FNV-1a implementation
 implement DLL protocol

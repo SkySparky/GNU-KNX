@@ -53,8 +53,11 @@ Defines error codes and implements the error printout function
 
 //Parser 1200-1299
 #define WRN_UNBOUND_STR   1200//string not closed by end of line
+#define WRN_UNBOUND_CHR   1201//char not closed by end of line
+#define WRN_NO_EFFECT     1202//character not meaningful
 //Data 1300-1399
 #define WRN_IMPLICIT_CAST 1300//implicitly casted types
+#define WRN_INV_FLAG      1301//invalid flag
 
 #endif
 
