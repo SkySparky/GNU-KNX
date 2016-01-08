@@ -52,12 +52,8 @@ typedef struct token
 tCode type;
 void*data;
 bool raw;
-struct token*next;
-struct token*previous;
 }token;
 
-token*getHead(token*);
-token*getTail(token*);
 token*genToken(token*);
 
 void freeToken(token*);//add specific memory deletions for raw values
@@ -70,6 +66,8 @@ typedef struct
   bool prntSys : 1;
   bool prntEcho: 1;
   bool prntDbg : 1;
+
+  bool tabAssist:1;
 }settings;
 
 #endif

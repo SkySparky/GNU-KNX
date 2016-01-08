@@ -71,6 +71,9 @@ case ERR_ILL_SYN: printc("Illegal syntax\n",line,PRNT_ERR, code); break;
 case ERR_ILL_ARG: printc("Illegal argument\n",line,PRNT_ERR, code); break;
 case ERR_SHRT_ARG: printc("Too few arguments\n",line,PRNT_ERR, code); break;
 case ERR_LNG_ARG: printc("Too many arguments\n",line,PRNT_ERR, code); break;
+case ERR_NEG_BRACK: printc("Unexpected bracket\n",line,PRNT_ERR, code); break;
+case ERR_NEG_BRACE: printc("Unexpected brace\n",line,PRNT_ERR, code); break;
+case ERR_NEG_PARANTH: printc("Unexpected paranthesis\n",line,PRNT_ERR, code); break;
 
 case ERR_XMEMBER: printc("Member object does not exist\n",line,PRNT_ERR, code); break;
 case ERR_XOBJ: printc("Object does not exist\n",line,PRNT_ERR, code); break;
@@ -88,6 +91,8 @@ case WRN_NO_EFFECT: printc("Character has no effect",line,PRNT_WRN, code); break
 case WRN_IMPLICIT_CAST: printc("Implicit cast",line,PRNT_WRN, code); break;
 case WRN_INV_FLAG: printc("Invlalid flag format",line,PRNT_WRN, code); break;
 
+//Other
+case FNC_MSG: printc("",line,PRNT_MISC, code); break;
 
 default:
 printc("",line,PRNT_MISC, code); break;

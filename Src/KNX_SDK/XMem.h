@@ -28,9 +28,20 @@ typedef struct
   unsigned numMembers;
 }_struct_;
 
-
-
 object*genObject(tCode, char*name);
 bool freeObject(object*);
+
+typedef struct
+{
+object**memory;
+unsigned numObjects;
+}database;
+
+database*genDatabase();
+void freeDatabase(database*);
+object*_getObject(database*, unsigned long long);
+object*getObject(database*, char*);
+bool addObject(database*, object*);
+bool delObject(database*, object*);
 
 #endif

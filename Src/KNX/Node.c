@@ -1,7 +1,7 @@
-#include "Node.h"
 #include "Interpreter.h"
 #include <stdlib.h>
 #include "KNX.h"
+#include "Node.h"
 
 node*nodeGen()
 {
@@ -49,6 +49,9 @@ if (sys->stdin_hndle==current)
 	{
 	printf("@%u >> ",current->nb.handle);
 	activeReading=true;
+	if (intr->st->options.tabAssist)
+		for (unsigned x=0; x<intr->blockOp; ++x)
+			printf("   ");
 	}
 int chr = fgetc(stdin);
 //update buffer
@@ -58,10 +61,10 @@ int chr = fgetc(stdin);
 		interpret(string,length,intr);
 		//clear buffer
 		length=0;
-		free(string);
-		string=malloc(10);
+		if (maxLength!=10)
+			string=realloc(string, 10);
 		maxLength=10;
-		string[0]='0';
+		memset(string,0,10);
 		activeReading=false;
 	}else if (chr==INTERRUPT)
 	{

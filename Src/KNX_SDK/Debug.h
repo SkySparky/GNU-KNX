@@ -6,6 +6,6 @@
 
 void prntMemory();//print all memory in pushed scope
 void prntTree(baseNode*);//print node tree from pushed value
-void prntTokens(token*);
+void prntTokens(token**, unsigned);
 
 #endif

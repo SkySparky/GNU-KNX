@@ -1,8 +1,8 @@
 #include "Interpreter.h"
-
 #include "../KNX_SDK/Debug.h"
-
 #include <string.h>
+#include "Node.h"
+#include "KNX.h"
 
 
 #define isOp(c)(\
@@ -22,10 +22,33 @@ ret->litOp=0;
 ret->listOp=0;
 ret->blockOp=0;
 
+ret->global=st->global;
+ret->local=malloc(sizeof(database));
+ret->local->memory=(object**)malloc(0);
+ret->local->numObjects=0;
+
 ret->buffSize=0;
 ret->buffer=malloc(0);
+ret->streamLength=0;
+ret->stream=malloc(sizeof(token)*10);
 
 return ret;
+}
+
+void reset(interpreter*intr)
+{
+intr->pending=false;
+intr->waitExprss=false;
+intr->waitLn=false;
+intr->litOp=false;
+intr->listOp=0;
+intr->blockOp=0;
+
+for (unsigned x=0; x<intr->streamLength; ++x)
+	freeToken(intr->stream[x]);
+if (intr->streamLength>10)
+	intr->stream=realloc(intr->stream,10);
+intr->streamLength=0;
 }
 
 char getEscape(char input)
@@ -43,36 +66,44 @@ case 't':
 return input;
 }
 
-token * addToken(token*parent, void*data, tCode type, bool raw)
+bool addToken(interpreter*intr, void*data, tCode type, bool raw)
 {
+//resize if necessary
+if (intr->streamLength%10==0 && intr->streamLength>0)
+	{
+		token**tmpBuf=realloc(intr->stream, sizeof(token)*(intr->streamLength+10));
+		if (tmpBuf==NULL)
+			return false;
+		intr->stream=tmpBuf;
+		intr->streamLength+=10;
+	}
 
-if (parent==NULL)
-{
-	parent=genToken(parent);
-	parent->data=data;
-	parent->type=type;
-	parent->raw=raw;
-	return parent;
-}
+token*tk=malloc(sizeof(token));
+tk->data=data;
+tk->type=type;
+tk->raw=raw;
 
-token * curr = genToken(parent);
-curr->data=data;
-curr->type=type;
-curr->raw=raw;
-curr->previous=parent;
-parent->next=curr;
+if (tk==NULL)
+	{
+		if (intr->st->options.prntDbg)
+			printf("Malloc fail\n");
+		return false;
+	}
 
-return curr;
+intr->stream[intr->streamLength++]=tk;
+
+return true;
 }
 
 //identify symbolic identifiers
-token* identify(char*string, unsigned length, interpreter*intr, token*tail)
+void identify(char*input, unsigned length, interpreter*intr)
 {
+char*string=malloc(length+1);
+strncpy(string,input,length);
+string[length]='\0';
 void*data=NULL;
 tCode type=0;
 bool raw=true;
-if (intr->st->options.prntDbg)
-	printf("identifying: %s\n", string);
 
 switch (isNumeric(string, length))
 {
@@ -100,19 +131,26 @@ switch (isNumeric(string, length))
 	break;
 }
 
-build:
+//begin symbol checks
+long long unsigned hash = FNV_1a(string);
 
-return addToken(tail, data, type, raw);
+//check for keyword
+if ((type=keycode(hash)!=0))
+	goto build;
+
+build:;
+
+free(string);
+addToken(intr, data, type, raw);
 }
 
-token * tokenize(char* string,unsigned length,interpreter*intr)
+void tokenize(char* string,unsigned length,interpreter*intr)
 {
 
 unsigned lIndex=0;
 
 //0=normal, 1=string, 2=comment, 3=character
 unsigned readMode=0;
-token*current=NULL;
 
 //check pending states
 if (intr->waitLn)
@@ -127,7 +165,6 @@ for (unsigned x=0; x<=length; ++x)
 	{
 		if (readMode==3)
 			{
-				printf("%d %d\n", x, lIndex);
 				prntError(string, WRN_UNBOUND_STR, intr->st->options);
 				if (x-lIndex>1)
 					prntError(string, ERR_EXS_CHR, intr->st->options);
@@ -137,7 +174,7 @@ for (unsigned x=0; x<=length; ++x)
 				{
 					char*chr = malloc(1);
 					*chr=string[x-1];
-					current=addToken(current,(void*) chr, _mChar, true);
+					addToken(intr,(void*) chr, _mChar, true);
 				}
 
 				break;
@@ -152,12 +189,12 @@ for (unsigned x=0; x<=length; ++x)
 			char*buff = malloc((x-lIndex)+1);
 			strncpy(buff, string+lIndex, x-lIndex);
 			buff[x-lIndex]='\0';
-			current=addToken(current,(void*) buff, _mStr, true);
+			addToken(intr,(void*) buff, _mStr, true);
 			break;
 		}
 		else
 		{
-			current = identify(string+lIndex, x-lIndex-1, intr, current);
+			identify(string+lIndex, x-lIndex, intr);
 			break;
 		}
 	}
@@ -191,7 +228,7 @@ for (unsigned x=0; x<=length; ++x)
 					nVar[x-lIndex]='\0';
 					readMode=0;
 					lIndex=x+1;
-					current=addToken(current,(void*) nVar, _mStr, true);
+					addToken(intr,(void*) nVar, _mStr, true);
 				}
 
 		}
@@ -204,7 +241,6 @@ for (unsigned x=0; x<=length; ++x)
 	else if (readMode==3)
 		{
 			if (string[x]=='\''){
-				printf(">> %d %d\n", x, lIndex);
 				if (x-lIndex>1)
 					prntError(string, ERR_EXS_CHR, intr->st->options);
 				else if (x-lIndex==0)
@@ -213,7 +249,7 @@ for (unsigned x=0; x<=length; ++x)
 				{
 					char*chr = malloc(1);
 					*chr=string[x-1];
-					current=addToken(current,(void*) chr, _mChar, true);
+					addToken(intr,(void*) chr, _mChar, true);
 				}
 			readMode=0;
 			lIndex=x+1;
@@ -221,7 +257,7 @@ for (unsigned x=0; x<=length; ++x)
 		}
 	else if (isOp(string[x])){
 		if (x!=lIndex)
-			current = identify(string+lIndex, x-lIndex, intr, current);
+			identify(string+lIndex, x-lIndex, intr);
 
 		switch (string[x])
 		{
@@ -229,151 +265,137 @@ for (unsigned x=0; x<=length; ++x)
 		case '\'':readMode=3;break;
 		case '\"':readMode=1;break;
 		//encapsulations
-		case '(':current=addToken(current,NULL, _sOpParanth, true); break;
-		case ')':current=addToken(current,NULL, _sClParanth, true); break;
-		case '[':current=addToken(current,NULL, _sOpBrack, true); break;
-		case ']':current=addToken(current,NULL, _sClBrack, true); break;
-		case '{':current=addToken(current,NULL, _sOpBrace, true); break;
-		case '}':current=addToken(current,NULL, _sClBrace, true); break;
+		case '(':addToken(intr,NULL, _sOpParanth, true); intr->listOp++; break;
+		case ')':addToken(intr,NULL, _sClParanth, true);
+		if (intr->listOp>0)
+			intr->listOp--;
+		else
+		 	prntError(string, ERR_NEG_PARANTH, intr->st->options);
+		break;
+		case '[':addToken(intr,NULL, _sOpBrack, true); intr->brackOp++; break;
+		case ']':addToken(intr,NULL, _sClBrack, true);
+		if (intr->brackOp>0)
+			intr->brackOp--;
+		else
+			prntError(string, ERR_NEG_BRACK, intr->st->options);
+		break;
+		case '{':addToken(intr,NULL, _sOpBrace, true); intr->blockOp++; break;
+		case '}':addToken(intr,NULL, _sClBrace, true);
+		if (intr->blockOp>0)
+			intr->blockOp--;
+		else
+			prntError(string, ERR_NEG_BRACE, intr->st->options);
+		break;
 		//logical
-		case '&': current=addToken(current,NULL, _lAnd, true); break;
+		case '&': addToken(intr,NULL, _lAnd, true); break;
 		case '|'://OR, XNOR, XOR
-		if (x+1==length)
-			{
-				current=addToken(current,NULL, _lOr, true);//OR
-				break;
-			}
 		if (string[x+1]=='!')//XNOR
 		{
-			current=addToken(current,NULL, _lOr, true);//OR
+			addToken(intr,NULL, _lXnor, true);//OR
 			++x;
 		}else if (string[x+1]=='|')//XOR
 		{
-			current=addToken(current,NULL, _lXor, true);//OR
+			addToken(intr,NULL, _lXor, true);//OR
 			++x;
 		}else
-			current=addToken(current,NULL, _lOr, true);//OR
+			addToken(intr,NULL, _lOr, true);//OR
 		break;
 		case '!':
-		if (x+1==length)
-			{
-				current=addToken(current,NULL,_lNot,true);//NOT
-				break;
-			}
 		if (string[x+1]=='|')
 			{
-				current=addToken(current,NULL,_lNor,true);//NOR
+				addToken(intr,NULL,_lNor,true);//NOR
 				++x;
 			}
 		else if (string[x+1]=='&')
 			{
-				current=addToken(current,NULL,_lNand,true);//NOR
+				addToken(intr,NULL,_lNand,true);//NOR
 				++x;
 			}
 		else if (string[x+1]=='=')
 			{
-				current=addToken(current,NULL,_cNequ,true);//NOR
+				addToken(intr,NULL,_cNequ,true);//NOR
 				++x;
 			}
 		else
-			current=addToken(current,NULL,_lNot,true);//NOT
+			addToken(intr,NULL,_lNot,true);//NOT
 		break;
 		//comparitive
 		case '<':
-			if (x+1==length)
-				current=addToken(current,NULL,_cLss,true);
-			else if (string[x+1]=='=')
+			if (string[x+1]=='=')
 				{
-					current=addToken(current,NULL,_cLssEqu,true);
+					addToken(intr,NULL,_cLssEqu,true);
 					++x;
 				}
 			else
-				current=addToken(current,NULL,_cLss,true);
+				addToken(intr,NULL,_cLss,true);
 		break;
 		case '>':
-			if (x+1==length)
-				current=addToken(current,NULL,_cGtr,true);
-			else if (string[x+1]=='=')
+				if (string[x+1]=='=')
 				{
-					current=addToken(current,NULL,_cGtrEqu,true);
+					addToken(intr,NULL,_cGtrEqu,true);
 					++x;
 				}
 			else
-				current=addToken(current,NULL,_cGtr,true);
+				addToken(intr,NULL,_cGtr,true);
 		break;
 		//assignment
 		case '=':
-		if (x+1==length)
+		if (string[x+1]=='=')
 			{
-				current=addToken(current,NULL,_eSet,true);//SET
-				break;
-			}
-		else if (string[x+1]=='=')
-			{
-				current=addToken(current,NULL,_cEqu,true);//_cEqu
+				addToken(intr,NULL,_cEqu,true);//_cEqu
 				++x;
 			}
 		else
-			current=addToken(current,NULL,_eSet,true);
+			addToken(intr,NULL,_eSet,true);
 		break;
 		case '?':
-			current=addToken(current,NULL,_cQst,true);
+			addToken(intr,NULL,_cQst,true);
 		break;
 		//arithmetic
 		case '+':
-			if (x+1==length)
-				current=addToken(current,NULL,_aAdd,true);
-			else if (string[x+1]=='=')
+			if (string[x+1]=='=')
 			{
-				current=addToken(current,NULL,_eAdd,true);
+				addToken(intr,NULL,_eAdd,true);
 				++x;
 			}else
-				current=addToken(current,NULL,_aAdd,true);
+				addToken(intr,NULL,_aAdd,true);
 			break;
 		case '-':
-		if (x+1==length)
-				current=addToken(current,NULL,_aSub,true);
-			else if (string[x+1]=='=')
+			if (string[x+1]=='=')
 			{
-				current=addToken(current,NULL,_eSub,true);//SET
+				addToken(intr,NULL,_eSub,true);//SET
 				++x;
 			}else
-				current=addToken(current,NULL,_aSub,true);
+				addToken(intr,NULL,_aSub,true);
 			break;
 		case '*':
-		if (x+1==length)
-				current=addToken(current,NULL,_aMult,true);
-			else if (string[x+1]=='=')
+			if (string[x+1]=='=')
 			{
-				current=addToken(current,NULL,_eMult,true);
+				addToken(intr,NULL,_eMult,true);
 				++x;
 			}else
-				current=addToken(current,NULL,_aMult,true);
+				addToken(intr,NULL,_aMult,true);
 			break;
 		case '/':
-		if (x+1==length)
-				current=addToken(current,NULL,_aDiv,true);
-			else if (string[x+1]=='=')
+			if (string[x+1]=='=')
 			{
-				current=addToken(current,NULL,_eDiv,true);
+				addToken(intr,NULL,_eDiv,true);
 				++x;
 			}else
-				current=addToken(current,NULL,_aDiv,true);
+				addToken(intr,NULL,_aDiv,true);
 			break;
 		case '%':
-		if (x+1==length)
-				current=addToken(current,NULL,_aMod,true);
-			else if (string[x+1]=='=')
+			if (string[x+1]=='=')
 			{
-				current=addToken(current,NULL,_eMod,true);
+				addToken(intr,NULL,_eMod,true);
 				++x;
 			}else
-				current=addToken(current,NULL,_aMod,true);
+				addToken(intr,NULL,_aMod,true);
 			break;
 		case '^':
-			current=addToken(current,NULL,_aPow,true);
+			addToken(intr,NULL,_aPow,true);
 		case -5://root
-			current=addToken(current,NULL,_aRoot,true);
+			addToken(intr,NULL,_aRoot,true);
 		break;
 		//other
 		case '\\':
@@ -389,19 +411,16 @@ for (unsigned x=0; x<=length; ++x)
 						 (string[x+1]<'A' || string[x+1]>'Z'))
 			prntError(string, WRN_INV_FLAG, intr->st->options);
 		else
-			{
-				current=addToken(current,NULL,_oFlag,true);
-				++x;
-			}
+				addToken(intr,NULL,_oFlag,true);
+			++x;
 		break;
 		}
 		lIndex=x+1;
 	}
 }
-current=getHead(current);
-if (intr->st->options.prntSys)
-	prntTokens(current);
-return current;
+if (intr->st->options.prntDbg)
+	prntTokens(intr->stream, intr->streamLength);
+
 }
 
 void interpret(char* string,unsigned length,interpreter*intr)
@@ -412,13 +431,24 @@ if (length==0)
 if (length==0)
 	return;
 
-if (intr->st->options.prntEcho)
-	printf("\t\t>> %s\n", string);
+//reset some states
+intr->waitExprss=false;
 
-token*tokenStream=tokenize(string, length, intr);
+tokenize(string, length, intr);
 
 //determine whether or not to continue waiting
-intr->pending=!intr->litOp && !intr->listOp && !intr->blockOp? false: true;
+intr->pending=intr->waitExprss | intr->waitLn | intr->litOp |\
+!(intr->listOp==0 && intr->blockOp==0 && intr->brackOp==0);
 
-freeToken(tokenStream);
+if (intr->st->options.prntDbg)
+	printf("%d%d%d%d %d %d %d\n",intr->pending, intr->waitExprss, intr->waitLn,\
+intr->litOp, intr->listOp, intr->blockOp, intr->brackOp);
+
+if (intr->pending)
+	return;
+
+//begin execution phase
+execute(intr);
+//cleanup
+reset(intr);
 }

@@ -5,6 +5,7 @@
 state*genState()
 {
 state * ret = malloc(sizeof(struct state));
+ret->global = (database*) genDatabase();
 ret->registrar = (node**) malloc(0);
 ret->registered=0;
 ret->options.prntWrn=1;
@@ -12,10 +13,17 @@ ret->options.prntErr=1;
 ret->options.prntSys=1;
 ret->options.prntEcho=1;
 ret->options.prntDbg=1;
+ret->options.tabAssist=1;
 ret->maxNodes=SYSTEM_MAX_NODES;
 ret->stdin_hndle=NULL;
 ret->sizeLevel=0;
 return ret;
+}
+
+void freeState(state * st)
+{
+free (st->global);
+free (st);
 }
 
 //register new node

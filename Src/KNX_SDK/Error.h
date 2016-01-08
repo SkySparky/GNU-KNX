@@ -35,7 +35,9 @@ Defines error codes and implements the error printout function
 #define ERR_ILL_ARG       39//illegal argument
 #define ERR_SHRT_ARG      40//too few arguments
 #define ERR_LNG_ARG       41//too many arguments
-
+#define ERR_NEG_BRACK     42//Unexpected ]
+#define ERR_NEG_BRACE     43//}
+#define ERR_NEG_PARANTH   44//)
 //Data  101-120
 #define ERR_XMEMBER       101//has no member
 #define ERR_XOBJ          102//no such object
@@ -58,6 +60,9 @@ Defines error codes and implements the error printout function
 //Data 1300-1399
 #define WRN_IMPLICIT_CAST 1300//implicitly casted types
 #define WRN_INV_FLAG      1301//invalid flag
+
+//Other
+#define FNC_MSG           2000//function message
 
 #endif
 
