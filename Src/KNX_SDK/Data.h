@@ -43,8 +43,10 @@ _oFlag=100
 
 }tCode;
 
-//typedef struct token _token;
+//Flag definitions
+typedef unsigned int flag;//26 bits used for a-z
 
+flag setFlag(flag, char*);
 //tokenized data
 typedef struct token
 {
@@ -52,6 +54,7 @@ typedef struct token
 tCode type;
 void*data;
 bool raw;
+flag flg;
 }token;
 
 token*genToken(token*);

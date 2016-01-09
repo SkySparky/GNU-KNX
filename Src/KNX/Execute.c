@@ -1,7 +1,10 @@
 #include "Interpreter.h"
 
-tokenList * execute(interpreter* intr)
+
+
+void execute(interpreter* intr)
 {
 
-return NULL;
+//free tokens
+
 }

@@ -96,3 +96,21 @@ unsigned operatorIndex;
 
 return true;
 }
+
+void toLower(char*string)
+{
+do {
+	if (*string>='A' && *string<='Z')
+		*string+=32;
+	++string;
+} while(*string!=0);
+}
+
+void toUpper(char*string)
+{
+	do {
+		if (*string>='a' && *string<='z')
+			*string-=32;
+		++string;
+	} while(string!=NULL);
+}

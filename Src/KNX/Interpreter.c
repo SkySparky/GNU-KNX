@@ -149,7 +149,7 @@ void tokenize(char* string,unsigned length,interpreter*intr)
 
 unsigned lIndex=0;
 
-//0=normal, 1=string, 2=comment, 3=character
+//0=normal, 1=string, 2=comment, 3=character, 4=flag
 unsigned readMode=0;
 
 //check pending states
@@ -163,6 +163,12 @@ for (unsigned x=0; x<=length; ++x)
 //ending value
 	if (x==length)
 	{
+		if (readMode==4)
+		{
+			flag*flg = malloc (sizeof(flag));
+			*flg = setFlag(0,string+lIndex);
+			addToken(intr, (void*)flg, _oFlag, true);
+		}
 		if (readMode==3)
 			{
 				prntError(string, WRN_UNBOUND_STR, intr->st->options);
@@ -254,6 +260,20 @@ for (unsigned x=0; x<=length; ++x)
 			readMode=0;
 			lIndex=x+1;
 			}
+		}else if (readMode==4)
+		{
+			if ((string[x+1]<'a' && string[x+1]>'z') || (string[x+1]<'A' && string[x+1]>'Z'))
+				{
+					char*tmp=malloc((x-lIndex)+1);
+					strncpy(tmp,string+lIndex, x-lIndex);
+					tmp[x-lIndex]='\0';
+					flag*flg=malloc(sizeof(flag));
+					*flg=setFlag(0,tmp);
+					addToken(intr,(void*)flg,_oFlag, true);
+					free(tmp);
+					readMode=0;
+				}
+			lIndex=x+1;
 		}
 	else if (isOp(string[x])){
 		if (x!=lIndex)
@@ -404,15 +424,11 @@ for (unsigned x=0; x<=length; ++x)
 		else
 				prntError(string, WRN_NO_EFFECT,intr->st->options);
 		break;
-		case '~':
-		if (x+1==length)
-			prntError(string, WRN_INV_FLAG, intr->st->options);
-		else if ((string[x+1]<'a' || string[x+1]>'z') &&
-						 (string[x+1]<'A' || string[x+1]>'Z'))
+		case '~':readMode=4;
+		if ((string[x+1]<'a' && string[x+1]>'z') || (string[x+1]<'A' && string[x+1]>'Z'))
 			prntError(string, WRN_INV_FLAG, intr->st->options);
 		else
-				addToken(intr,NULL,_oFlag,true);
-			++x;
+			readMode=4;
 		break;
 		}
 		lIndex=x+1;

@@ -1,0 +1,5 @@
+This directory holds the standard importable library modules for extending the base KNX engine's functionality.
+Please add custom libraries to the EXT_LIB directory, and do not delete or modify the contents of this directory
+as it may cause undefined behavior in code written for the official libraries.
+
+Unless I goofed something, then go ahead and change it.

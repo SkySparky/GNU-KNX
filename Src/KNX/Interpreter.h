@@ -52,6 +52,6 @@ unsigned length;
 //raw input, input length, system state, current node, interpreter instance
 void interpret(char*,unsigned,interpreter*);
 void reset(interpreter*);
-tokenList * execute(interpreter*);
+void execute(interpreter*);
 
 #endif

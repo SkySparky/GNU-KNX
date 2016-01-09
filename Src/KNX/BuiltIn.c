@@ -1,4 +1,12 @@
+/*
+Defines built-in commands
+
+*/
+
+
 #include "BuiltIn.h"
+
+
 
 bool isFunction(char*input,unsigned length)
 {

@@ -20,12 +20,7 @@ int main(int argc, char**argv)
 {
 if (TEST)
 {
-char * buff;
-buff=malloc(10);
-strncpy(buff,"123456789",10);
-buff[9]='\0';
-printf("%s\n", buff);
-printf("%d\n",buff[10]);
+printf("%u\n",setFlag(0,"aABC\0"));
 return 0;
 }
 

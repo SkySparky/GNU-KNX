@@ -15,5 +15,8 @@ unsigned long long prime(unsigned long long);//deprecated until further notice
 unsigned isNumeric(char*string, unsigned length);
 //return false if div/0
 bool math(token*start, unsigned length);
+//convert to lowercase, uppercase
+void toLower(char*);
+void toUpper(char*);
 
 #endif
