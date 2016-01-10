@@ -15,6 +15,7 @@ ret->type=0;
 ret->data=NULL;
 ret->raw=true;
 ret->flg=0;
+ret->order=0;
 
 return ret;
 }

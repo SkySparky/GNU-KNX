@@ -82,6 +82,7 @@ token*tk=malloc(sizeof(token));
 tk->data=data;
 tk->type=type;
 tk->raw=raw;
+tk->order=intr->listOp+intr->blockOp+intr->brackOp;
 
 if (tk==NULL)
 	{
@@ -135,9 +136,9 @@ switch (isNumeric(string, length))
 long long unsigned hash = FNV_1a(string);
 
 //check for keyword
-if ((type=keycode(hash)!=0))
+if ((type=keycode(hash))!=0)
 	goto build;
-
+printf("No Keyword\n");
 build:;
 
 free(string);
@@ -286,23 +287,33 @@ for (unsigned x=0; x<=length; ++x)
 		case '\"':readMode=1;break;
 		//encapsulations
 		case '(':addToken(intr,NULL, _sOpParanth, true); intr->listOp++; break;
-		case ')':addToken(intr,NULL, _sClParanth, true);
+		case ')':
 		if (intr->listOp>0)
+		{
 			intr->listOp--;
+			addToken(intr,NULL, _sClParanth, true);
+		}
 		else
 		 	prntError(string, ERR_NEG_PARANTH, intr->st->options);
 		break;
 		case '[':addToken(intr,NULL, _sOpBrack, true); intr->brackOp++; break;
-		case ']':addToken(intr,NULL, _sClBrack, true);
+		case ']':
 		if (intr->brackOp>0)
+		{
 			intr->brackOp--;
+			addToken(intr,NULL, _sClBrack, true);
+		}
+
 		else
 			prntError(string, ERR_NEG_BRACK, intr->st->options);
 		break;
 		case '{':addToken(intr,NULL, _sOpBrace, true); intr->blockOp++; break;
-		case '}':addToken(intr,NULL, _sClBrace, true);
+		case '}':
 		if (intr->blockOp>0)
+		{
 			intr->blockOp--;
+			addToken(intr,NULL, _sClBrace, true);
+		}
 		else
 			prntError(string, ERR_NEG_BRACE, intr->st->options);
 		break;
@@ -434,9 +445,6 @@ for (unsigned x=0; x<=length; ++x)
 		lIndex=x+1;
 	}
 }
-if (intr->st->options.prntDbg)
-	prntTokens(intr->stream, intr->streamLength);
-
 }
 
 void interpret(char* string,unsigned length,interpreter*intr)
@@ -456,10 +464,10 @@ tokenize(string, length, intr);
 intr->pending=intr->waitExprss | intr->waitLn | intr->litOp |\
 !(intr->listOp==0 && intr->blockOp==0 && intr->brackOp==0);
 
-if (intr->st->options.prntDbg)
-	printf("%d%d%d%d %d %d %d\n",intr->pending, intr->waitExprss, intr->waitLn,\
+//if (intr->st->options.prntDbg)
+/*	printf("%d%d%d%d %d %d %d\n",intr->pending, intr->waitExprss, intr->waitLn,\
 intr->litOp, intr->listOp, intr->blockOp, intr->brackOp);
-
+*/
 if (intr->pending)
 	return;
 

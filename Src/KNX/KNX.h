@@ -1,6 +1,8 @@
 #ifndef KNX_ENG
 #define KNX_ENG
 
+#define INTERPRETER_VERSON  "1.0.0"
+
 /*
 General Header File
 */
@@ -9,6 +11,6 @@ General Header File
 #include "Node.h"
 #include "State.h"
 #include "Interpreter.h"
-#include "BuiltIn.h"
+#include "Keywords.h"
 
 #endif

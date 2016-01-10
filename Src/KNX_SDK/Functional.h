@@ -5,6 +5,6 @@
 #include "Data.h"
 #include <stdarg.h>
 
-bool validParams(token*, unsigned, ...);
+bool validParams(unsigned, token*,...);
 
 #endif

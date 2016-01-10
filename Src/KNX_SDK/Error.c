@@ -48,42 +48,50 @@ void prntError(char*line, int code, settings opts)
 if (code<=0)
   return;
 
+if ((code<1000 && !opts.prntErr) || ((code>=1000 && code<2000) && !opts.prntWrn))
+  return;
+
 switch (code)
 {
 //Errors
-case ERR_NODE_XSPAWN: printc("Node failed to spawn\n",line,PRNT_ERR, code); break;
-case ERR_NODE_XDESTROY: printc("Node failed to deregister\n",line,PRNT_ERR, code); break;
-case ERR_NODE_EXIST: printc("Node does not exist\n",line,PRNT_ERR, code); break;
+case ERR_NODE_XSPAWN: printc("Node failed to spawn",line,PRNT_ERR, code); break;
+case ERR_NODE_XDESTROY: printc("Node failed to deregister",line,PRNT_ERR, code); break;
+case ERR_NODE_EXIST: printc("Node does not exist",line,PRNT_ERR, code); break;
+case ERR_REDEF_CMD: printc("Command line argument already defined",line,PRNT_ERR, code); break;
 
-case ERR_REALLOC: printc("Memory failed to reallocate\n",line,PRNT_ERR, code); break;
-case ERR_MALLOC: printc("Memory failed to allocate\n",line,PRNT_ERR, code); break;
-case ERR_STDIO_REALLOC: printc("Std IO buffer failed to reallocate\n",line,PRNT_ERR, code); break;
+case ERR_REALLOC: printc("Memory failed to reallocate",line,PRNT_ERR, code); break;
+case ERR_MALLOC: printc("Memory failed to allocate",line,PRNT_ERR, code); break;
+case ERR_STDIO_REALLOC: printc("Std IO buffer failed to reallocate",line,PRNT_ERR, code); break;
 
-case ERR_FILE_404: printc("File not found\n",line,PRNT_ERR, code); break;
-case ERR_FILE_DEL: printc("Could not delete file\n",line,PRNT_ERR, code); break;
-case ERR_FILE_CREATE: printc("Could not create file\n",line,PRNT_ERR, code); break;
-case ERR_FILE_WRITE: printc("Could not write to file\n",line,PRNT_ERR, code); break;
-case ERR_FILE_OPEN: printc("Could not open file\n",line,PRNT_ERR, code); break;
+case ERR_FILE_404: printc("File not found",line,PRNT_ERR, code); break;
+case ERR_FILE_DEL: printc("Could not delete file",line,PRNT_ERR, code); break;
+case ERR_FILE_CREATE: printc("Could not create file",line,PRNT_ERR, code); break;
+case ERR_FILE_WRITE: printc("Could not write to file",line,PRNT_ERR, code); break;
+case ERR_FILE_OPEN: printc("Could not open file",line,PRNT_ERR, code); break;
 
-case ERR_BLNK_CHR: printc("Cannot declare blank character\n",line,PRNT_ERR, code); break;
-case ERR_EXS_CHR: printc("Cannot use multiple characters in string\n",line,PRNT_ERR, code); break;
-case ERR_ILL_SYN: printc("Illegal syntax\n",line,PRNT_ERR, code); break;
-case ERR_ILL_ARG: printc("Illegal argument\n",line,PRNT_ERR, code); break;
-case ERR_SHRT_ARG: printc("Too few arguments\n",line,PRNT_ERR, code); break;
-case ERR_LNG_ARG: printc("Too many arguments\n",line,PRNT_ERR, code); break;
-case ERR_NEG_BRACK: printc("Unexpected bracket\n",line,PRNT_ERR, code); break;
-case ERR_NEG_BRACE: printc("Unexpected brace\n",line,PRNT_ERR, code); break;
-case ERR_NEG_PARANTH: printc("Unexpected paranthesis\n",line,PRNT_ERR, code); break;
+case ERR_BLNK_CHR: printc("Cannot declare blank character",line,PRNT_ERR, code); break;
+case ERR_EXS_CHR: printc("Cannot use multiple characters in string",line,PRNT_ERR, code); break;
+case ERR_ILL_SYN: printc("Illegal syntax",line,PRNT_ERR, code); break;
+case ERR_ILL_ARG: printc("Illegal argument",line,PRNT_ERR, code); break;
+case ERR_SHRT_ARG: printc("Too few arguments",line,PRNT_ERR, code); break;
+case ERR_LNG_ARG: printc("Too many arguments",line,PRNT_ERR, code); break;
+case ERR_NEG_BRACK: printc("Unexpected bracket",line,PRNT_ERR, code); break;
+case ERR_NEG_BRACE: printc("Unexpected brace",line,PRNT_ERR, code); break;
+case ERR_NEG_PARANTH: printc("Unexpected paranthesis",line,PRNT_ERR, code); break;
 
-case ERR_XMEMBER: printc("Member object does not exist\n",line,PRNT_ERR, code); break;
-case ERR_XOBJ: printc("Object does not exist\n",line,PRNT_ERR, code); break;
-case ERR_REDEF: printc("Object redefinition\n",line,PRNT_ERR, code); break;
-case ERR_ACC_DENIED: printc("Memory access denied\n",line,PRNT_ERR, code); break;
+case ERR_XMEMBER: printc("Member object does not exist",line,PRNT_ERR, code); break;
+case ERR_XOBJ: printc("Object does not exist",line,PRNT_ERR, code); break;
+case ERR_REDEF: printc("Object redefinition",line,PRNT_ERR, code); break;
+case ERR_ACC_DENIED: printc("Memory access denied",line,PRNT_ERR, code); break;
 
-case ERR_LIB_404: printc("Library not found\n",line,PRNT_ERR, code); break;
-case ERR_LIB_OPEN: printc("Could not open library\n",line,PRNT_ERR, code); break;
+case ERR_LIB_404: printc("Library not found",line,PRNT_ERR, code); break;
+case ERR_LIB_OPEN: printc("Could not open library",line,PRNT_ERR, code); break;
 
 //Warnings
+case WRN_BLNK_OPT:printc("No option value following identifier",line,PRNT_WRN, code); break;
+case WRN_UNDEF_OPT:printc("Unrecognized option value following identifier",line,PRNT_WRN, code); break;
+case WRN_INV_OPT:printc("Invalid option value following identifier",line,PRNT_WRN, code); break;
+
 case WRN_UNBOUND_STR: printc("Unbound string",line,PRNT_WRN, code); break;
 case WRN_UNBOUND_CHR: printc("Unbound character",line,PRNT_WRN, code); break;
 case WRN_NO_EFFECT: printc("Character has no effect",line,PRNT_WRN, code); break;

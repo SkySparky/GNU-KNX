@@ -12,8 +12,10 @@ ret->options.prntWrn=1;
 ret->options.prntErr=1;
 ret->options.prntSys=1;
 ret->options.prntEcho=1;
-ret->options.prntDbg=1;
+ret->options.prntDbg=0;
 ret->options.tabAssist=1;
+ret->options.dbgLog=0;
+ret->tabSize=4;
 ret->maxNodes=SYSTEM_MAX_NODES;
 ret->stdin_hndle=NULL;
 ret->sizeLevel=0;
@@ -36,13 +38,13 @@ node*curr = nodeGen();
 if (curr==NULL)
 	return NULL;
 
-printf("M1\n");
 //assign handle
 bool validID=false;
 unsigned idIndex=0;
 for (;idIndex<st->maxNodes && idIndex<st->registered && !validID; ++idIndex)
 {
-	printf(">> %u %u\n", idIndex, st->registered);
+	if (st->options.prntDbg)
+		printf(">> %u %u\n", idIndex, st->registered);
 	validID=true;
 	if (primeList[idIndex]==st->registrar[idIndex]->nb.handle)
 		{

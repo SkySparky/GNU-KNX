@@ -25,6 +25,7 @@ Sets up important macros
 	#endif
 #endif
 
+#define SDK_VERSION "1.0.0"
 
 //system interrupt
 #define INTERRUPT	0x7

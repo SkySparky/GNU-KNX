@@ -1,7 +1,7 @@
 #include "Functional.h"
 
 //verify input parameters are correct
-bool validParams(token*stream, unsigned len, ...)
+bool validParams(unsigned len,token*stream, ...)
 {
 
 flag decoy;
@@ -20,12 +20,3 @@ va_end(lstPtr);
 
 return true;
 }
-
-/*
-int i;
-  va_list al;
-  va_start(al,num_count);
-  for(i=1;i<=num_count;i++){
-     int val=va_arg(al,int);
-     printf("%d ",val);
-*/

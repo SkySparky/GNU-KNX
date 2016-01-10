@@ -18,6 +18,7 @@ Defines error codes and implements the error printout function
 #define ERR_NODE_XSPAWN   1//fail to create node
 #define ERR_NODE_XDESTROY 2//fail to destroy node
 #define ERR_NODE_EXIST    3//node doesnt exist
+#define ERR_REDEF_CMD     4//CMD argument already defined
   //Memory 16-25
 #define ERR_REALLOC       16//realloc fail
 #define ERR_MALLOC        17//malloc fail
@@ -49,8 +50,10 @@ Defines error codes and implements the error printout function
 #define ERR_LIB_OPEN      122//failed to open library
 
 //Warnings 1000-1999
-//General 1001-1099
-
+//General 1000-1099
+#define WRN_BLNK_OPT      1000//no option value after identifier
+#define WRN_UNDEF_OPT     1001//option not recognized
+#define WRN_INV_OPT       1002//invalid option input
 //File 1100-1199
 
 //Parser 1200-1299

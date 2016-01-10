@@ -110,6 +110,7 @@ for (unsigned x=0; x<length; ++x)
 		printf("NA");
 		break;
 	}
-	printf("]\n");
+	printf(" %hu]", target[x]->order);
 }
+printf("\n");
 }

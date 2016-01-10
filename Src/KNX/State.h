@@ -35,6 +35,8 @@ database * global;//global database
 
 //constraints
 unsigned maxNodes;
+unsigned maxMemory;//implement
+unsigned tabSize;
 
 }state;
 

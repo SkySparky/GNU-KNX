@@ -7,8 +7,7 @@ node*nodeGen()
 {
 node*ret = (node*) malloc(sizeof(node));
 //construct super class
-if (!setupBaseNode(&ret->nb))
-	printf("Fail\n");
+setupBaseNode(&ret->nb);
 return ret;
 };
 
@@ -16,18 +15,27 @@ int nodeProc(state*sys, node*parent, char*cmd)
 {
 //validate node
 node*current=validateNode(sys,parent);
-if (sys->options.prntSys)
+if (sys->options.prntDbg)
 {
-	if (current!=NULL)
+	if (current!=NULL && sys->options.prntSys)
 		printf("Node %u registered\n",current->nb.handle);
 	else
 	{
-		printf("Registration failed\n");
+		if (sys->options.prntSys)
+			printf("Registration failed\n");
 		return -1;
 	}
 }
 
-printRegistrar(sys);
+//process cmd
+if (cmd!=NULL)
+{
+//free memory
+free (cmd);
+}
+
+if (sys->options.prntDbg)
+	printRegistrar(sys);
 interpreter*intr = genInterpreter(sys,current);
 if (intr==NULL)
 	{
@@ -40,7 +48,6 @@ unsigned length = 0, maxLength=10;
 char * string = malloc (10);
 string[0]='\0';
 
-printf("%u\n",current->nb.active);
 while (current->nb.active)
 {
 if (sys->stdin_hndle==current)
@@ -50,8 +57,8 @@ if (sys->stdin_hndle==current)
 	printf("@%u >> ",current->nb.handle);
 	activeReading=true;
 	if (intr->st->options.tabAssist)
-		for (unsigned x=0; x<intr->blockOp; ++x)
-			printf("   ");
+		for (unsigned x=0; x<intr->blockOp*intr->st->tabSize; ++x)
+			printf(" ");
 	}
 int chr = fgetc(stdin);
 //update buffer
