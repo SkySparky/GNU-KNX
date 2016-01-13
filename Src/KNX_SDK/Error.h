@@ -39,6 +39,9 @@ Defines error codes and implements the error printout function
 #define ERR_NEG_BRACK     42//Unexpected ]
 #define ERR_NEG_BRACE     43//}
 #define ERR_NEG_PARANTH   44//)
+#define ERR_MSMTCH_PAR    45//
+#define ERR_MSMTCH_BRK    46
+#define ERR_MSMTCH_BRC    47
 //Data  101-120
 #define ERR_XMEMBER       101//has no member
 #define ERR_XOBJ          102//no such object

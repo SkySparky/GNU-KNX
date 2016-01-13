@@ -50,12 +50,20 @@ _oFlag=110
 #define _isIntegral(code)(code>=_mInt && code<=_mDbl)
 #define _isData(code)(code>=_mInt && code<=_mVoid)
 #define _isLexile(code)(code>=_sOpParanth && code<=_sMember)
+#define _isEncap(code)(code>=_sOpParanth && code <=_sClBrace)
 #define _isLogic(code)(code>=_lAnd && code<=_lXor)
 #define _isComparison(code)(code>=_cEqu && code<=_cGtrEqu)
 #define _isMath(code)(code>=_aAdd && code<=_aMod)
 #define _isAssignment(code)(code>=_eSet && code<=_eMod)
 #define _isKeyword(code)(code>=_kExit && code<=_kVoid)
 #define _isOther(code)(code>=_oFlag && code<=_oFlag)
+
+#define _isOpenEncap(code)(code==_sOpParanth || code==_sOpBrack || code==_sOpBrace)
+#define _isCloseEncap(code)(code==_sClParanth || code==_sClBrack || code==_sClBrace)
+
+#define _isEnCapComp(code1, code2)(_isOpenEncap(code1) && code1+1==code2)
+//functions, assignments, keywords
+#define _isActable(code)(_isKeyword(code) || _mFunction || _isAssignment(code))
 
 //Flag definitions
 typedef unsigned int flag;//26 bits used for a-z
@@ -65,6 +73,8 @@ flag setFlag(flag, char*);
 typedef struct token
 {
 //TODO
+struct token*next;
+struct token*prev;
 tCode type;
 void*data;
 bool raw;
@@ -72,9 +82,12 @@ flag flg;
 unsigned short order;//encapsulation level
 }token;
 
+
 token*genToken(token*);
 
 void freeToken(token*);//add specific memory deletions for raw values
+void freeStrand(token*);
+token*getTail(token*);
 
 typedef struct
 {
@@ -88,6 +101,10 @@ typedef struct
   bool tabAssist:1;
   bool dbgLog:1;
 }settings;
+
+//define library API
+#define KNX_API_RETURN  token*
+#define KNX_API_PARAM   token*, interpreter*intr
 
 
 #endif

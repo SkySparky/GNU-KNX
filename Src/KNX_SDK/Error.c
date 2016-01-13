@@ -78,6 +78,9 @@ case ERR_LNG_ARG: printc("Too many arguments",line,PRNT_ERR, code); break;
 case ERR_NEG_BRACK: printc("Unexpected bracket",line,PRNT_ERR, code); break;
 case ERR_NEG_BRACE: printc("Unexpected brace",line,PRNT_ERR, code); break;
 case ERR_NEG_PARANTH: printc("Unexpected paranthesis",line,PRNT_ERR, code); break;
+case ERR_MSMTCH_PAR: printc("Mismatch encapsulation with Paranthesis",line,PRNT_ERR, code); break;
+case ERR_MSMTCH_BRK: printc("Mismatch encapsulation with Bracket",line,PRNT_ERR, code); break;
+case ERR_MSMTCH_BRC: printc("Mismatch encapsulation with Brace",line,PRNT_ERR, code); break;
 
 case ERR_XMEMBER: printc("Member object does not exist",line,PRNT_ERR, code); break;
 case ERR_XOBJ: printc("Object does not exist",line,PRNT_ERR, code); break;

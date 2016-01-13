@@ -3,9 +3,10 @@
 
 #include "NodeSuper.h"
 #include "Data.h"
+#include "XMem.h"
 
-void prntMemory();//print all memory in pushed scope
+void prntMemory(database*);//print all memory in pushed scope
 void prntTree(baseNode*);//print node tree from pushed value
-void prntTokens(token**, unsigned);
+void prntTokens(token*);
 
 #endif

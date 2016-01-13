@@ -1,6 +1,6 @@
 #include "Debug.h"
 
-void prntMemory()
+void prntMemory(database*db)
 {
 
 }
@@ -25,17 +25,14 @@ if (target==NULL)
 _prntTree(target,0);
 }
 
-void prntTokens(token**target, unsigned length)
+void prntTokens(token*target)
 {
-if (target==NULL)
-	return;
-unsigned cnt=0;
-for (unsigned x=0; x<length; ++x)
+while (target!=NULL)
 {
 	printf("[");
-	if (target[x]->raw)
+	if (target->raw)
 		printf("r");
-	switch (target[x]->type)
+	switch (target->type)
 	{
 		case _mShort:printf("SHORT");break;
 		case _mInt:printf("INT");break;
@@ -110,7 +107,8 @@ for (unsigned x=0; x<length; ++x)
 		printf("NA");
 		break;
 	}
-	printf(" %hu]", target[x]->order);
+	printf(" %hu]", target->order);
+	target=target->next;
 }
 printf("\n");
 }

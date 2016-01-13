@@ -29,8 +29,8 @@ ret->local->numObjects=0;
 
 ret->buffSize=0;
 ret->buffer=malloc(0);
-ret->streamLength=0;
-ret->stream=malloc(sizeof(token)*10);
+ret->head=NULL;
+ret->current=NULL;
 
 return ret;
 }
@@ -44,11 +44,18 @@ intr->litOp=false;
 intr->listOp=0;
 intr->blockOp=0;
 
-for (unsigned x=0; x<intr->streamLength; ++x)
-	freeToken(intr->stream[x]);
-if (intr->streamLength>10)
-	intr->stream=realloc(intr->stream,10);
-intr->streamLength=0;
+//destroy current list
+if (intr->head==NULL)
+	return;
+
+token*curr=intr->head;
+do{
+	token*next=curr->next;
+	freeToken(curr);
+	curr=next;
+}while(curr!=NULL);
+
+intr->head=NULL;
 }
 
 char getEscape(char input)
@@ -68,31 +75,21 @@ return input;
 
 bool addToken(interpreter*intr, void*data, tCode type, bool raw)
 {
-//resize if necessary
-if (intr->streamLength%10==0 && intr->streamLength>0)
-	{
-		token**tmpBuf=realloc(intr->stream, sizeof(token)*(intr->streamLength+10));
-		if (tmpBuf==NULL)
-			return false;
-		intr->stream=tmpBuf;
-		intr->streamLength+=10;
-	}
-
 token*tk=malloc(sizeof(token));
 tk->data=data;
 tk->type=type;
 tk->raw=raw;
 tk->order=intr->listOp+intr->blockOp+intr->brackOp;
-
-if (tk==NULL)
-	{
-		if (intr->st->options.prntDbg)
-			printf("Malloc fail\n");
-		return false;
-	}
-
-intr->stream[intr->streamLength++]=tk;
-
+tk->next=NULL;
+tk->prev=intr->current;
+if (intr->head==NULL)
+{
+	intr->head=tk;
+	intr->current=tk;
+}else{
+	intr->current->next=tk;
+	intr->current=tk;
+}
 return true;
 }
 
@@ -138,7 +135,7 @@ long long unsigned hash = FNV_1a(string);
 //check for keyword
 if ((type=keycode(hash))!=0)
 	goto build;
-printf("No Keyword\n");
+//printf("No Keyword\n");
 build:;
 
 free(string);
@@ -226,6 +223,7 @@ for (unsigned x=0; x<=length; ++x)
 					}else
 					{
 					//pend next line
+					intr->waitLn=true;
 					}
 				}
 				else if (string[x]=='\"')

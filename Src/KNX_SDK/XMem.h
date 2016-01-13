@@ -37,6 +37,13 @@ object**memory;
 unsigned numObjects;
 }database;
 
+
+//System Data
+typedef struct
+{
+
+}module;
+
 database*genDatabase();
 void freeDatabase(database*);
 object*_getObject(database*, unsigned long long);

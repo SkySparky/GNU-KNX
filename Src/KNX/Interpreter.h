@@ -35,19 +35,11 @@ char*buffer;//block buffer
 unsigned buffSize;
 //tokenized sequence
 //Persists until cleared or executed
-token**stream;
-unsigned streamLength;
-
+token*head;
+token*current;
 }interpreter;
 
 interpreter*genInterpreter(_state_ *,_node_ *);
-
-//simply allows multiple returns from the execute function
-typedef struct
-{
-token**substream;
-unsigned length;
-} tokenList;
 
 //raw input, input length, system state, current node, interpreter instance
 void interpret(char*,unsigned,interpreter*);

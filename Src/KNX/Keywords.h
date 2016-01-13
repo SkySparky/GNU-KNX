@@ -76,4 +76,6 @@ static unsigned long long keyList[DEF_KEYWORDS] = {
 
 tCode keycode(long long unsigned hash);
 
+void _int_exit(token*retCode);
+
 #endif

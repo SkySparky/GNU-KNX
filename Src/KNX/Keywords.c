@@ -21,3 +21,23 @@ tCode keycode(long long unsigned hash)
     }
   return tc;
 }
+
+//Built in functions
+//replace with safe-shutdown method
+void _int_exit(token*retCode)
+{
+if (retCode==NULL)
+{
+  printf("Exiting with return code 0\n");
+  exit(0);
+
+  if (_isNumeric(retCode->type))
+  {
+    if (_isIntegral(retCode->type))
+    {
+      printf("Exiting with return code %d\n", *(int*)retCode->data);
+      exit(*(int*)retCode->data);
+    }
+  }
+  }
+}

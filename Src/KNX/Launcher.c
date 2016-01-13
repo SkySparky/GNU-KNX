@@ -7,6 +7,22 @@
 
 #define TEST false
 
+void printHelp()
+{
+printf("-w : Suppress warnings\n");
+printf("-e : Suppress errors\n");
+printf("-s : Suppress system printouts\n");
+printf("-r : Suppress echo\n");
+printf("-d : Enable debug printouts\n");
+printf("-t : Disable tab assist\n");
+printf("-v : Display Engine and SDK version\n");
+printf("-l : Record debug log\n");
+printf("-x : Prevent interpreter from executing\n");
+printf("--maxnodes=[num] : Set maximum allowed nodes\n");
+printf("--tabsize=[num] : Set spacing size of tab for tab assist\n");
+printf("\n");
+}
+
 //determine initial/default settings
 //return command to node if found
 //exits with code -1 if multiple -c options specified
@@ -79,6 +95,7 @@ for (unsigned x=1; x<argc; ++x)
 					case 'v': printf("%s : %s \n", INTERPRETER_VERSON, SDK_VERSION);break;
 					case 'l': sts->options.dbgLog=0;break;
 					case 'x': cnt=false; break;
+					case 'h': printHelp(); break;
 					default:
 					prntError(argv[x], WRN_UNDEF_OPT, sts->options);
 					break;
