@@ -1,5 +1,7 @@
 #include "Interpreter.h"
 
+
+
 token*runFunction(token*args,interpreter*intr)
 {
 
@@ -51,76 +53,8 @@ void splice(token*LP1, token*LP2, token*LP3)
 
 token*recExecute(interpreter*intr, token*start)
 {
-  if (start==NULL)
-    return NULL;
-
-  token * current=start;
-  tCode boundType=0;
-  unsigned logReg=-1;//-1 (no data) 0 (false) 1 (true)
-  token * strand=NULL;
-
-  if (intr->st->options.prntDbg)
-  {
-    printf("Enter lvl %d : ", start->order);
-    prntTokens(start);
-  }
-
-  //break up heirarchies
-  while(current!=NULL){
-    if (_isActable(current->type))
-    {
-      token * retval=NULL;
-      //check for argument
-      if (current->next!=NULL){
-        if (_isOpenEncap(current->next->type)){//determine aggregation type
-          if (current->next->type==_sOpParanth)//parameter list
-          {
-            token *cut2=current->next->next;
-            while (cut2->next!=NULL)
-              if (cut2->type==_sClParanth && cut2->order==current->order)
-                break;
-              else
-                cut2=cut2->next;
-
-            retval=runFunction(isolate(current->next,cut2), intr);
-          }else if (current->next->type==_sOpBrack)//index
-          {
-
-          }else if (current->next->type==_sOpBrace)//body override
-          {
-
-          }else
-          {
-
-          }
-        }else
-        {
-          token*c2=current->next->next;
-          retval=isolate(current, c2);
-          retval=runFunction(retval,intr);
-        }
-        }
-    }else if (_isEncap(current->type))
-    {
-
-    }
-
-    current=current->next;
-  }
-
-  if (intr->st->options.prntDbg)
-  {
-    printf("Exit lvl %d : ", start->order);
-    prntTokens(start);
-  }
-
-  //process data
-  token * retVal = NULL;
-
-  //free stream memory
-  freeStrand(start);
-
-  return retVal;
+ 
+  return NULL;
 }
 
 void execute(interpreter* intr)
@@ -128,8 +62,10 @@ void execute(interpreter* intr)
 
 if (intr->st->options.prntDbg)
 	prntTokens(intr->head);
-//free tokens
+	
 
+	
+//free tokens
 freeStrand(recExecute(intr,intr->head));
 
 }

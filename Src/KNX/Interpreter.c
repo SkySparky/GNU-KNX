@@ -163,6 +163,8 @@ for (unsigned x=0; x<=length; ++x)
 	{
 		if (readMode==4)
 		{
+			//check if previous token exists and is valid
+			
 			flag*flg = malloc (sizeof(flag));
 			*flg = setFlag(0,string+lIndex);
 			addToken(intr, (void*)flg, _oFlag, true);
@@ -448,7 +450,7 @@ for (unsigned x=0; x<=length; ++x)
 void interpret(char* string,unsigned length,interpreter*intr)
 {
 //ensure string size
-if (length==0)
+if (length==0)//auto size check
 	length=strlen(string);
 if (length==0)
 	return;

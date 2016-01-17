@@ -7,6 +7,10 @@
 
 #define TEST false
 
+#ifdef _WIN32
+	#include <windows.h>
+#endif
+
 void printHelp()
 {
 printf("-w : Suppress warnings\n");
@@ -147,3 +151,16 @@ freeState(sys);
 
 return 0;
 }
+
+#ifdef _WIN32
+int CALLBACK WinMain(
+  _In_ HINSTANCE hInstance,
+  _In_ HINSTANCE hPrevInstance,
+  _In_ LPSTR     lpCmdLine,
+  _In_ int       nCmdShow
+)
+{
+	
+	return 0;
+}
+#endif

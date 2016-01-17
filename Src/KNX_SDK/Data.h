@@ -4,7 +4,7 @@
 #include "Defs.h"
 
 /*
-Defines bytecode format and protocol
+	Defines bytecode format and protocol
 for DLL linkage
 
 These are the structures used in importable
