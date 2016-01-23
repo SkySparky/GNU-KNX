@@ -6,11 +6,11 @@ void (*callback)()=NULL;
 
 void register_function(void(*fnc)())
 {
-  callback=fnc();
+  callback=fnc;
 }
 
 void _display(void)
 {
-  callback();
+  //callback();
   printf("Shared Library Test\n");
 }

@@ -25,7 +25,7 @@ ar rcs libKNX_SDK.a %OBJL%
 cd ..
 if errorLevel 1 goto houston
 cd KNX
-gcc -Wall -static %SRCF% ../KNX_SDK/libKNX_SDK.a -o ../../bin/KNX %COMP_LEVEL% %COMP_IGNORE% %ENVO_DECL% -ldl
+gcc -Wall -static %SRCF% ../KNX_SDK/libKNX_SDK.a -o ../../_bin/KNX %COMP_LEVEL% %COMP_IGNORE% %ENVO_DECL% -ldl
 
 cd..
 if errorLevel 1 goto houston
