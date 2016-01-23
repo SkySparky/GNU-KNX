@@ -1,0 +1,2 @@
+Make comprehensive validity check in parser so no syntax errors make it to the
+execute function

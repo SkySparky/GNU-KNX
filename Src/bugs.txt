@@ -1,0 +1,1 @@
+Using arrow keys in terminal and then typing will prevent inputs from being read

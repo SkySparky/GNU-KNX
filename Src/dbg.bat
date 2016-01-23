@@ -1,1 +1,1 @@
-%~dp0KNX\KNX.exe -d
+..\bin\KNX.exe -d

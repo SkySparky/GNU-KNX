@@ -5,11 +5,15 @@
 
 #include "KNX.h"
 
-#define TEST false
+#define TEST true
 
 #ifdef _WIN32
 	#include <windows.h>
 #endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <dlfcn.h>
 
 void printHelp()
 {
@@ -129,7 +133,29 @@ int main(int argc, char**argv)
 {
 if (TEST)
 {
-printf("%u\n",setFlag(0,"aABC\0"));
+		printf("Test\n");
+		void *handle;
+    char *error;
+		void (*fnc)(void)=NULL;
+    handle = dlopen ("std/KNX_IO.so", RTLD_LAZY);
+    if (!handle) {
+        fprintf (stderr, "%s\n", dlerror());
+        exit(1);
+    }
+		printf("Didn't fail apparently\n");
+    dlerror();    /* Clear any existing error */
+    fnc=dlsym(handle, "_display");
+
+		//fnc();
+
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s\n", error);
+        exit(1);
+    }
+    //printf ("%f\n", (*cosine)(2.0));
+		fnc();
+
+    dlclose(handle);
 return 0;
 }
 
@@ -151,16 +177,3 @@ freeState(sys);
 
 return 0;
 }
-
-#ifdef _WIN32
-int CALLBACK WinMain(
-  _In_ HINSTANCE hInstance,
-  _In_ HINSTANCE hPrevInstance,
-  _In_ LPSTR     lpCmdLine,
-  _In_ int       nCmdShow
-)
-{
-	
-	return 0;
-}
-#endif

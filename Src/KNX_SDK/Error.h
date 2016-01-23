@@ -42,6 +42,8 @@ Defines error codes and implements the error printout function
 #define ERR_MSMTCH_PAR    45//
 #define ERR_MSMTCH_BRK    46
 #define ERR_MSMTCH_BRC    47
+#define ERR_MSS_FLG_TARG  48//no left hand side for ~[x] operator
+#define ERR_INV_FLG_TARG  49//left hand token is of an invalid format
 //Data  101-120
 #define ERR_XMEMBER       101//has no member
 #define ERR_XOBJ          102//no such object

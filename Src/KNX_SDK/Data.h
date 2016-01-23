@@ -12,6 +12,7 @@ modules
 */
 
 typedef enum {
+_dNa=0,//unidentified
 //Memory
 _mInt=1, _mShort, _mLong,//int, short, long long
 _mDbl,//double
@@ -57,6 +58,7 @@ _oFlag=110
 #define _isAssignment(code)(code>=_eSet && code<=_eMod)
 #define _isKeyword(code)(code>=_kExit && code<=_kVoid)
 #define _isOther(code)(code>=_oFlag && code<=_oFlag)
+#define _isFlaggable(code)(_isData(code) || _isCloseEncap(code) || code==_dNa)//end caps transfer properties to calling functions, if any
 
 #define _isOpenEncap(code)(code==_sOpParanth || code==_sOpBrack || code==_sOpBrace)
 #define _isCloseEncap(code)(code==_sClParanth || code==_sClBrack || code==_sClBrace)

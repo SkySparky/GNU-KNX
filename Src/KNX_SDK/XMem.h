@@ -28,11 +28,23 @@ typedef struct
   unsigned numMembers;
 }_struct_;
 
+//define module functions
+/*
+typedef struct exFnc
+{
+
+
+
+};
+*/
+
 object*genObject(tCode, char*name);
 bool freeObject(object*);
 
 typedef struct
 {
+
+
 object**memory;
 unsigned numObjects;
 }database;

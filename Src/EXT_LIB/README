@@ -1,3 +1,0 @@
-This directory holds non-official libraries, such as custom builds. Make note that libraries in this directory
-are scanned following the STD_LIB directory. Thus, any libraries existing in this folder that share the same
-name as another in the standard path will be ignored, unless explicitly requested.

@@ -6,6 +6,7 @@ setlocal
 set COMP_LEVEL=-std=c11
 set COMP_IGNORE=-Wno-unused-variable
 set COMP_MODE=-m64
+set STDLIB_PATH=STD_LIB\
 
 rem Engine files
 set SRCF=Launcher.c Node.c State.c Interpreter.c Execute.c Keywords.c
@@ -24,8 +25,8 @@ ar rcs libKNX_SDK.a %OBJL%
 cd ..
 if errorLevel 1 goto houston
 cd KNX
-gcc -Wall -static %SRCF% ../KNX_SDK/libKNX_SDK.a -o KNX %COMP_LEVEL% %COMP_IGNORE% %ENVO_DECL%
-rem gcc %OBJF% -o KNX
+gcc -Wall -static %SRCF% ../KNX_SDK/libKNX_SDK.a -o ../../bin/KNX %COMP_LEVEL% %COMP_IGNORE% %ENVO_DECL% -ldl
+
 cd..
 if errorLevel 1 goto houston
 goto success

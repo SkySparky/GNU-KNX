@@ -39,6 +39,7 @@ switch (target->type)
 	case _mBool: free((bool*)target->data); break;
 	case _mChar: free((char*)target->data); break;
 	case _mStr: free((char*)target->data); break;
+	case _dNa : free((char*)target->data);break;
 	case _mStruct:
 	//collapse structure
 	break;

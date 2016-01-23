@@ -100,7 +100,7 @@ char*string=malloc(length+1);
 strncpy(string,input,length);
 string[length]='\0';
 void*data=NULL;
-tCode type=0;
+tCode type=_dNa;
 bool raw=true;
 
 switch (isNumeric(string, length))
@@ -136,6 +136,11 @@ long long unsigned hash = FNV_1a(string);
 if ((type=keycode(hash))!=0)
 	goto build;
 //printf("No Keyword\n");
+
+
+//no id found
+data=malloc(length+1);
+strncpy(data,input,length);
 build:;
 
 free(string);
@@ -147,7 +152,7 @@ void tokenize(char* string,unsigned length,interpreter*intr)
 
 unsigned lIndex=0;
 
-//0=normal, 1=string, 2=comment, 3=character, 4=flag
+//0=normal, 1=string, 2=comment, 3=character
 unsigned readMode=0;
 
 //check pending states
@@ -161,14 +166,6 @@ for (unsigned x=0; x<=length; ++x)
 //ending value
 	if (x==length)
 	{
-		if (readMode==4)
-		{
-			//check if previous token exists and is valid
-			
-			flag*flg = malloc (sizeof(flag));
-			*flg = setFlag(0,string+lIndex);
-			addToken(intr, (void*)flg, _oFlag, true);
-		}
 		if (readMode==3)
 			{
 				prntError(string, WRN_UNBOUND_STR, intr->st->options);
@@ -261,20 +258,6 @@ for (unsigned x=0; x<=length; ++x)
 			readMode=0;
 			lIndex=x+1;
 			}
-		}else if (readMode==4)
-		{
-			if ((string[x+1]<'a' && string[x+1]>'z') || (string[x+1]<'A' && string[x+1]>'Z'))
-				{
-					char*tmp=malloc((x-lIndex)+1);
-					strncpy(tmp,string+lIndex, x-lIndex);
-					tmp[x-lIndex]='\0';
-					flag*flg=malloc(sizeof(flag));
-					*flg=setFlag(0,tmp);
-					addToken(intr,(void*)flg,_oFlag, true);
-					free(tmp);
-					readMode=0;
-				}
-			lIndex=x+1;
 		}
 	else if (isOp(string[x])){
 		if (x!=lIndex)
@@ -435,11 +418,20 @@ for (unsigned x=0; x<=length; ++x)
 		else
 				prntError(string, WRN_NO_EFFECT,intr->st->options);
 		break;
-		case '~':readMode=4;
+		case '~'://token must be character and is CASE SENSITIVE
 		if ((string[x+1]<'a' && string[x+1]>'z') || (string[x+1]<'A' && string[x+1]>'Z'))
 			prntError(string, WRN_INV_FLAG, intr->st->options);
 		else
-			readMode=4;
+		{
+			printf("Setting flag\n");
+			if (intr->current==NULL)
+				prntError(string, ERR_MSS_FLG_TARG, intr->st->options);
+			else if (!_isFlaggable(intr->current->type))
+				prntError(string, ERR_INV_FLG_TARG, intr->st->options);
+			else
+				intr->current->flg=setFlag(intr->current->flg,&string[x+1]);
+			++x;
+		}
 		break;
 		}
 		lIndex=x+1;
@@ -459,7 +451,7 @@ if (length==0)
 intr->waitExprss=false;
 
 tokenize(string, length, intr);
-
+printf("Done.\n");
 //determine whether or not to continue waiting
 intr->pending=intr->waitExprss | intr->waitLn | intr->litOp |\
 !(intr->listOp==0 && intr->blockOp==0 && intr->brackOp==0);
