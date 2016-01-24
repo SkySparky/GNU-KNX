@@ -20,7 +20,7 @@ typedef struct node
 baseNode nb;
 } node;
 
-node*nodeGen();
+node*nodeGen(database*);
 
 //Node message loop
 //parent, command, global databases

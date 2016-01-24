@@ -3,11 +3,11 @@
 #include "KNX.h"
 #include "Node.h"
 
-node*nodeGen()
+node*nodeGen(database*db)
 {
 node*ret = (node*) malloc(sizeof(node));
 //construct super class
-setupBaseNode(&ret->nb);
+setupBaseNode(&ret->nb,NULL);
 return ret;
 };
 

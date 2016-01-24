@@ -9,8 +9,16 @@ void register_function(void(*fnc)())
   callback=fnc;
 }
 
-void _display(void)
+extern void _test_(token*param, baseNode*bn,settings opts)
+{
+  printf("SUCCESS ()\n");
+}
+
+KNX_API_RETURN _display(token*data, baseNode*intr, settings opts)
 {
   //callback();
-  printf("Shared Library Test\n");
+  //data->flg=20;
+  //printf("Shared Library Test : %d : %s \n", data->flg,data->data);
+  printf("XXXXX\n");
+  return NULL;
 }

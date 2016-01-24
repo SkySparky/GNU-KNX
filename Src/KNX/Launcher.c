@@ -131,34 +131,6 @@ return ret;
 
 int main(int argc, char**argv)
 {
-if (TEST)
-{
-		printf("Test\n");
-		void *handle;
-    char *error;
-		void (*fnc)(void)=NULL;
-    handle = dlopen ("std/KNX_IO.so", RTLD_LAZY);
-    if (!handle) {
-        fprintf (stderr, "%s\n", dlerror());
-        exit(1);
-    }
-		printf("Didn't fail apparently\n");
-    dlerror();    /* Clear any existing error */
-    fnc=dlsym(handle, "_display");
-
-		//fnc();
-
-    if ((error = dlerror()) != NULL)  {
-        fprintf (stderr, "%s\n", error);
-        exit(1);
-    }
-    //printf ("%f\n", (*cosine)(2.0));
-		fnc();
-
-    dlclose(handle);
-return 0;
-}
-
 state*sys=genState();
 
 if (sys->options.prntDbg)
@@ -168,6 +140,20 @@ if (sys->options.prntDbg)
 	if (PLATFORM==PLATFORM_LINUX)
 		printf("%d bit linux\n", BITMODE);
 	printf("%d\n",sys->registered);
+}
+
+if (TEST)
+{
+		printf("#####################Test#####################\n");
+		printf("%d\n", loadLibrary("std/KNX_IO", sys->global, sys->options));
+		token*param=genToken(NULL);
+		param->type=_mStr;
+		param->raw=true;
+		param->data=malloc(20);
+		strncpy(param->data,"Hello World\0",12);
+		baseNode*bn=genBaseNode((_nsDb*)sys->global);
+		token * ret = invokeEx(param,bn,sys->options,FNV_1a("_display"),sys->global);
+return 0;
 }
 
 //jump into node0 without creating new thread

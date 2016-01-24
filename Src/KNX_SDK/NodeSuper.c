@@ -1,39 +1,44 @@
 #include "NodeSuper.h"
 
 #include <stdlib.h>
+#include "XMem.h"
 
-typedef struct baseNode _bNode;
-
-_bNode*genBaseNode()
+baseNode*genBaseNode(_nsDb*db)
 {
-_bNode*curr = malloc (sizeof(_bNode));
+baseNode*curr = malloc (sizeof(baseNode));
 
 if (curr==NULL)
 	return NULL;
 
 curr->parent=NULL;
-curr->children=(_bNode**)malloc(0);
+curr->children=(baseNode**)malloc(0);
 curr->numChildren=0;
 curr->handle=0;
 curr->active=true;
 curr->prntErr=true;
 curr->prntWrn=true;
 
+curr->local=malloc(sizeof(database));
+curr->global=db;
+
 return curr;
 }
 
-bool setupBaseNode(_bNode*curr)
+bool setupBaseNode(baseNode*curr,_nsDb*db)
 {
 if (curr==NULL)
 	return false;
 
 curr->parent=NULL;
-curr->children=(_bNode**)malloc(0);
+curr->children=(baseNode**)malloc(0);
 curr->numChildren=0;
 curr->handle=0;
 curr->active=true;
 curr->prntErr=true;
 curr->prntWrn=true;
+
+curr->local=malloc(sizeof(database));
+curr->global=db;
 
 return true;
 }

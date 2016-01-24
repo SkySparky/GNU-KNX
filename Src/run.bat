@@ -1,1 +1,3 @@
-..\_bin\KNX.exe
+cd ..\_bin
+KNX.exe
+cd ..\Src

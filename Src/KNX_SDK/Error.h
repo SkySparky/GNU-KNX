@@ -19,6 +19,8 @@ Defines error codes and implements the error printout function
 #define ERR_NODE_XDESTROY 2//fail to destroy node
 #define ERR_NODE_EXIST    3//node doesnt exist
 #define ERR_REDEF_CMD     4//CMD argument already defined
+#define ERR_EXT_IMP_FAIL  5//externally defined function import failure
+#define ERR_EXT_LIB_FAIL  6//external library import fail
   //Memory 16-25
 #define ERR_REALLOC       16//realloc fail
 #define ERR_MALLOC        17//malloc fail

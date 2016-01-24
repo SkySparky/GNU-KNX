@@ -34,7 +34,7 @@ node* validateNode(state*st,node*parent)
 if (st==NULL || (st->registered==st->maxNodes))
 	return NULL;
 
-node*curr = nodeGen();
+node*curr = nodeGen(st->global);
 if (curr==NULL)
 	return NULL;
 

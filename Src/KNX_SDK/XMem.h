@@ -2,6 +2,11 @@
 #define KNX_SDK_MEM
 
 #include "Data.h"
+#include <dlfcn.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef KNX_API_RETURN (*exLibPtr)(KNX_API_PARAM);
 
 typedef struct
 {
@@ -28,33 +33,32 @@ typedef struct
   unsigned numMembers;
 }_struct_;
 
-//define module functions
-/*
-typedef struct exFnc
-{
-
-
-
-};
-*/
-
 object*genObject(tCode, char*name);
 bool freeObject(object*);
 
+//DLL/so function library handle
 typedef struct
 {
+char*moduleName;
+exLibPtr * function;
+unsigned long long * fHash;
+unsigned numFunction;
+void*handle;//close on exit or unloading all references, NOT at end of loading
+}module;
 
+//store modules
+typedef struct
+{
+module*modList;
+unsigned numModules;
+}exModule;
 
+typedef struct database
+{
+exModule mLib;
 object**memory;
 unsigned numObjects;
 }database;
-
-
-//System Data
-typedef struct
-{
-
-}module;
 
 database*genDatabase();
 void freeDatabase(database*);
@@ -62,5 +66,10 @@ object*_getObject(database*, unsigned long long);
 object*getObject(database*, char*);
 bool addObject(database*, object*);
 bool delObject(database*, object*);
+int loadLibrary(char*, database*, settings);
+void freeLibrary(exModule*);
+void freeModule(module*);
+
+KNX_API_RETURN invokeEx(KNX_API_PARAM, long long unsigned, database*);
 
 #endif

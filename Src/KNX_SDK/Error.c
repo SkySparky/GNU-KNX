@@ -58,6 +58,8 @@ case ERR_NODE_XSPAWN: printc("Node failed to spawn",line,PRNT_ERR, code); break;
 case ERR_NODE_XDESTROY: printc("Node failed to deregister",line,PRNT_ERR, code); break;
 case ERR_NODE_EXIST: printc("Node does not exist",line,PRNT_ERR, code); break;
 case ERR_REDEF_CMD: printc("Command line argument already defined",line,PRNT_ERR, code); break;
+case ERR_EXT_IMP_FAIL: printc("External function failed to import ",line,PRNT_ERR, code); break;
+case ERR_EXT_LIB_FAIL: printc("External library failed to import ",line,PRNT_ERR, code); break;
 
 case ERR_REALLOC: printc("Memory failed to reallocate",line,PRNT_ERR, code); break;
 case ERR_MALLOC: printc("Memory failed to allocate",line,PRNT_ERR, code); break;

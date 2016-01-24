@@ -2,6 +2,8 @@
 #define KNX_SDK_DATA
 
 #include "Defs.h"
+#include "NodeSuper.h"
+//#include "XMem.h"
 
 /*
 	Defines bytecode format and protocol
@@ -106,7 +108,7 @@ typedef struct
 
 //define library API
 #define KNX_API_RETURN  token*
-#define KNX_API_PARAM   token*, interpreter*intr
+#define KNX_API_PARAM   token*, baseNode*, settings
 
 
 #endif

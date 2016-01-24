@@ -197,3 +197,4 @@ FakesAssemblies/
 *.exe
 Src/KNX_SDK/Data.o
 *.a
+*.stackdump
