@@ -198,3 +198,6 @@ FakesAssemblies/
 Src/KNX_SDK/Data.o
 *.a
 *.stackdump
+*.o
+Src/KNX_SDK/XMem.o
+*.a

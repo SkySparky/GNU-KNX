@@ -69,6 +69,7 @@ bool delObject(database*, object*);
 int loadLibrary(char*, database*, settings);
 void freeLibrary(exModule*);
 void freeModule(module*);
+char**getSymTable(char*, unsigned*);
 
 KNX_API_RETURN invokeEx(KNX_API_PARAM, long long unsigned, database*);
 

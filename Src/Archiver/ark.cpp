@@ -4,6 +4,7 @@
 #include <fstream>
 #include <stdlib.h>
 #include <string.h>
+#include <iomanip>
 
 using namespace std;
 
@@ -47,8 +48,6 @@ string getExtension(string input)
 
 void setExtension(string&input)
 {
-  printf("^^%s\n",input.c_str());
-
   if (getExtension(input)==".ark")
     return;
   int index = input.find_last_of(".", 0);
@@ -56,10 +55,9 @@ void setExtension(string&input)
     input+=".ark";
   else
   {
-    input.erase(input.begin()+index, input.end()-1);
+    input.erase(input.begin()+index+1, input.end());
     input+=".ark";
   }
-
 }
 
 string getFileName(string input)
@@ -67,8 +65,7 @@ string getFileName(string input)
   int index = input.find(".", 0);
   if (index==string::npos)
     return input;
-
-  string output(input.begin(), input.begin()+index-1);
+  string output(input.begin(), input.begin()+index);
   return output;
 }
 
@@ -180,8 +177,6 @@ if (fatal)
 
 if (tSpec && lSpec)
 {
-  printf("%s~%s\n", tableFile.c_str(), objectFile.c_str());
-
   ifstream tblFle(tableFile);
   ifstream objFle(objectFile);
 
@@ -201,18 +196,34 @@ if (tSpec && lSpec)
   string out=nSpec?outputPath+outputName:outputPath+getFileName(objectFile);
   setExtension(out);
   ofstream outFile(out,ios::out);
-  printf(">> %s\n", out.c_str());
   if (!outFile)
     {
       printf("Failed to generate path %s\n", out.c_str());
       exit(1);
     }
   //begin writing
+
+  //write object file
+  while(!objFle.eof())
+  {
+    string buffer;
+    getline(objFle, buffer);
+
+    outFile<<buffer<<endl;
+  }
+
+  outFile<<endl;
+
+  //write symbol table
+  bool first=false;
+  int aCnt=0;
+  outFile<<"[";
   while(!tblFle.eof())
   {
-    printf("...");
     string buffer;
     getline(tblFle, buffer);
+    if (buffer.size()==0)
+      continue;
 
     if (debug)
       printf("%s >> %s\n", tableFile.c_str(), buffer.c_str());
@@ -222,21 +233,20 @@ if (tSpec && lSpec)
     if (buffer[0]=='#')
       continue;
 
+      //check for carriage return
+      if (buffer[buffer.size()-1]=='\r')
+        buffer.erase(buffer.begin()+buffer.size()-1);
+
+    if (first)
+      outFile<<',';
     outFile<<buffer;
+    ++aCnt;
+    first=true;
   }
+  outFile<<"]<"<<setfill('0')<<setw(3)<<aCnt<<">";
+  //outFile<<endl;
 
-  outFile<<endl;
 
-  while(!objFle.eof())
-  {
-    string buffer;
-    getline(objFle, buffer);
-
-    if (debug && 0)
-      printf("%s >> %s\n", objectFile.c_str(), buffer.c_str());
-
-    outFile<<buffer<<endl;
-  }
 
   tblFle.close();
   objFle.close();

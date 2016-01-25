@@ -148,44 +148,89 @@ bool delObject(database*db, object*obj)
   return true;
 }
 
-char**getSymTable(char*filename, unsigned*tblSize)
+char**getSymTable(char*file, unsigned*tblSize)
 {
-  *tblSize=0;
-  FILE *fp = fopen(filename,"r");
-  if (!fp)
-  {
-    printf("%s\n", filename);
+  tblSize=0;
+  char**table=NULL;
+
+  FILE*rd=fopen(file,"r");
+
+  if (!rd)
     return NULL;
-  }
-
-  //TODO - Truncate path
-
-  char**table=malloc(0);
 
   char buffer[128];
-  char tBuf[128];
+  fseek(rd,-1,SEEK_END);
 
-  while(fgets(buffer, sizeof(buffer), fp))
+  //find start of line
+  int mode=0;//0=scanning, 1=list count, 2=list
+  char numElStr[4]="000\0";
+  unsigned dIndex=0;
+  unsigned tChar=0;
+  unsigned numEl=0;
+  char lineBuffer[MAX_STREL_SIZE]="";//reverse before copying
+  while ((tChar=fgetc(rd))!='[')
   {
-    unsigned len = strlen(buffer);
-    for (unsigned x=0; x<len; ++x)
-      if ((int)buffer[x]<48 || x+1==len)
+    fseek(rd,-2,SEEK_CUR);
+    switch (mode)
+    {
+      case 0:{
+        //detect mode
+        if (tChar=='>')
+          {
+            mode=1;
+            dIndex=0;
+          }
+          else if (tChar==']')
+            {
+              mode=2;
+              dIndex=0;
+            }
+        break;
+      }
+      case 1:{
+        if (tChar=='<')
+          {
+            mode=0;
+            dIndex=0;
+            numEl=atoi(numElStr);
+
+            printf("%d elements expected\n", numEl);
+            if (numEl==0)
+              return NULL;
+
+            table=malloc(sizeof(char*)*numEl+1);
+            for (int x=0; x<numEl; ++x)
+              table[x]=malloc(MAX_STREL_SIZE);
+            table[numEl]=NULL;
+
+          }else
+          {
+            if (dIndex<4)
+              numElStr[3-dIndex++]=tChar;
+          }
+        break;
+      }
+      case 2:{
+        if (tChar==',')//break
         {
-          if (x==0)//empty line
-            break;
-          if (x+1==len)
-            tBuf[x]=buffer[x];
-          tBuf[x+(x+1==len?1:0)]='\0';
-          table=realloc(table,(*tblSize+1)*sizeof(char*));
-          table[*tblSize]=malloc(MAX_STREL_SIZE*sizeof(char));
-          strncpy(table[*tblSize],tBuf, strlen(tBuf)+2);
-          ++*tblSize;
-          break;
+          lineBuffer[++dIndex]='\0';
+          //reverse
+
+          //append
         }else
-          tBuf[x]=buffer[x];
+        {
+          lineBuffer[++dIndex]=tChar;
+        }
+        break;
+      }
+    }
   }
 
-  fclose(fp);
+  //fseek(rd,-1,SEEK_CUR);
+
+  //convert to table
+
+  fclose(rd);
   return table;
 }
 
@@ -196,7 +241,7 @@ int loadLibrary(char* filename, database*db, settings opts)
     return 1;
   char*fileSO=malloc(strlen(filename)+4);
   strncpy(fileSO,filename,strlen(filename));
-  strncpy(fileSO+strlen(filename),".so\0",3);
+  strncpy(fileSO+strlen(filename),".ark\0",4);
 
   void *handle;
   char *error;
@@ -210,11 +255,8 @@ int loadLibrary(char* filename, database*db, settings opts)
   //fnc=dlsym(handle, "_display");
 
   //load symbol table
-  char*fileSYM=malloc(strlen(filename)+5);
-  strncpy(fileSYM,filename,strlen(filename));
-  strncpy(fileSYM+strlen(filename),".sym\0",5);
   unsigned tblSize=0;
-  char**table=getSymTable(fileSYM,&tblSize);
+  char**table=getSymTable(fileSO,&tblSize);
 
   if (table==NULL)
     return 2;

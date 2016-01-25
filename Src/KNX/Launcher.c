@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 
 #include "Node.h"
 #include "State.h"
@@ -144,15 +145,23 @@ if (sys->options.prntDbg)
 
 if (TEST)
 {
-		printf("#####################Test#####################\n");
-		printf("%d\n", loadLibrary("std/KNX_IO", sys->global, sys->options));
-		token*param=genToken(NULL);
-		param->type=_mStr;
-		param->raw=true;
-		param->data=malloc(20);
-		strncpy(param->data,"Hello World\0",12);
-		baseNode*bn=genBaseNode((_nsDb*)sys->global);
-		token * ret = invokeEx(param,bn,sys->options,FNV_1a("_display"),sys->global);
+	void *handle;
+	char *error;
+
+	handle = dlopen ("../_bin/std/IO.ark", RTLD_LAZY);
+	if (!handle) {
+			fprintf (stderr, "%s\n", dlerror());
+			return 1;
+	}
+	dlerror();
+	KNX_API_RETURN (*fnc)(token*,baseNode*,settings)=NULL;
+	fnc=dlsym(handle, "_display");
+	fnc(NULL,NULL,sys->options);
+
+	//print table
+	unsigned dmy=0;
+	getSymTable("../_bin/std/IO.ark",&dmy);
+
 return 0;
 }
 
