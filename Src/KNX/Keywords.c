@@ -1,4 +1,5 @@
 #include "Keywords.h"
+#include "Error.h"
 
 //convert symbol to token code
 tCode keycode(long long unsigned hash)
@@ -17,6 +18,10 @@ tCode keycode(long long unsigned hash)
         case KW_CHAR: return _kChar;
         case KW_STRING: return _kString;
         case KW_METHOD: return _kFunction;
+
+        case KW_XNODE: return _kXNode;
+        case KW_IMPORT: return _kImport;
+
         case KW_EXIT: return _kExit;
         default:
         return _dNa;
@@ -29,22 +34,42 @@ tCode keycode(long long unsigned hash)
 //replace with safe-shutdown method
 void _int_exit(token*retCode)
 {
-if (retCode==NULL)
-{
-  printf("Exiting with return code 0\n");
-  exit(0);
-}
-
-if (_isNumeric(retCode->type))
-{
-  if (_isIntegral(retCode->type))
+  if (retCode==NULL)
   {
-    printf("Exiting with return code %d\n", *(int*)retCode->data);
-    exit(*(int*)retCode->data);
+    printf("Exiting with return code 0\n");
+    exit(0);
+  }
+
+  if (_isNumeric(retCode->type))
+  {
+    if (_isIntegral(retCode->type))
+    {
+      printf("Exiting with return code %d\n", *(int*)retCode->data);
+      exit(*(int*)retCode->data);
+    }
   }
 }
-}
 
+void _int_import(token*libs, interpreter*intr)
+{
+  token * curr = libs;
+  while (curr!=NULL)
+  {
+    //../_bin/std/IO.ark
+    char*path=malloc(strlen((char*)libs->data)+strlen("..\\_bin\\std\\IO.ark")+1);
+    strncpy(path,"..\\_bin\\std\\IO.ark",strlen("..\\_bin\\std\\IO.ark"));
+    strncpy(path+strlen("..\\_bin\\std\\IO.ark")+1,(char*)libs->data,strlen((char*)libs->data)+1);
+    printf("%s\n", path);
+    system("dir\n");
+    if (libs->type==_mStr)
+      loadLibrary(path,intr->global,intr->st->options);
+    else
+      prntError(path,ERR_ILL_ARG,intr->st->options);
+      free(path);
+    curr=curr->next;
+  }
+printf("***");
+}
 
 token * invokeKeyword(token*args, interpreter*intr)
 {
@@ -57,7 +82,7 @@ token * invokeKeyword(token*args, interpreter*intr)
   switch(args->type)
   {
     case _kExit: _int_exit(args->next); break;
-
+    case _kImport: _int_import(args->next, intr); break;
     default:
     return NULL;
   }

@@ -51,17 +51,9 @@ intr->blockOp=0;
 if (intr->head==NULL)
 	return;
 
-token*curr=intr->head;
-do{
-	token*next=curr->next;
-	printf("%d\n", curr->type);
-	freeToken(curr);
-	//printf("<>><\n");
-	curr=next;
-	//printf("<>><\n");
-}while(curr!=NULL);
-
+freeStrand(intr->head);
 intr->head=NULL;
+intr->current=NULL;
 }
 
 char getEscape(char input)

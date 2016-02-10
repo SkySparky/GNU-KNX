@@ -52,7 +52,7 @@ cast
 struct _interpreter;
 typedef struct _interpreter interpreter;
 
-#define DEF_KEYWORDS      11
+#define DEF_KEYWORDS      12
 
 #if BITMODE==64
 static unsigned long long keyList[DEF_KEYWORDS] = {
@@ -67,6 +67,7 @@ static unsigned long long keyList[DEF_KEYWORDS] = {
 10732784859024281776ULL,//method
 
 18094490007562572359ULL,//xnode
+10732928266430976756ULL,//import
 
 2986610718626400101ULL//exit
 
@@ -84,6 +85,7 @@ static unsigned long long keyList[DEF_KEYWORDS] = {
 16015900429428855856,//method
 
 1112857672448079367,//xnode
+16015945215496767700,//import
 
 1011474885660797061//exit
 };
@@ -99,8 +101,11 @@ static unsigned long long keyList[DEF_KEYWORDS] = {
 #define KW_STRING  6
 #define KW_STRUCT  7
 #define KW_METHOD  8
+
 #define KW_XNODE   9
-#define KW_EXIT    10
+#define KW_IMPORT  10
+
+#define KW_EXIT    11
 
 tCode keycode(long long unsigned hash);
 

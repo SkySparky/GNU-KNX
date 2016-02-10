@@ -28,7 +28,7 @@ void freeToken(token*target)
 if (target==NULL)
 	return;
 //delete non-managed data types
-if (target->raw)
+if (target->raw && _isData(target->type))
 	free(target->data);
 free(target);
 }

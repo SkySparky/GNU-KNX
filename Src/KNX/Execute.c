@@ -76,6 +76,7 @@ if (start==NULL)
     if (_isActable(current->type))
     {
       token*rval = runFunction(current,intr);
+      printf("***");
       trash=start;
       start=rval;
       break;
@@ -89,8 +90,9 @@ if (start==NULL)
   //perform body calculations
 
   //delete uneeded tokens
+  printf(">");
   freeStrand(trash);
-
+  printf("<");
   return ret;
 }
 

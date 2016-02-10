@@ -44,7 +44,7 @@ _kTry, _kCatch, _kCast,
 _kShort, _kInt, _kLong, _kBool,_kDouble, _kChar, _kString,
 _kFile,_kScript,_kFunction,_kStruct,_kVoid,
 //Other
-_oFlag=110
+_oFlag=130
 
 }tCode;
 
