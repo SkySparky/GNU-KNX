@@ -1,5 +1,5 @@
 #include "Keywords.h"
-#include "Error.h"
+#include "../KNX_SDK/Error.h"
 
 //convert symbol to token code
 tCode keycode(long long unsigned hash)
@@ -56,16 +56,16 @@ void _int_import(token*libs, interpreter*intr)
   while (curr!=NULL)
   {
     //../_bin/std/IO.ark
-    char*path=malloc(strlen((char*)libs->data)+strlen("..\\_bin\\std\\IO.ark")+1);
-    strncpy(path,"..\\_bin\\std\\IO.ark",strlen("..\\_bin\\std\\IO.ark"));
-    strncpy(path+strlen("..\\_bin\\std\\IO.ark")+1,(char*)libs->data,strlen((char*)libs->data)+1);
-    printf("%s\n", path);
-    system("dir\n");
+    char*path=malloc(strlen(intr->st->dirPath)+strlen((char*)libs->data)+1);
+    strncpy(path,intr->st->dirPath,strlen(intr->st->dirPath));
+    strncpy(path+strlen(intr->st->dirPath), (char*)curr->data, strlen(curr->data)+1);
+
+    printf("Searching %s\n", path);
     if (libs->type==_mStr)
       loadLibrary(path,intr->global,intr->st->options);
     else
-      prntError(path,ERR_ILL_ARG,intr->st->options);
-      free(path);
+      prntError((char*)curr->data,ERR_ILL_ARG,intr->st->options);
+    free(path);
     curr=curr->next;
   }
 printf("***");

@@ -38,6 +38,8 @@ unsigned maxNodes;
 unsigned maxMemory;//implement
 unsigned tabSize;
 
+char*dirPath;
+
 }state;
 
 state*genState();

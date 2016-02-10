@@ -72,6 +72,7 @@ if (start==NULL)
 
   while (current!=NULL)
   {
+    printf("%d\n",current->type);
     //Support for single non-nested execution only for now
     if (_isActable(current->type))
     {
@@ -91,7 +92,7 @@ if (start==NULL)
 
   //delete uneeded tokens
   printf(">");
-  freeStrand(trash);
+  //freeStrand(trash);
   printf("<");
   return ret;
 }

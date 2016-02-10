@@ -18,6 +18,6 @@ gcc -Wall $LIB_C $COMP_LEVEL $COMP_IGNORE -lm -ldl
 ar rcs libKNX_SDK.a $LIB_O
 cd ..
 cd KNX
-gcc -Wall -static $SRC_C ../KNX_SDK/libKNX_SDK.a -o KNX $COMP_LEVEL $COMP_IGNORE -lm -ldl
+gcc -Wall -static $SRC_C ../KNX_SDK/libKNX_SDK.a -o ../../_bin/KNX $COMP_LEVEL $COMP_IGNORE -lm -ldl
 cd ..
 echo Done.

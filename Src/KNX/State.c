@@ -1,5 +1,6 @@
 #include "State.h"
 #include <math.h>
+#include "../KNX_SDK/Defs.h"
 
 //state factory
 state*genState()
@@ -19,6 +20,18 @@ ret->tabSize=4;
 ret->maxNodes=SYSTEM_MAX_NODES;
 ret->stdin_hndle=NULL;
 ret->sizeLevel=0;
+
+ret->dirPath=malloc(256);
+
+#if PLATFORM == PLATFORM_LINUX
+#include <unistd.h>
+readlink("/proc/self/exe", ret->dirPath, 255);
+strncpy(ret->dirPath+strlen(ret->dirPath)-3, "std/\0", 5);
+#else
+#include <windows.h>//ADD SUPPORT FOR WINDOWS
+ret->dirPath=NULL;
+#endif
+
 return ret;
 }
 
