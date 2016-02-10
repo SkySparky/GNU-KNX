@@ -1,3 +1,1 @@
-cd ..\_bin
-KNX.exe
-cd ..\Src
+%~dp0..\_bin\KNX.exe

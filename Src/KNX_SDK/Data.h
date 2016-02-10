@@ -67,7 +67,7 @@ _oFlag=110
 
 #define _isEnCapComp(code1, code2)(_isOpenEncap(code1) && code1+1==code2)
 //functions, assignments, keywords
-#define _isActable(code)(_isKeyword(code) || _mFunction || _isAssignment(code))
+#define _isActable(code)(_isKeyword(code) || code==_mFunction || _isAssignment(code))
 
 //Flag definitions
 typedef unsigned int flag;//26 bits used for a-z

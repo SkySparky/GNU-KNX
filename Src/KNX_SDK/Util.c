@@ -24,12 +24,10 @@ unsigned long long hash=_offset;
 unsigned len = strlen(str);
 for (unsigned x=0; x<len; ++x)
 	{
-		hash^=(unsigned long long)(*str++);
-		hash += (hash << 1) + (hash << 4) + (hash << 5) +
-            (hash << 7) + (hash << 8) + (hash << 40);
-		//hash=(str[x]^hash)*_prime;
+		hash^=(str[x]);
+		hash*=_prime;
 	}
-
+	printf("%llu\n", hash);
 	return hash;
 }
 

@@ -101,6 +101,17 @@ while (target!=NULL)
 		case _kTry:printf("TRY");break;
 		case _kCatch:printf("CATCH");break;
 		case _kCast:printf("CST");break;
+		case _kShort:printf("SHORT");break;
+		case _kInt:printf("INT");break;
+		case _kLong:printf("LONG");break;
+		case _kBool:printf("BOOL");break;
+		case _kDouble:printf("DBL");break;
+		case _kChar:printf("CHAR");break;
+		case _kString:printf("STR");break;
+		case _kFile:printf("FILE");break;
+		case _kScript:printf("SCRIPT");break;
+		case _kFunction:printf("FNC");break;
+		case _kVoid:printf("VOID");break;
 
 		case _oFlag:printf("FLAG");break;
 		default:

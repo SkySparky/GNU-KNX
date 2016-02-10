@@ -14,7 +14,7 @@ noLogic,
 ifFailure//allows immediate 'else' if set
 }logicState;
 
-typedef struct
+typedef struct _interpreter
 {
 _state_*st;
 _node_*nd;

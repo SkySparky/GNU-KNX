@@ -85,6 +85,7 @@ case ERR_MSMTCH_BRK: printc("Mismatch encapsulation with Bracket",line,PRNT_ERR,
 case ERR_MSMTCH_BRC: printc("Mismatch encapsulation with Brace",line,PRNT_ERR, code); break;
 case ERR_MSS_FLG_TARG: printc("Missing flag target",line,PRNT_ERR, code); break;
 case ERR_INV_FLG_TARG: printc("Invalid flag target",line,PRNT_ERR, code); break;
+case ERR_UNDEF_SYM: printc("Undefined symbol",line,PRNT_ERR, code); break;
 
 case ERR_XMEMBER: printc("Member object does not exist",line,PRNT_ERR, code); break;
 case ERR_XOBJ: printc("Object does not exist",line,PRNT_ERR, code); break;

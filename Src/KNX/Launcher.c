@@ -6,7 +6,7 @@
 
 #include "KNX.h"
 
-#define TEST true
+#define TEST false
 
 #ifdef _WIN32
 	#include <windows.h>

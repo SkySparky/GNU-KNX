@@ -29,23 +29,7 @@ if (target==NULL)
 	return;
 //delete non-managed data types
 if (target->raw)
-{
-switch (target->type)
-{
-	case _mInt: free((int*)target->data); break;
-	case _mShort: free((short*)target->data); break;
-	case _mLong: free((long*)target->data); break;
-	case _mDbl: free((double*)target->data); break;
-	case _mBool: free((bool*)target->data); break;
-	case _mChar: free((char*)target->data); break;
-	case _mStr: free((char*)target->data); break;
-	case _dNa : free((char*)target->data);break;
-	case _mStruct:
-	//collapse structure
-	break;
-	default:break;
-}
-}
+	free(target->data);
 free(target);
 }
 

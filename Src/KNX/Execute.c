@@ -4,7 +4,12 @@
 
 token*runFunction(token*args,interpreter*intr)
 {
-
+  //printf("Running function\n");
+  if (_isKeyword(args->type))
+  {
+    token * ret = invokeKeyword(args, intr);
+    return ret;
+  }
 
 return NULL;
 }
@@ -16,16 +21,20 @@ token*isolate(token*cut1, token*cut2)
   if (cut2==NULL)
     return cut1;
 
-  token * ret = cut1->next;
-  if (cut2->prev==NULL)
-    return NULL;
-  //decouple cut 2
-  cut2->prev->next=NULL;
-  cut2->prev=NULL;
+  token * ret = NULL;
+  if (cut1->next!=cut2)
+    ret = cut1->next;
 
+  //decouple cut 2
+  cut2->prev=NULL;
   //decouple cut 1
   cut1->next=NULL;
-  ret->prev=NULL;
+
+  if (ret!=NULL)
+  {
+    ret->prev=NULL;
+    ret->next=NULL;
+  }
 
   return ret;
 }
@@ -63,50 +72,21 @@ if (start==NULL)
 
   while (current!=NULL)
   {
-    //detect and collapse heirarchies
-    if (_isOpenEncap(current->type))
+    //Support for single non-nested execution only for now
+    if (_isActable(current->type))
     {
-      if (current->type==_sOpParanth)
-      {
-        token*rep = recExecute(intr, current->next, _rEnd);
-        isolate(current, *_rEnd);//cut out passed section
-        current=current->prev;
-        *_rEnd=(*_rEnd)->next;
-        //delete heirarchy tokens
-        free(current->next);
-        free((*_rEnd)->prev);
-
-        //determine whether to splice, or use as parameters
-        if (current->prev==NULL)
-          splice(current, rep, *_rEnd);
-        else if (!_isActable(current->prev->type))
-          splice(current, rep, *_rEnd);
-        else
-        {
-          //call function from database
-
-          //splice return value
-          splice(current, rep, *_rEnd);
-        }
-      }
-      else if (current->type==_sOpBrack)
-      {
-        token*rep = recExecute(intr, current->next, _rEnd);
-      }
-      else if (current->type==_sOpBrace)
-      {
-        token*rep = recExecute(intr, current->next, _rEnd);
-      }
-    }
-    else if (_isCloseEncap(current->type))
-    {
-      *_rEnd=current;
+      token*rval = runFunction(current,intr);
+      trash=start;
+      start=rval;
       break;
     }
-    current=current->next;
+
+    current=current->prev;
   }
 
   token * ret = NULL;
+
+  //perform body calculations
 
   //delete uneeded tokens
   freeStrand(trash);
@@ -122,6 +102,5 @@ if (intr->st->options.prntDbg)
 
 token * dummy = NULL;
 //free tokens
-freeStrand(recExecute(intr,intr->head, &dummy));
-
+freeStrand(recExecute(intr,intr->current/*tail*/, &dummy));
 }

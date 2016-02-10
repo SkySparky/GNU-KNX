@@ -1,0 +1,1 @@
+g++ Src.cpp -o CopyHasher -std=c++11 -march=x86-64

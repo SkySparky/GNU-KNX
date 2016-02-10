@@ -37,6 +37,9 @@ return ret;
 
 void reset(interpreter*intr)
 {
+if (intr==NULL)
+	return;
+
 intr->pending=false;
 intr->waitExprss=false;
 intr->waitLn=false;
@@ -51,8 +54,11 @@ if (intr->head==NULL)
 token*curr=intr->head;
 do{
 	token*next=curr->next;
+	printf("%d\n", curr->type);
 	freeToken(curr);
+	//printf("<>><\n");
 	curr=next;
+	//printf("<>><\n");
 }while(curr!=NULL);
 
 intr->head=NULL;
@@ -142,8 +148,12 @@ if ((type=keycode(hash))!=0)
 data=malloc(length+1);
 strncpy(data,input,length);
 build:;
-
 free(string);
+
+if (type==_dNa)
+	{
+		prntError(input, ERR_UNDEF_SYM, intr->st->options);
+	}
 addToken(intr, data, type, raw);
 }
 
@@ -451,7 +461,6 @@ if (length==0)
 intr->waitExprss=false;
 
 tokenize(string, length, intr);
-printf("Done.\n");
 //determine whether or not to continue waiting
 intr->pending=intr->waitExprss | intr->waitLn | intr->litOp |\
 !(intr->listOp==0 && intr->blockOp==0 && intr->brackOp==0);
@@ -467,4 +476,5 @@ if (intr->pending)
 execute(intr);
 //cleanup
 reset(intr);
+
 }

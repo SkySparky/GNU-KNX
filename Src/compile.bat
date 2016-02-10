@@ -20,7 +20,7 @@ if /I %COMP_MODE% == -m32 set ENVO_DECL=-D_WIN32
 
 rem static library first
 cd KNX_SDK
-gcc -Wall %SRCL% %COMP_LEVEL% %COMP_IGNORE%
+gcc -Wall %SRCL% %COMP_LEVEL% %COMP_IGNORE% %ENVO_DECL%
 ar rcs libKNX_SDK.a %OBJL%
 cd ..
 if errorLevel 1 goto houston
