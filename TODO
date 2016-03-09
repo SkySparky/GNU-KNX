@@ -1,6 +1,0 @@
-Tasks to complete in order
-
-implement token tree (maybe not)
-implement keywords
-finish keyword hash list (use http://www.nitrxgen.net/hashgen/), as its compatible with the KNX FNV-1a implementation
-Add windows Exe Path support (import will not work without it) (State.c)
