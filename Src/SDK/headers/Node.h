@@ -16,8 +16,12 @@ typedef struct tNodeBase
   long long unsigned policySet;//semi-prime product
   visibility privacyPolicy;//general policy set for local memory scope
 
-  struct nodeBase*children;
+  unsigned char active:1;
+
+  struct nodeBase**children;
   struct nodeBase*parent;
+
+  unsigned numChildren;
 
 } nodeBase;
 

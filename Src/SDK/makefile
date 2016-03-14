@@ -4,7 +4,7 @@ CC=gcc
 CFLAGS= -std=c11 -pedantic -Wall -c
 #LDFLAGS= -g
 LIBS= -lm
-SRC=Memory.c
+SRC=Memory.c Node.c Error.c Exchange.c
 OBJ=$(SRC:.c=.o)
 INCLUDES= -Iheaders
 OUT=libKDK.a

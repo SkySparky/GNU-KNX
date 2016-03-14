@@ -7,7 +7,7 @@ OUT = KNX
 CLEANEXT = o a
 BITVRS=64
 DBGFLAG=
-SRC=Launcher.c
+SRC=Launcher.c Settings.c Node.c
 
 ifeq ($(shell uname), Linux)
 	FixPath = $1
@@ -32,3 +32,7 @@ all:
 .PHONY: clean
 clean:
 	rm -f $@ *.o
+
+.PHONY: dbg
+dbg: $(OUT)
+	$(RUNPATH) $(DBGFLAGS)

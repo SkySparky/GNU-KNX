@@ -8,6 +8,9 @@ The dInfo structure contains raw and meta data for a data piece.
 Tokenization utilizes this, in addition with a tree wrapper
 */
 
+#include "wchar.h"
+#include <stdlib.h>
+
 struct tInfo;
 
 typedef enum{
