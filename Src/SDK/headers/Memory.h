@@ -1,12 +1,20 @@
 #ifndef KNX_SDK_MEM
 #define KNX_SDK_MEM
 
+#include "wchar.h"
+
 typedef long long unsigned HASH;
 
 //Defines memory structures
 
-typedef enum mtType{mNA,mtInt, mtUInt, mtLint, mtULint, mtFloat, mtDouble, mtBool,
-  mtChar, mtUChar, mtWChar, mtString, mtArray, mtStruct, mtVoid} mType;
+typedef enum {mNA,
+  mtInt, mtUInt, mtLint, mtULint, mtFloat, mtDouble, mtBool,
+  mtChar, mtUChar, mtWChar, mtString,
+  mtArray, mtStruct, mtVoid, mMethod,
+  mFile, mScript,
+  mModular=100//used as loadtime starting reference
+} mType;
+
 
 
 //tag declarations
@@ -125,19 +133,12 @@ typedef struct tArray
 typedef struct tStruct
 {
   mBase*base;
-
-  mBranch * root;
-
+  void * data;
 }mStruct;
 
 typedef struct tVoid
 {
   mBase*base;
-
-//hash searchable binary tree
-//TODO make splay tree
-  mBranch * root;
-
 }mVoid;
 
 typedef struct tMemory

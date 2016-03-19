@@ -4,7 +4,7 @@ CC=gcc
 CFLAGS= -std=c11 -pedantic -Wall -c
 #LDFLAGS= -g
 LIBS= -lm
-SRC=Memory.c Node.c Error.c Exchange.c
+SRC=Memory.c Node.c Error.c Exchange.c Util.c
 OBJ=$(SRC:.c=.o)
 INCLUDES= -Iheaders
 OUT=libKDK.a
@@ -27,7 +27,7 @@ endif
 
 
 %.o : %.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c $< $(LIBS)
+	$(CC) $(INCLUDES) $(CFLAGS) $(PLATFORM) $(OSMODE) -c $< $(LIBS)
 
 $(EPATH_FULL): $(OBJ)
 	ar rcs $(EPATH_FULL) $(OBJ)

@@ -20,7 +20,7 @@ typedef enum{
   RawData, ManData, Command,
 //Operators
 //Encapsulators
-  OParanth, CParanth, OBrack, CBrack, OBrace, CBrace,
+  OParanth, OBrack, OBrace, CParanth,  CBrack, CBrace,
 //Math
   Add, Sub, Mult, Div, Pow, Root, Mod,
 //Referencing
@@ -39,6 +39,18 @@ typedef enum{
 
 }dType;
 
+//Macro type checks
+#define isData(x)       (x>=RawData && x<=Command)
+#define isEncap(x)      (x>=OParanth && x<=CBrace)
+#define isOpCap(x)      (x>=OParanth && x<=OBrace)
+#define isClCap(x)      (x>=CParanth && x<=CBrace)
+#define isReference(x)  (x==RefMember || x==Index)
+#define isComparison(x) (x>=Lss && x<=NEqu)
+#define isBoolean(x)    (x>=And && x<=XNor)
+#define isAssign(x)     (x>=Set && x<=XNor)
+#define isLogic(x)      (x>=If && x<=Tern)
+#define isAttribute(x)  (x==Flag)
+
 typedef struct tInfo
 {
   dType type;
@@ -49,6 +61,10 @@ typedef struct tInfo
 dInfo * makeInfo(dType, void*data);
 
 int infoDelete(dInfo*);
+
+//API definitions
+#define KNX_API_RETURN mBase*
+#define KNX_API_PARAM mBase**params, nodeBase*node
 
 #endif
 

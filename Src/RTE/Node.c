@@ -1,5 +1,6 @@
 #include "Node.h"
 #include "Prime.h"
+#include "Lexile.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -16,7 +17,7 @@ Registrar * makeRegistry()
 
   reg->settings=makeSettings();
   reg->node_registry=malloc(0);
-  reg->length=0;
+  reg->node_length=0;
 
   return reg;
 }
@@ -37,7 +38,7 @@ Node * registerNode(Registrar * reg)
   if (reg==0)
     return 0;
 
-  if (reg->length==reg->settings.maxNodes)
+  if (reg->node_length==reg->settings.maxNodes)
     return 0;
 
   //create new node
@@ -52,7 +53,7 @@ Node * registerNode(Registrar * reg)
 
   //register with id
   unsigned iDex=0;
-  for (unsigned x=0; x<reg->length; ++x)
+  for (unsigned x=0; x<reg->node_length; ++x)
   {
     if (reg->node_registry[x]->base->id==primeList[iDex])
     {
@@ -63,13 +64,13 @@ Node * registerNode(Registrar * reg)
 
   newNode->base->id=primeList[iDex];
 
-  Node**chk = realloc(reg->node_registry, reg->length+1);
+  Node**chk = realloc(reg->node_registry, reg->node_length+1);
   if (chk==0)
     return 0;
 
   reg->node_registry=chk;
-  reg->node_registry[reg->length]=newNode;
-  ++reg->length;
+  reg->node_registry[reg->node_length]=newNode;
+  ++reg->node_length;
 
   return newNode;
 }
@@ -108,7 +109,7 @@ int deregisterNode(Node * node, Registrar * reg)
   Node * target = 0;
 
   //find registry reference
-  for (unsigned x=0; x<reg->length; ++x)
+  for (unsigned x=0; x<reg->node_length; ++x)
   {
     if (node->base->id==reg->node_registry[x]->base->id)
       {

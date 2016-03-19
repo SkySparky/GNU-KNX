@@ -4,6 +4,7 @@
 #include "Settings.h"
 
 #include "../SDK/headers/Node.h"
+#include "../SDK/headers/Memory.h"
 
 /*
 defines node structure, methods, and node-thread procedure
@@ -18,11 +19,16 @@ typedef struct tNode
   Settings*settings;
 }Node;
 
+//only allocate one instance at beginning of program
 typedef struct tReg
 {
   Settings settings;
+
   Node**node_registry;
-  unsigned length;
+  unsigned node_length;
+
+  mBase*modvar_registry;
+  unsigned modvar_length;
 }Registrar;
 
 Registrar * makeRegistry();

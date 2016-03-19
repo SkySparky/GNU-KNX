@@ -13,6 +13,7 @@ Error and warning macros and console readout
   //System
   //Parsing
 #define W_IMP_CAST        0x0120//Implicit cast (valid)
+#define W_
   //Exchange
   //File
   //IO
