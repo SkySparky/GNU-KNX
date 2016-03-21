@@ -66,8 +66,13 @@ return 0;
 }
 
 //form factor specific appends
-int appendUnary()
+int appendUnary(Token * tkn, Interpreter * intr)
 {
+  //lawdy that's a lot of dereferencing
+  if (isUnary(intr->current->super->type))
+  {
+    
+  }
 
   return 0;
 }
@@ -113,7 +118,10 @@ void appendTree(Token*input, Interpreter * intr)
     return;
   }
 
-
+  //determine type to append
+  if (isUnary(input->super->type))
+    if (appendUnary(input, intr))
+      printf("Error appending unary to tree");//TODO replace with error throw or exception
 
 }
 

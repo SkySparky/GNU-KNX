@@ -14,6 +14,7 @@ tdNA,
 tJumpTag,//jump location
 tJump,//jump to another node
 tNot,//logical NOT
+tExpression,//acts as disconnected subtree
 //binary
 tCond,//if else node
 tLoop,//for loop
@@ -24,14 +25,16 @@ tLss, tGtr, tEqu, tLssEqu, tGtrEqu, tNEqu,
 tAnd, tOr, tNand, tNor, tXor, tXnor,
 //ternary
 tTernary,
-//poly
+//table
 tSwitch,
+//poly
+tMethod,
 //data
 tData//raw data type
 }tOp;
 
 //form factor check macros
-#define isUnary(x)  (x>=tJumpTag && x<=tNot)
+#define isUnary(x)  (x>=tJumpTag && x<=tExpression)
 #define isBinary(x) (x>=tCond && x<=tXnor)
 #define isTernary(x)(x==tTernary)
 #define isPoly(x)   (x==tSwitch)
@@ -78,6 +81,12 @@ typedef struct
 
   Token ** lookup;
   Token ** channel;
+}TokenTabel;
+
+typedef struct
+{
+  Token * super;
+  Token ** input;
 }TokenPoly;
 
 typedef struct
