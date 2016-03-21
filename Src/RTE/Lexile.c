@@ -34,11 +34,9 @@ Token * genToken(void*data, unsigned type)
   if (ret==0)
     return 0;
 
-  ret->type=type;
-  ret->data=data;
-  ret->params=0;
-  ret->success=0;
-  ret->failure=0;
+  ret->type=tdNA;
+  ret->next=0;
+  ret->parent=0;
 
   return ret;
 }
@@ -64,11 +62,58 @@ Token * identify(char*raw, unsigned sIndex, unsigned eIndex, Interpreter*intr)
 Token * queryMemory(char*raw, unsigned sIndex, unsigned eIndex, Interpreter*intr, Node*node, char searchGlobal)
 {
 
+return 0;
+}
+
+//form factor specific appends
+int appendUnary()
+{
+
+  return 0;
+}
+
+int appendBinary()
+{
+  return 0;
+}
+
+int appendTernary()
+{
+
+  return 0;
+}
+
+int appendPoly()
+{
+  return 0;
+}
+
+int appendData()
+{
+  return 0;
 }
 
 //use intr.pOrder to track current execution path
-void appendTree(Token*tkn, Interpreter * intr)
+//tkn is node to add
+//returns reference to current node
+void appendTree(Token*input, Interpreter * intr)
 {
+  //should never happen
+  //TODO throw warning/error
+  if (input==0)
+    return;
+
+  Token * ret = 0;
+
+  //if root node is null, assign tkn as root
+  if (intr->root==0)
+  {
+    intr->root=input;
+    intr->current=input;
+    return;
+  }
+
+
 
 }
 
@@ -85,10 +130,10 @@ int analyze(char*input, Interpreter*intr)
   //point of last cutoff
   size_t Index=0;
 
-  for (size_t x=len-1; x>=0; ++x)
+  for (size_t x=0; x<=len; ++x)
   {
     //end of stream jumps
-    if (x==0)
+    if (x==len)
     {
 
     }
@@ -100,11 +145,11 @@ int analyze(char*input, Interpreter*intr)
       case '\t':
       if (Index==x)
       {
-        --x;
+        ++x;
       }else
       {
-        appenTree(identify(input, x, Index, intr), intr);
-        x=Index-1;
+        appendTree(identify(input, x, Index, intr), intr);
+        x=Index+1;
       }
       break;
 

@@ -15,7 +15,9 @@ typedef enum {mNA,
   mModular=100//used as loadtime starting reference
 } mType;
 
-
+#define isNumeric(x) (x>=mtInt && x<=mtDouble)//is integral/floating point
+#define isTextual(x) (x>=mtChar && x<=mtString)//characters, strings
+#define isNumComp(x) (x>=mtmtInt && x<=mtWChar)//numeric, or castable to numeric
 
 //tag declarations
 struct tBase;//inherited base structure
@@ -43,7 +45,9 @@ typedef struct tBase
 {
   HASH hash;
   unsigned char type;
-  char lock:1;//one bit switch
+  //settings
+  unsigned char lock:1;//one bit switch
+  unsigned char raw:1;//is literal (1) or managed (0)
 }mBase;
 
 //for storing data structures within a tree
@@ -141,6 +145,7 @@ typedef struct tVoid
   mBase*base;
 }mVoid;
 
+//splay tree memory container
 typedef struct tMemory
 {
   mBranch * root;
@@ -166,6 +171,7 @@ mStruct * makeStruct();
 mVoid * makeVoid();
 
 mMemory * makeMemory();
+int freeMemory(mMemory*);//permenantly clear full memory structure
 
 
 //Utility functions

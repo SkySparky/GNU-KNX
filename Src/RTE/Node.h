@@ -15,8 +15,13 @@ struct tReg;
 
 typedef struct tNode
 {
+  //settings and references
   nodeBase * base;
   Settings*settings;
+
+  //memory space
+  mMemory * global;
+  mMemory * local;
 }Node;
 
 //only allocate one instance at beginning of program
@@ -33,7 +38,7 @@ typedef struct tReg
 
 Registrar * makeRegistry();
 int freeRegistrar(Registrar*);
-Node * registerNode(Registrar*);
+Node * registerNode(Registrar*, mMemory*);
 
 //same returns as deletNode + -2: Reference not found
 int deregisterNode(Node*,Registrar*);
@@ -45,6 +50,6 @@ int deleteNode(Node*);
 //1 Crash
 //2 Max node limit reached
 //-1 Failure to register
-int NodeProc(Registrar*);
+int NodeProc(Registrar*, mMemory*);
 
 #endif

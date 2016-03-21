@@ -33,7 +33,7 @@ int freeRegistrar(Registrar * reg)
   return 0;
 }
 
-Node * registerNode(Registrar * reg)
+Node * registerNode(Registrar * reg, mMemory*global)
 {
   if (reg==0)
     return 0;
@@ -71,6 +71,9 @@ Node * registerNode(Registrar * reg)
   reg->node_registry=chk;
   reg->node_registry[reg->node_length]=newNode;
   ++reg->node_length;
+
+  newNode->global=global;
+  newNode->local=makeMemory();
 
   return newNode;
 }
@@ -130,9 +133,9 @@ int deregisterNode(Node * node, Registrar * reg)
 }
 
 
-int NodeProc(Registrar * reg)
+int NodeProc(Registrar * reg, mMemory*global)
 {
-  Node * node = registerNode(reg);
+  Node * node = registerNode(reg,global);
   if (node==0)
   {
     prntErr(E_INI_NODE, 0, reg->settings.prntWrn);

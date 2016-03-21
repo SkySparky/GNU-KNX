@@ -58,6 +58,7 @@ int parseCMD(int argc, char**argv, Registrar * reg)
 int main(int argc, char**argv, char **argx)
 {
   Registrar * reg = makeRegistry();
+  mMemory * global = makeMemory();
 
   if (reg==0)
   {
@@ -67,7 +68,7 @@ int main(int argc, char**argv, char **argx)
 
   parseCMD(argc, argv, reg);
 
-  int rVal = NodeProc(reg);
+  int rVal = NodeProc(reg, global);
 
   if (rVal)
   {

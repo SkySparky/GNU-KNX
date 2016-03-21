@@ -9,81 +9,82 @@ struct tToken;
 
 //token operator types
 typedef enum {
-tData,//raw data type
+tdNA,
+//unary
+tJumpTag,//jump location
+tJump,//jump to another node
+tNot,//logical NOT
+//binary
 tCond,//if else node
 tLoop,//for loop
 tReturn,//return node
-
+tSet,// x = y
+tAdd, tSub, tMult, tDiv, tPow, tMod, tRoot,
+tLss, tGtr, tEqu, tLssEqu, tGtrEqu, tNEqu,
+tAnd, tOr, tNand, tNor, tXor, tXnor,
+//ternary
+tTernary,
+//poly
+tSwitch,
+//data
+tData//raw data type
 }tOp;
+
+//form factor check macros
+#define isUnary(x)  (x>=tJumpTag && x<=tNot)
+#define isBinary(x) (x>=tCond && x<=tXnor)
+#define isTernary(x)(x==tTernary)
+#define isPoly(x)   (x==tSwitch)
+#define isData(x)   (x==tData)
 
 //token superclass
 typedef struct tToken
 {
   tOp type;//tOp
   struct Token * next;
+  struct Token * parent;
 }Token;
 //sub class token
 //these are used to give additional context and functionality
 //to a particular token, such as additional functionality or
 //storage
+//Functionality defined by type, but designed by form factor
 
-//controls if/else conditional execution
-typedef struct
-{
-  Token * super;//type, TRUE control
-  Token * expression;//TRUE/FALSE input expression
-  Token * elseControl;//false, ELSE control
-}TokenIf;
-
-//allows a temporary variable, continue expression, and post-cycle expression
 typedef struct
 {
   Token * super;
-  Token * initial;//initial local
-  Token * expression;//expression to evaluate to continue cycle
-  Token * postOp;//operation to occur after cyle (probably local_init increment/decrement)
-  mBase * local_init;//local instantiation
-}TokenLoop;
+  Token * expression;
+}TokenUnary;
 
-//specifies somewhere in current executation path to jump to
-//(only works in current buffer frame)
 typedef struct
 {
   Token * super;
-} TokenJump;
+  Token * L;
+  Token * R;
+}TokenBinary;
 
-//variable or literal references (non function)
 typedef struct
 {
   Token * super;
-  mBase * data;
+
+  Token * expression;
+  Token * L;
+  Token * R;
+}TokenTernary;
+
+typedef struct
+{
+  Token * super;
+
+  Token ** lookup;
+  Token ** channel;
+}TokenPoly;
+
+typedef struct
+{
+  Token * super;
+  mBase * info;
 }TokenData;
-
-//functional method. Both scripted and modular methods
-typedef struct
-{
-  Token * super;
-  void * reference;//reference to method
-  Token * parameters;
-  char reference;//0=NA 1=scripted, 2=modular
-}TokenMethod;
-
-//Binary Operators
-typedef struct
-{
-  Token * super;
-  char operation;//0=NA 1=+ 2=- 3=* 4=/ 5=% 6=^ 7=root
-  Token * lParam;
-  Token * rParam;
-}TokenLR;
-
-//unary expressions
-typedef struct
-{
-  Token * super;
-  char operation;
-  Token * expression;//expression to operate
-}TokenU;
 
 //interpreter instance
 typedef struct tInter
@@ -94,8 +95,8 @@ typedef struct tInter
   Token*root;
   Token*current;
 
-  //nested order
-  unsigned pOrder;
+  unsigned pOrder; //nested order
+  tOp encapStack [256]; //encapsulation operator stack
 }Interpreter;
 
 Interpreter * makeInterpreter(Node*, Registrar*);

@@ -17,6 +17,7 @@ mBase * makeBase()
   ret->hash=0;
   ret->type=mNA;
   ret->lock=0;
+  ret->raw=1;
 
   return ret;
 }
@@ -234,7 +235,7 @@ mStruct * makeStruct()
   if (ret==NULL)
     return NULL;
 
-  ret->root=NULL;
+  ret->data=NULL;
 
   return ret;
 }
@@ -250,6 +251,16 @@ mMemory * makeMemory()
   return ret;
 }
 
+int freeMemory(mMemory * target)
+{
+  if (target==0)
+    return -1;
+
+  //TODO iterate through tree, deleting each reference
+
+  free(target);
+  return 0;
+}
 
 mBase*memSearch(mBranch* target,HASH hash)
 {
