@@ -8,6 +8,7 @@ Settings makeSettings()
   ret.dbg=0;
 
   ret.maxNodes=500;
+  ret.tabSize=2;
 
   return ret;
 }

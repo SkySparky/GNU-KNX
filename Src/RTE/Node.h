@@ -22,6 +22,8 @@ typedef struct tNode
   //memory space
   mMemory * global;
   mMemory * local;
+
+  unsigned conId;//user friendly reference number
 }Node;
 
 //only allocate one instance at beginning of program

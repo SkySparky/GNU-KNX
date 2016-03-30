@@ -297,13 +297,20 @@ mBase*memSearch(mBranch* target,HASH hash)
 
 int memDelete(mBase*target)
 {
-
+  //TODO delete based on target type
 
   return 0;
 }
 
 mBase*makeVar(char*name, mType type, void*initial)
 {
+
+  return NULL;
+}
+
+char * getMember(char*input, unsigned len)
+{
+
 
   return NULL;
 }

@@ -55,6 +55,7 @@ Node * registerNode(Registrar * reg, mMemory*global)
   unsigned iDex=0;
   for (unsigned x=0; x<reg->node_length; ++x)
   {
+    newNode->conId=x;
     if (reg->node_registry[x]->base->id==primeList[iDex])
     {
       ++iDex;
@@ -74,6 +75,8 @@ Node * registerNode(Registrar * reg, mMemory*global)
 
   newNode->global=global;
   newNode->local=makeMemory();
+
+  newNode->base->active=1;
 
   return newNode;
 }
@@ -145,10 +148,21 @@ int NodeProc(Registrar * reg, mMemory*global)
   if (reg->settings.dbg)
     printf("Node %llu created\n", node->base->id);
 
+  Interpreter * intr = makeInterpreter(node, reg);
+
+  char * buff = malloc(256);
+  size_t nBytes = 256;
+
   while (node->base->active)
   {
-
-    break;
+    printf("|%d>>\t", node->conId);
+    if (reg->settings.tabAssist)
+      for (unsigned x=0; x<reg->settings.tabSize; ++x)
+        printf(" ");
+    getline(&buff, &nBytes, stdin);
+    Token * stream = analyze(buff, intr);
+    if (stream!=0 && intr->pOrder==0)
+      break;//TODO replace with execution stage
   }
 
 
@@ -158,6 +172,8 @@ int NodeProc(Registrar * reg, mMemory*global)
     prntErr(E_EXT_NODE, 0, reg->settings.dbg);
     return 0;
   }
+
+  free(buff);
 
   if (reg->settings.dbg)
     printf("Node %llu destroyed\n", id);

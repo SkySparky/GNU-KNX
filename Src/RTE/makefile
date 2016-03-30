@@ -1,7 +1,7 @@
 #Compiles runtime language
 
 CC = gcc
-CFLAGS = -std=c11 -Wall
+CFLAGS = -std=c11 -Wall -DNULL=0
 LFLAGS = -lm -L../../_bin_/ -lKDK
 OUT = KNX
 CLEANEXT = o a

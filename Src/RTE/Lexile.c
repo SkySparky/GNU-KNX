@@ -1,175 +1,58 @@
 #include "Lexile.h"
 #include <string.h>
+#include <stdio.h>
 
-Interpreter * makeInterpreter(Node*node, Registrar*reg)
+
+//**********************Factories
+Interpreter * makeInterpreter(Node * node, Registrar * reg)
 {
-  Interpreter * ret = malloc(sizeof(Interpreter));
+  Interpreter * intr = malloc(sizeof(Interpreter));
 
-  if (ret==0)
-    return 0;
+  if (intr==NULL)
+    return NULL;
 
-  ret->host=node;
-  ret->reg=reg;
+  intr->host=node;
+  intr->reg=reg;
 
-  ret->root=0;
-  ret->current=0;
+  intr->root=NULL;
+  intr->cRoot=NULL;
+  intr->cursor=NULL;
 
-  return ret;
+  intr->pOrder=0;
+
+  return intr;
 }
 
-int freeInterpreter(Interpreter*intr)
+int freeInterpreter(Interpreter * intr)
 {
-
-  if (intr->root!=0)//free any existing structures
-    {
-      free(intr->root);//TODO replace with tree-deconstruction
-    }
-
+  dissolveTree(intr->root);
+  free(intr);
   return 0;
 }
 
-Token * genToken(void*data, unsigned type)
-{
-  Token * ret = malloc(sizeof(Token));
-  if (ret==0)
-    return 0;
 
-  ret->type=tdNA;
-  ret->next=0;
-  ret->parent=0;
-
-  return ret;
-}
-
-Token * identify(char*raw, unsigned sIndex, unsigned eIndex, Interpreter*intr)
-{
-  if (sIndex>eIndex)
-    return 0;
-
-  Token * token = 0;
-  char * input = 0;
-
-  input = malloc((eIndex-sIndex)+1);
-  strncpy(input, raw+sIndex, eIndex-sIndex);
-
-  //determine if literal
-
-
-  free (input);
-  return token;
-}
-//querry defined memory scope
-Token * queryMemory(char*raw, unsigned sIndex, unsigned eIndex, Interpreter*intr, Node*node, char searchGlobal)
+//**********************Analysis
+Token * parseExpression(char*string, unsigned sIndex, unsigned eIndex, Interpreter*intr)
 {
 
-return 0;
+  return NULL;
 }
 
-//form factor specific appends
-int appendUnary(Token * tkn, Interpreter * intr)
+Token * analyze(char*string, Interpreter * intr)
 {
-  //lawdy that's a lot of dereferencing
-  if (isUnary(intr->current->super->type))
-  {
-    
-  }
 
-  return 0;
+
+  return NULL;
 }
 
-int appendBinary()
-{
-  return 0;
-}
-
-int appendTernary()
+int delToken(Token * tk)
 {
 
   return 0;
 }
 
-int appendPoly()
+int dissolveTree(Token * tree)
 {
-  return 0;
-}
-
-int appendData()
-{
-  return 0;
-}
-
-//use intr.pOrder to track current execution path
-//tkn is node to add
-//returns reference to current node
-void appendTree(Token*input, Interpreter * intr)
-{
-  //should never happen
-  //TODO throw warning/error
-  if (input==0)
-    return;
-
-  Token * ret = 0;
-
-  //if root node is null, assign tkn as root
-  if (intr->root==0)
-  {
-    intr->root=input;
-    intr->current=input;
-    return;
-  }
-
-  //determine type to append
-  if (isUnary(input->super->type))
-    if (appendUnary(input, intr))
-      printf("Error appending unary to tree");//TODO replace with error throw or exception
-
-}
-
-int analyze(char*input, Interpreter*intr)
-{
-  if (input==0)
-    return 0;
-
-  //0=normal 1=char 2=string 3=comment 4=reference(variable)
-  char readMode=0;
-
-  size_t len = strlen(input);
-
-  //point of last cutoff
-  size_t Index=0;
-
-  for (size_t x=0; x<=len; ++x)
-  {
-    //end of stream jumps
-    if (x==len)
-    {
-
-    }
-
-    switch(input[x])
-    {
-      //whitespace delimeters
-      case ' ':
-      case '\t':
-      if (Index==x)
-      {
-        ++x;
-      }else
-      {
-        appendTree(identify(input, x, Index, intr), intr);
-        x=Index+1;
-      }
-      break;
-
-      //encapsulation
-
-      //data
-
-      default:
-
-      break;
-    }
-  }
 
   return 0;
 }

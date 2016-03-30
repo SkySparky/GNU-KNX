@@ -10,6 +10,7 @@ typedef struct tSettings
   unsigned char dbg:1;
 
   unsigned maxNodes;
+  unsigned short tabSize;
 
 }Settings;
 

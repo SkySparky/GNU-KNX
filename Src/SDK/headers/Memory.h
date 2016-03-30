@@ -184,4 +184,7 @@ int memDelete(mBase*);
 //name, type, initial value (ignored if inapplicable, assumed to be literal of selected type)
 mBase*makeVar(char*, mType, void*);
 
+//returns member, removes from input
+char * getMember(char*, unsigned);
+
 #endif
