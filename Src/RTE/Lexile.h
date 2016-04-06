@@ -55,7 +55,7 @@ pointer
 */
 typedef struct Data
 {
-  Token * super;
+  Token super;
 
   mBase * data;
 }Data;
@@ -63,7 +63,7 @@ typedef struct Data
 //Stores a sub-tree independanty from interpreter
 typedef struct Expression
 {
-  Token * super;
+  Token super;
 
   Token * root;
   mMemory * scope;
@@ -75,9 +75,9 @@ typedef struct Expression
 */
 typedef struct Unary
 {
-  Token * super;
+  Token super;
 
-  Token * arg;
+  Token * channelA;
 } Unary;
 
 /*
@@ -86,7 +86,7 @@ typedef struct Unary
 */
 typedef struct Binary
 {
-  Token * super;
+  Token super;
 
   Token * channelA;
   Token * channelB;
@@ -94,11 +94,11 @@ typedef struct Binary
 
 typedef struct Multi
 {
-  Token * super;
+  Token super;
 
-  unsigned char argLength;
+  unsigned argLength;
   Token ** args;
-} Mutli;
+} Multi;
 
 
 //************************************************
@@ -127,5 +127,13 @@ Token * analyze(char*, Interpreter*);
 int delToken(Token*);
 //delete all nodes in tree
 int dissolveTree(Token*);
+
+int addToken(Interpreter*, Token*);
+
+Token * genDataToken(mBase*);
+Token * genExprToken();
+Token * genUnaryToken(TkType);
+Token * genBinaryToken(TkType);
+Token * genMultiToken(TkType);
 
 #endif

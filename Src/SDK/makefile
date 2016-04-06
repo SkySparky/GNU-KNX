@@ -1,7 +1,7 @@
 #compiles KNX SDK
 
 CC=gcc
-CFLAGS= -std=c11 -pedantic -Wall -c -DNULL=0
+CFLAGS= -std=c11 -pedantic -Wall -c -DNULL=0 -Dtrue=1 -Dfalse=0
 #LDFLAGS= -g
 LIBS= -lm
 SRC=Memory.c Node.c Error.c Exchange.c Util.c

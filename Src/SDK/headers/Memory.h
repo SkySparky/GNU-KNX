@@ -22,20 +22,20 @@ typedef enum {mNA,
 //tag declarations
 struct mBase;//inherited base structure
 
-struct tInt;
-struct tUInt;
-struct tLInt;
-struct tULInt;
-struct tFloat;
-struct tDouble;
-struct tBool;
-struct tChar;
-struct tUChar;
-struct tWChar;
-struct tString;
-struct tArray;
-struct tStruct;
-struct tVoid;
+struct mInt;
+struct mUInt;
+struct mLInt;
+struct mULInt;
+struct mFloat;
+struct mDouble;
+struct mBool;
+struct mChar;
+struct mUChar;
+struct mWChar;
+struct mString;
+struct mArray;
+struct mStruct;
+struct mVoid;
 //TODO Consider runtime loaded modular memory
 
 struct mBranch;
@@ -56,10 +56,93 @@ typedef struct mInt
   int value;
 } mInt;
 
+typedef struct mUInt
+{
+  mBase base;
+  unsigned value;
+} mUInt;
+
+typedef struct mLInt
+{
+  mBase base;
+  long value;
+} mLInt;
+
+typedef struct mULInt
+{
+  mBase base;
+  unsigned long value;
+} mULInt;
+
+typedef struct mFloat
+{
+  mBase base;
+  float value;
+}mFloat;
+
+typedef struct mDouble
+{
+  mBase base;
+  double value;
+}mDouble;
+
+typedef struct mBool
+{
+  mBase base;
+  unsigned char value;
+}mBool;
+
+typedef struct mChar
+{
+  mBase base;
+  char value;
+}mChar;
+
+typedef struct mUChar
+{
+  mBase base;
+  unsigned char value;
+}mUChar;
+
+typedef struct mWChar
+{
+  mBase base;
+  short value;
+}mWChar;
+
+typedef struct mString
+{
+  mBase base;
+  char*value;
+}mString;
+
+typedef struct mArray
+{
+  mBase base;
+  void * value;
+  unsigned length;
+}mArray;
+
+//TODO consider using splay tree after benchmark tests
+typedef struct mStruct
+{
+  mBase base;
+
+  mBase * value;
+  unsigned length;
+}mStruct;
+
+typedef struct mVoid
+{
+  mBase base;
+  void * value;
+  mType type;
+}mVoid;
+
 //for storing data structures within a tree
 typedef struct mBranch
 {
-  mBase target;
+  mBase * target;
   struct mBranch * left;
   struct mBranch * right;
   struct mBranch * parent;
@@ -82,13 +165,17 @@ int freeMemory(mMemory*);//permenantly clear full memory structure
 
 //Utility functions
 //search BST by hash
-mBase*memSearch(mBranch*, HASH);
+mBase*memSearch(mMemory*, mBranch*, HASH);
 
 mBase * getMember(mMemory*,HASH);
 
+//0=invalid input -1=input already exists 1=success
+//adds new branch to binary tree
 int addBranch(mMemory*,mBase*);
 //determine type, and free memory accordingly
 int memDelete(mBase*);
+//TODO implement splay method
+int memSplay(mMemory*, mBranch*);
 
 //locate correct factory
 //name, type, initial value (ignored if inapplicable)

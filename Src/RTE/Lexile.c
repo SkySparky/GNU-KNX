@@ -11,6 +11,71 @@
 typedef enum {_normal, _string, _char, _comment}readmode;
 typedef enum {_none, _ref/*$*/, }spChar;
 
+//**********************Tokens
+int addToken(Interpreter * intr, Token * tk)
+{
+
+  return 0;
+}
+
+Token * genDataToken(mBase*data)
+{
+  Data * ret = malloc(sizeof(Data));
+  ret->super.type=_data_;
+  ret->super.parent=NULL;
+  ret->super.previous=NULL;
+  ret->super.next=NULL;
+  ret->data=data;
+  return &ret->super;
+}
+
+Token * genExprToken()
+{
+  Expression * ret = malloc(sizeof(Expression));
+  ret->super.type=_exprss_;
+  ret->super.parent=NULL;
+  ret->super.previous=NULL;
+  ret->super.next=NULL;
+  ret->root=NULL;
+  ret->scope=malloc(sizeof(mMemory));
+  return &ret->super;
+}
+
+Token * genUnaryToken(TkType type)
+{
+  Unary * ret = malloc(sizeof(Unary));
+  ret->super.type=type;
+  ret->super.parent=NULL;
+  ret->super.previous=NULL;
+  ret->super.next=NULL;
+  ret->channelA=NULL;
+  return &ret->super;
+}
+
+Token * genBinaryToken(TkType type)
+{
+  Binary * ret = malloc(sizeof(Binary));
+  ret->super.type=type;
+  ret->super.parent=NULL;
+  ret->super.previous=NULL;
+  ret->super.next=NULL;
+  ret->channelA=NULL;
+  ret->channelB=NULL;
+  return &ret->super;
+}
+
+Token * genMultiToken(TkType type)
+{
+  Multi * ret = malloc(sizeof(Multi));
+  ret->super.type=type;
+  ret->super.parent=NULL;
+  ret->super.previous=NULL;
+  ret->super.next=NULL;
+  ret->args=NULL;
+  ret->argLength=0;
+  return &ret->super;
+}
+
 //**********************Factories
 Interpreter * makeInterpreter(Node * node, Registrar * reg)
 {
@@ -103,7 +168,9 @@ Token * analyze(char*string, Interpreter * intr)
           break;
 
           //logic
-
+          case '=':
+            if (string[x+1]=='=')
+          break;
         }
         index=x+1;
       } else if (x+1==len)
