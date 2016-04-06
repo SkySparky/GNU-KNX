@@ -4,8 +4,11 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "../SDK/headers/Error.h"
+
+#include "../SDK/headers/Memory.h"
 
 extern unsigned primeList [500];
 
@@ -160,6 +163,11 @@ int NodeProc(Registrar * reg, mMemory*global)
       for (unsigned x=0; x<reg->settings.tabSize; ++x)
         printf(" ");
     getline(&buff, &nBytes, stdin);
+    #ifdef __WINDOWS
+    if (buff[strlen(buff)-1]==10)
+      buff[strlen(buff)-1]=0;//remove leading NL
+    #endif
+
     Token * stream = analyze(buff, intr);
     if (stream!=0 && intr->pOrder==0)
       break;//TODO replace with execution stage

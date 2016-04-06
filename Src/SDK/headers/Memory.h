@@ -20,7 +20,7 @@ typedef enum {mNA,
 #define isNumComp(x) (x>=mtmtInt && x<=mtWChar)//numeric, or castable to numeric
 
 //tag declarations
-struct tBase;//inherited base structure
+struct mBase;//inherited base structure
 
 struct tInt;
 struct tUInt;
@@ -41,109 +41,29 @@ struct tVoid;
 struct mBranch;
 struct tMemory;
 
-typedef struct tBase
+typedef struct mBase
 {
   HASH hash;
-  unsigned char type;
+  mType type;
   //settings
   unsigned char lock:1;//one bit switch
   unsigned char raw:1;//is literal (1) or managed (0)
 }mBase;
 
+typedef struct mInt
+{
+  mBase base;
+  int value;
+} mInt;
+
 //for storing data structures within a tree
 typedef struct mBranch
 {
-  mBase*target;
+  mBase target;
   struct mBranch * left;
   struct mBranch * right;
   struct mBranch * parent;
 }mBranch;
-
-typedef struct tInt
-{
-  mBase*base;
-  int value;
-}mInt;
-
-typedef struct tUInt
-{
-  mBase*base;
-  unsigned value;
-}mUInt;
-
-typedef struct tLInt
-{
-  mBase*base;
-  long long int value;
-} mLInt;
-
-typedef struct tULInt
-{
-  mBase*base;
-  unsigned long long int value;
-}mULInt;
-
-typedef struct tFloat
-{
-  mBase*base;
-  unsigned long long int value;
-}mFloat;
-
-typedef struct tDouble
-{
-  mBase*base;
-  unsigned long long int value;
-}mDouble;
-
-typedef struct tBool
-{
-  mBase*base;
-  char value;
-}mBool;
-
-typedef struct tChar
-{
-  mBase*base;
-  char value;
-}mChar;
-
-typedef struct tUChar
-{
-  mBase*base;
-  unsigned char value;
-}mUChar;
-
-typedef struct tWChar
-{
-  mBase*base;
-  wchar_t value;
-} mWChar;
-
-typedef struct tString
-{
-  mBase*base;
-  char*string;
-  unsigned length;
-}mString;
-
-typedef struct tArray
-{
-  mBase*base;
-  mBase*items;
-  unsigned length;
-  unsigned char type;//item type
-} mArray;
-
-typedef struct tStruct
-{
-  mBase*base;
-  void * data;
-}mStruct;
-
-typedef struct tVoid
-{
-  mBase*base;
-}mVoid;
 
 //splay tree memory container
 typedef struct tMemory
@@ -152,23 +72,9 @@ typedef struct tMemory
 }mMemory;
 
 //factories
-mBase * makeBase();
 mBranch * makeBranch();
 
-mInt * makeInt();
-mUInt * makeUInt();
-mLInt * makeLInt();
-mULInt * makeULInt();
-mFloat * makeFloat();
-mDouble * makeDouble();
-mBool * makeBool();
-mChar * makeChar();
-mUChar * makeUChar();
-mWChar * makeWChar();
-mString * makeString();
-mArray * makeArray();
-mStruct * makeStruct();
-mVoid * makeVoid();
+mBase makeBase(char*, mType, unsigned char, unsigned char);
 
 mMemory * makeMemory();
 int freeMemory(mMemory*);//permenantly clear full memory structure
@@ -177,14 +83,18 @@ int freeMemory(mMemory*);//permenantly clear full memory structure
 //Utility functions
 //search BST by hash
 mBase*memSearch(mBranch*, HASH);
+
+mBase * getMember(mMemory*,HASH);
+
+int addBranch(mMemory*,mBase*);
 //determine type, and free memory accordingly
 int memDelete(mBase*);
 
 //locate correct factory
-//name, type, initial value (ignored if inapplicable, assumed to be literal of selected type)
-mBase*makeVar(char*, mType, void*);
+//name, type, initial value (ignored if inapplicable)
+mBase*makeVar(char*, mType, void*, unsigned char);
 
 //returns member, removes from input
-char * getMember(char*, unsigned);
+char * getMemberString(char*, unsigned);
 
 #endif

@@ -13,6 +13,8 @@ First thread is root
 
 #include "../SDK/headers/Error.h"
 
+#define DEBUG
+
 int parseCMD(int argc, char**argv, Registrar * reg)
 {
   int ret=0;
@@ -84,9 +86,12 @@ int main(int argc, char**argv, char **argx)
   return 0;
 }
 #else
+#include "../SDK/headers/Memory.h"
 int main(int argc, char**argv, char**argx)
 {
-
+  char name [] = "TestVar";
+  int init = 4;
+  makeVar(name, mtInt, &init, 1);
   return 0;
 }
 #endif

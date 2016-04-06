@@ -1,7 +1,8 @@
-#include "Util.h"
+#include "headers/Util.h"
 
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 
 unsigned long long FNV_1A(const char*input)
 {
@@ -26,20 +27,36 @@ unsigned long long FNV_1A(const char*input)
     return hash;
 }
 
-int isNumeric(char*raw, unsigned sIndex, unsigned eIndex)
+int isNumber(char*raw, unsigned sIndex, unsigned eIndex)
 {
-  char * seg = 0;
-  size_t len=0;
-  if ((sIndex==0) && (eIndex==0))
+    char rb = 0;
+    char neg = 0;
+
+    if (!(sIndex<eIndex))
+      return 0;
+
+    if (raw[sIndex]=='-')
     {
-      len=strlen(raw);
-      seg=raw;
-    }
-  else
-    {
-      seg=malloc((eIndex-sIndex)+1);
-      len=eIndex-sIndex;
+      neg=1;
+      ++sIndex;
     }
 
+    for (unsigned x=sIndex; x<eIndex; ++x)
+    {
+      if ((raw[x]<'0' || raw[x]>'9') && (raw[x]!='.'))
+        return 0;
+      if (raw[x]=='.')
+        {
+          if (rb==1)
+            return 0;
+          else
+            rb=1;
+        }
+    }
+
+    if (rb)//decimal
+      return 3;
+    else
+      return neg?2:1;
     return 0;
 }

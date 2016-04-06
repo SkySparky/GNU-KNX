@@ -13,7 +13,8 @@ Error and warning macros and console readout
   //System
   //Parsing
 #define W_IMP_CAST        0x0120//Implicit cast (valid)
-#define W_
+#define W_NEG_ENCAP       0x0121//pOrder below 0
+#define W_ENCAP_MSMATCH   0x0122//encapStack conjugate mismatch
   //Exchange
   //File
   //IO

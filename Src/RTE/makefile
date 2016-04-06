@@ -7,7 +7,7 @@ OUT = KNX
 CLEANEXT = o a
 BITVRS=64
 DBGFLAG=
-SRC=Launcher.c Settings.c Node.c Lexile.c
+SRC=Launcher.c Settings.c Node.c Lexile.c Debug.c
 
 ifeq ($(shell uname), Linux)
 	FixPath = $1
@@ -27,7 +27,7 @@ else
 endif
 
 all:
-	$(CC) $(SRC) $(OSMODE) $(CFLAGS) $(LFLAGS) -o $(RUNPATH)
+	$(CC) $(SRC) $(OSMODE) $(CFLAGS) $(PLATFORM) $(LFLAGS) -o $(RUNPATH)
 
 .PHONY: clean
 clean:

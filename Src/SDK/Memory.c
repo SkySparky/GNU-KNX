@@ -5,240 +5,11 @@ Defines memory type factories and commong operations
 */
 
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 
 #include "headers/Memory.h"
-
-mBase * makeBase()
-{
-  mBase * ret = malloc(sizeof(mBase));
-  if (ret==NULL)
-    return NULL;
-
-  ret->hash=0;
-  ret->type=mNA;
-  ret->lock=0;
-  ret->raw=1;
-
-  return ret;
-}
-
-mInt * makeInt()
-{
-  mInt * ret = malloc(sizeof(mInt));
-  if (ret==NULL)
-    return NULL;
-  ret->base=makeBase();
-  if (ret->base==NULL)
-  {
-    free(ret);
-    return NULL;
-  }
-
-  ret->value=0;
-
-  return ret;
-}
-
-mUInt * makeUInt()
-{
-  mUInt * ret = malloc(sizeof(mUInt));
-  if (ret==NULL)
-    return NULL;
-  ret->base=makeBase();
-  if (ret->base==NULL)
-  {
-    free(ret);
-    return NULL;
-  }
-
-  ret->value=0;
-
-  return ret;
-}
-
-mLInt * makeLInt()
-{
-  mLInt * ret = malloc(sizeof(mLInt));
-  if (ret==NULL)
-    return NULL;
-  ret->base=makeBase();
-  if (ret->base==NULL)
-  {
-    free(ret);
-    return NULL;
-  }
-
-  ret->value=0;
-
-  return ret;
-}
-
-mULInt * makeULInt()
-{
-  mULInt * ret = malloc(sizeof(mULInt));
-  if (ret==NULL)
-    return NULL;
-  ret->base=makeBase();
-  if (ret->base==NULL)
-  {
-    free(ret);
-    return NULL;
-  }
-
-  ret->value=0;
-
-  return ret;
-}
-
-mFloat * makeFloat()
-{
-  mFloat * ret = malloc(sizeof(mFloat));
-  if (ret==NULL)
-    return NULL;
-  ret->base=makeBase();
-  if (ret->base==NULL)
-  {
-    free(ret);
-    return NULL;
-  }
-
-  ret->value=0;
-
-  return ret;
-}
-
-mDouble * makeDouble()
-{
-  mDouble * ret = malloc(sizeof(mDouble));
-  if (ret==NULL)
-    return NULL;
-  ret->base=makeBase();
-  if (ret->base==NULL)
-  {
-    free(ret);
-    return NULL;
-  }
-
-  ret->value=0;
-
-  return ret;
-}
-
-mBool * makeBool()
-{
-  mBool * ret = malloc(sizeof(mBool));
-  if (ret==NULL)
-    return NULL;
-  ret->base=makeBase();
-  if (ret->base==NULL)
-  {
-    free(ret);
-    return NULL;
-  }
-
-  ret->value=0;
-
-  return ret;
-}
-
-mChar * makeChar()
-{
-  mChar * ret = malloc(sizeof(mChar));
-  if (ret==NULL)
-    return NULL;
-  ret->base=makeBase();
-  if (ret->base==NULL)
-  {
-    free(ret);
-    return NULL;
-  }
-
-  ret->value=0;
-
-  return ret;
-}
-
-mUChar * makeUChar()
-{
-  mUChar * ret = malloc(sizeof(mUChar));
-  if (ret==NULL)
-    return NULL;
-  ret->base=makeBase();
-  if (ret->base==NULL)
-  {
-    free(ret);
-    return NULL;
-  }
-
-  ret->value=0;
-
-  return ret;
-}
-
-mWChar * makeWChar()
-{
-  mWChar * ret = malloc(sizeof(mWChar));
-  if (ret==NULL)
-    return NULL;
-  ret->base=makeBase();
-  if (ret->base==NULL)
-  {
-    free(ret);
-    return NULL;
-  }
-
-  ret->value=0;
-
-  return ret;
-}
-
-mString * makeString()
-{
-  mString * ret = malloc(sizeof(mString));
-  if (ret==NULL)
-    return NULL;
-  ret->base=makeBase();
-  if (ret->base==NULL)
-  {
-    free(ret);
-    return NULL;
-  }
-
-  ret->string=malloc(0);
-  ret->length=0;
-
-  return ret;
-}
-
-mArray * makeArray()
-{
-  mArray * ret = malloc(sizeof(mArray));
-  if (ret==NULL)
-    return NULL;
-  ret->base=makeBase();
-  if (ret->base==NULL)
-  {
-    free(ret);
-    return NULL;
-  }
-
-  ret->items=malloc(0);
-  ret->length=0;
-  ret->type=mNA;
-
-  return ret;
-}
-
-mStruct * makeStruct()
-{
-  mStruct * ret = malloc(sizeof(mStruct));
-  if (ret==NULL)
-    return NULL;
-
-  ret->data=NULL;
-
-  return ret;
-}
+#include "headers/Util.h"
 
 mMemory * makeMemory()
 {
@@ -264,35 +35,30 @@ int freeMemory(mMemory * target)
 
 mBase*memSearch(mBranch* target,HASH hash)
 {
-  if (target==NULL)
-    return NULL;
+  return NULL;
+}
 
-  if (target->target->hash==hash)
-    return target->target;
-
-  //BST search
-  while (1)
-  {
-    if (hash<target->target->hash)
-    {
-      if (target->left==NULL)
-        return NULL;
-      else
-        target=target->left;
-    }
-    else if (hash>target->target->hash)
-    {
-      if (target->right==NULL)
-        return NULL;
-      else
-        target=target->right;
-    }
-
-      if (target->target->hash==hash)
-        return target->target;
-  }
+mBase * getMember(mMemory*mem, HASH hash)
+{
+  //Perform binary search to check if target is in scope
+  //If found, return
 
   return NULL;
+}
+
+int addBranch(mMemory*mem, mBase*tgt)
+{
+  /*
+    Add to top of tree, if DNE
+  */
+
+  if (mem==NULL || tgt==NULL)
+    return 0;
+
+  if (getMember(mem, tgt->hash)!=0)
+    return -1;
+
+  return 0;
 }
 
 int memDelete(mBase*target)
@@ -302,15 +68,57 @@ int memDelete(mBase*target)
   return 0;
 }
 
-mBase*makeVar(char*name, mType type, void*initial)
+mBase makeBase(char * name, mType type, unsigned char lock, unsigned char raw)
 {
+  mBase base;
+  base.hash=FNV_1A(name);
+  base.type=type;
+  base.lock=lock;
+  base.raw=raw;
 
+  return base;
+}
+
+mBase*makeVar(char*name, mType type, void*initial, unsigned char raw)
+{
+  switch(type)
+  {
+    case mtInt:
+    {
+      mInt * ret = malloc(sizeof(mInt));
+      ret->value=initial==NULL?0:*(int*)initial;
+      ret->base=makeBase(name, type, 0, raw);
+      return &ret->base;
+    }
+    break;
+
+    default:
+    return NULL;
+  }
   return NULL;
 }
 
-char * getMember(char*input, unsigned len)
+char * getMemberString(char*input, unsigned len)
 {
+  if (input==NULL)
+    return NULL;
 
+  if (len==0)
+    len=strlen(input);
+
+    printf("Length = %u\n", len);
+
+  for (unsigned p=0; p<len; ++p)
+  {
+    if (input[p]=='.')
+    {
+      char * member = malloc(len-p-1);
+      strncpy(member, input+p+1, len-p-1);
+      input[p]=0;
+      member[(len-p)-1]=0;
+      return member;
+    }
+  }
 
   return NULL;
 }

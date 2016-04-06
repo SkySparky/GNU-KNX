@@ -6,6 +6,7 @@
 
 typedef enum
 {
+  _raw_,//unrecognized symbol
   //general
   _data_, _exprss_,
   //unary
@@ -81,7 +82,7 @@ typedef struct Unary
 
 /*
   Designed for lVal rVal operations
-
+  Handles ternary operations
 */
 typedef struct Binary
 {
