@@ -1,13 +1,13 @@
 #Compiles runtime language
 
 CC = gcc
-CFLAGS = -std=c11 -Wall -DNULL=0
+CFLAGS = -std=c11 -Wall -DNULL=0 -Dtrue=1 -Dfalse=0
 LFLAGS = -lm -L../../_bin_/ -lKDK
 OUT = KNX
 CLEANEXT = o a
 BITVRS=64
 DBGFLAG=
-SRC=Launcher.c Settings.c Node.c Lexile.c Debug.c
+SRC=Launcher.c Settings.c Node.c Lexile.c Debug.c Keyword.c
 
 ifeq ($(shell uname), Linux)
 	FixPath = $1

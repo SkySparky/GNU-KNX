@@ -1,4 +1,5 @@
 #include "Lexile.h"
+#include "Keyword.h"
 #include "../SDK/headers/Error.h"
 
 #include <string.h>
@@ -108,6 +109,9 @@ void identify(unsigned sDex, unsigned eDex, char * string, Interpreter * intr, s
   char str [64] = {0};
   strncpy(str, string+sDex, (eDex-sDex));
   printf("%s : %d : %u\n", str, *sc, intr->pOrder);
+
+  printf("KW: %s %d \n",str , isKeyword(str, intr));
+
   *sc=0;
 }
 

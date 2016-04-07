@@ -13,7 +13,7 @@ First thread is root
 
 #include "../SDK/headers/Error.h"
 
-#define DEBUG
+//#define DEBUG
 
 int parseCMD(int argc, char**argv, Registrar * reg)
 {
@@ -87,11 +87,20 @@ int main(int argc, char**argv, char **argx)
 }
 #else
 #include "../SDK/headers/Memory.h"
+#include "Keyword.h"
 int main(int argc, char**argv, char**argx)
 {
-  char name [] = "TestVar";
-  int init = 4;
-  makeVar(name, mtInt, &init, 1);
+//  char name [] = "TestVar";
+//  int init = 4;
+//  makeVar(name, mtInt, &init, 1);
+
+  printf("%d\n", isKeyword("if",NULL));
+  printf("%d\n", isKeyword("true",NULL));
+  printf("%d\n", isKeyword("legacy",NULL));
+  printf("%d\n", isKeyword("If",NULL));
+  printf("%d\n", isKeyword("hello",NULL));
+  printf("%d\n", isKeyword("else\0",NULL));
+
   return 0;
 }
 #endif
