@@ -1,6 +1,9 @@
 #compiles KNX runtime engine, modules, and utility programs
 
-SUBDIRS = Src/SDK/ Src/RTE/
+SUBDIRS = Src/KDK/ Src/RTE/
+BITVRS=64
+
+export BITVRS
 
 subdirs:
 	for dir in $(SUBDIRS); do \
