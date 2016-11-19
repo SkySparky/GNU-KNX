@@ -1,15 +1,14 @@
 #Compiles runtime language
 
-export LD_LIBRARY_PATH=/../../_bin_
-
+#BINPATH="../../_bin_/"
 CC = gcc
-CFLAGS = -std=c11 -Wall -DNULL=0 -Dtrue=1 -Dfalse=0
-LFLAGS = -lm -L -l../../_bin_/KDK
+CFLAGS = -std=c11 -Wall -I../KDK -DNULL=0 -Dtrue=1 -Dfalse=0
+LFLAGS = -lm -ldl -L$(BINPATH) -lKDK -Wl,-rpath=$(BINPATH)
 OUT = KNX
 CLEANEXT = o a
 BITVRS=64
 DBGFLAG=
-SRC=Launcher.c Error.c
+SRC=Launcher.c Error.c Core.c Node.c CMD.c
 
 ifeq ($(shell uname), Linux)
 	FixPath = $1

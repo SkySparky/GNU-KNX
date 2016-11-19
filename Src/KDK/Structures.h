@@ -1,36 +1,21 @@
 #ifndef KDK_STRUCTURE
 #define KDK_STRUCTURE
 
+/*
+Defines basic structures for transversals and memory objects
+*/
+
 #include "Macro.h"
 #include "MemScheme.h"
 #include "ObjectSearch.h"
 
-typedef struct Object Object;
-typedef struct ObjectTree ObjectTree;
-typedef struct ObjectLeaf ObjectLeaf;
 
+//basic object model
 typedef struct Object{
   LUI hash;
-
-  ObjectTree * members;
-
+  unsigned typeId;
+  void * value;
 } Object;
 
-typedef struct ObjectLeaf{
-  ObjectLeaf * left;
-  ObjectLeaf * right;
-
-  Object * target;
-
-} ObjectLeaf;
-
-typedef struct ObjectTree{
-  MemScheme memScheme;
-  ObjectLeaf * root;
-} ObjectTree;
-
-extern Object * BuildObject(char * name);
-extern ObjectLeaf * BuildObjectLeaf(Object * trgt);
-extern ObjectTree * BuildObjectTree(MemScheme scheme, ObjectLeaf * root);
 
 #endif

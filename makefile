@@ -2,8 +2,10 @@
 
 SUBDIRS = Src/KDK/ Src/RTE/
 BITVRS=64
+BINPATH=$(shell pwd)/_bin_
 
 export BITVRS
+export BINPATH
 
 subdirs:
 	for dir in $(SUBDIRS); do \
@@ -16,4 +18,10 @@ run:
 
 .PHONY: dbg
 dbg:
-	_bin_/KNX -d
+	_bin_/KNX -h
+
+.PHONY: clean
+clean:
+	for dir in $(SUBDIRS); do \
+	 $(MAKE) clean -C $$dir; \
+	done

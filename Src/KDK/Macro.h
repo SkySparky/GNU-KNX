@@ -1,7 +1,7 @@
 #ifndef KNX_MACRO
 #define KNX_MACRO
 
-#define LUI long unsigned int
+#define LUI long long unsigned int
 #define UINT unsigned int
 #define bool unsigned char
 #define true 1

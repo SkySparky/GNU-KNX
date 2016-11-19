@@ -10,6 +10,6 @@ allow communication, registration and management between external dynamic librar
 
 #include "Contract.h"
 #include "MemScheme.h"
-
+#include "Util.h"
 
 #endif

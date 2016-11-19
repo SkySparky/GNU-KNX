@@ -1,13 +1,13 @@
 #Compiles KNX Development Kit
 
 CC = gcc
-CFLAGS = -std=c11 -Wall
+CFLAGS = -std=c11 -Wall -fPIC
 LFLAGS = -lm
 OUT = libKDK.so
 CLEANEXT = o a
 BITVRS=64
 DBGFLAGS=
-SRC=ObjectSearch.c StructureFactory.c Util.c
+SRC=Util.c Contract.c
 EXPORT_PTH=../../_bin_/
 
 ifeq ($(shell uname), Linux)

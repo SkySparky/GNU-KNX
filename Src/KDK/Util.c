@@ -1,5 +1,7 @@
 #include "Util.h"
 
+#include <stdio.h>
+
 LUI _FNV_1A(char * str){
 
 #if BITVRS == 64
@@ -14,9 +16,24 @@ LUI hash = FNV_OFFSET;
 
 char * iter = str;
 
-while (iter != 0){
+while (*iter){
   hash = (hash ^ *iter) * FNV_PRIME;
+  ++iter;
 }
 
 return hash;
+}
+
+void printlineC(char * str, char * color){
+  printC(str, color);
+  printf("\r\n");
+}
+
+void printC(char * str, char * color){
+  printf("%s%s",color, str);
+}
+
+void printReset()
+{
+  printf(COL_RESET);
 }
