@@ -3,12 +3,13 @@
 #BINPATH="../../_bin_/"
 CC = gcc
 CFLAGS = -std=c11 -Wall -I../KDK -DNULL=0 -Dtrue=1 -Dfalse=0
-LFLAGS = -lm -ldl -L$(BINPATH) -lKDK -Wl,-rpath=$(BINPATH)
+LFLAGS = -lm -ldl -lpthread -L$(BINPATH) -lKDK -Wl,-rpath=$(BINPATH)
+VERSION=-DRTEVERSION=\"0.0.1\"
 OUT = KNX
 CLEANEXT = o a
 BITVRS=64
 DBGFLAG=
-SRC=Launcher.c Error.c Core.c Node.c CMD.c
+SRC=Launcher.c Error.c Core.c Node.c CMD.c Registry.c
 
 ifeq ($(shell uname), Linux)
 	FixPath = $1
@@ -28,7 +29,7 @@ else
 endif
 
 all:
-	$(CC) $(SRC) $(OSMODE) $(CFLAGS) $(PLATFORM) $(LFLAGS) -o $(RUNPATH)
+	$(CC) $(SRC) $(OSMODE) $(CFLAGS) $(VERSION) $(PLATFORM) $(LFLAGS) -o $(RUNPATH)
 
 .PHONY: clean
 clean:

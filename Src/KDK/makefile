@@ -3,11 +3,12 @@
 CC = gcc
 CFLAGS = -std=c11 -Wall -fPIC
 LFLAGS = -lm
+VERSION = -DKDKVersion=\"0.0.1\"
 OUT = libKDK.so
 CLEANEXT = o a
 BITVRS=64
 DBGFLAGS=
-SRC=Util.c Contract.c
+SRC=Util.c Contract.c 
 EXPORT_PTH=../../_bin_/
 
 ifeq ($(shell uname), Linux)
@@ -22,7 +23,7 @@ else
 endif
 
 all:
-	$(CC) $(CFLAGS) $(SRC) -shared -o $(EXPORT_PTH)$(OUT) $(OSMODE) $(LFLAGS) $(DBGFLAGS)
+	$(CC) $(CFLAGS) $(VERSION) $(SRC) -shared -o $(EXPORT_PTH)$(OUT) $(OSMODE) $(LFLAGS) $(DBGFLAGS)
 
 .PHONY: clean
 clean:

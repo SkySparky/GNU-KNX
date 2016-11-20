@@ -11,23 +11,28 @@
 //return false on fatal error
 bool systemInit(){
   bool responseCode = true;
-
   //from Core.h
+  initializeConfig();
   initializeCore();
   initializeNodeRegistry();
+  intitializeTypeRegistry();
+  initializeInterfaces();
 
   return responseCode;
 }
 
 int main(int argc, char **argv)
 {
-
-  parseCMD(argc, argv);
-
   if (!systemInit()){
     printf("Failed to start\r\n");
     return -1;
   }
+
+  parseCMD(argc, argv);
+
+  //initialize root node
+  Node * root = buildNode("root", NULL);
+  registerNode(root);
 
   return 0;
 }

@@ -10,7 +10,6 @@
 bool parseCMD(int argc, char ** argv){
   bool isFatal = false;
   //generate default values
-  initializeConfig();
 
   //parse command line options
   for (size_t i = 1; i < argc; ++i){
@@ -27,7 +26,8 @@ bool parseCMD(int argc, char ** argv){
     }else{//char option
       for(size_t j=1; j<len; ++j){
         switch(argv[i][j]){
-            case 'h': printHelp(); break;
+            case 'h': printHelp();    break;
+            case 'v': printVersion(); break;
           default:
           printf("Unrecognized option: %s (%c)\r\n", argv[i], argv[i][j]);
           isFatal=true;
@@ -42,4 +42,10 @@ bool parseCMD(int argc, char ** argv){
 
 void printHelp(){
   printf("-h            Print this message\r\n");
+  printf("-v            Print KNX and KDK versions\r\n");
+}
+
+void printVersion(){
+  //printf(">>%s\n", Config->kdkVersion);
+  printf("KNX : %s | KDK : %s\r\n", Config->rteVersion, Config->kdkVersion);
 }

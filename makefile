@@ -18,7 +18,7 @@ run:
 
 .PHONY: dbg
 dbg:
-	_bin_/KNX -h
+	_bin_/KNX -h -v
 
 .PHONY: clean
 clean:
