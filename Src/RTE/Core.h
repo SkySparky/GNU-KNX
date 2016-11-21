@@ -20,8 +20,7 @@ typedef struct _nodeReg{
 typedef struct _typeReg{
   int * typeId;
   LUI * hashId;
-  //Constructor * constructors;
-  //Destructor * destructors;
+  Object ** objectMap;
 }_typeReg;
 
 typedef struct _core{
@@ -41,11 +40,13 @@ typedef struct _config{
 
   //system data
   unsigned objRegCount;
+  unsigned maxObjCount;//maximum unique types. Can be resized
 }_config;
 
 _core * Core;
 _nodeReg * NodeReg;
 _config * Config;
+_typeReg * TypeReg;
 
 //component generation
 void initializeCore();

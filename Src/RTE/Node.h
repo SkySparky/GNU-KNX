@@ -4,6 +4,7 @@
 #include <pthread.h>
 
 #include "Macro.h"
+#include "Memory.h"
 
 typedef struct Node Node;
 
@@ -33,6 +34,10 @@ typedef struct Node{
 
   //thread handle
   pthread_t handle;
+
+  //Memory access
+  Memory * global;
+  Memory * local;
 
 }Node;
 

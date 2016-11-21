@@ -13,10 +13,10 @@ bool systemInit(){
   bool responseCode = true;
   //from Core.h
   initializeConfig();
+  initializeInterfaces();
   initializeCore();
   initializeNodeRegistry();
   intitializeTypeRegistry();
-  initializeInterfaces();
 
   return responseCode;
 }

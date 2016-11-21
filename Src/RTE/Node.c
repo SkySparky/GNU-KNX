@@ -18,7 +18,7 @@ Node * buildNode(char * name, Node * parent){
 
   node->hash = _FNV_1A(name);
 
-  if (!node || !registerNode(node)){
+  if (!registerNode(node)){
     return NULL;
   }
 

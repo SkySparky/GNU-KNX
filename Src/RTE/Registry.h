@@ -10,7 +10,8 @@
 Defines common registration methods stored in Core.h
 */
 
-int _registerObject();
+//register new object
+int _registerObject(char*, void*, castable *);
 
 //core object types
 void registerBasicTypes();

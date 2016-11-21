@@ -19,6 +19,8 @@ void initializeConfig(){
 
   //setup initial values
   Config->maxNodes = 128;
+  Config->objRegCount = 0;
+  Config->maxObjCount = 128;
 
   size_t vLen = strlen(RTEVERSION);
   Config->rteVersion = (char*) malloc(vLen);
@@ -30,13 +32,24 @@ void initializeConfig(){
 }
 
 void intitializeTypeRegistry(){
+
+  //build registry
+  TypeReg = malloc(sizeof(_typeReg));
+
+  TypeReg->typeId = malloc(Config->maxObjCount * sizeof(int));
+  TypeReg->hashId = malloc(Config->maxObjCount * sizeof(LUI));
+  TypeReg->objectMap = malloc(Config->maxObjCount * sizeof(Object*));
+
+  for(int i = 0; i < Config->maxObjCount; ++i)
+    TypeReg->objectMap[i] = NULL;
+
   //populate registration table with basic types
   registerBasicTypes();
 }
 
 void initializeInterfaces(){
-  int (*registerObject)() = &_registerObject;
-  registerObject();
+  /*int (*registerObject)(char*, void*, castable *) = &_registerObject;*/
+  registerObject = &_registerObject;
 }
 
 bool registerNode(Node * node){

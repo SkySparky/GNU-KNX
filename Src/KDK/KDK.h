@@ -9,7 +9,10 @@ allow communication, registration and management between external dynamic librar
 #define KDK_HEAD
 
 #include "Contract.h"
-#include "MemScheme.h"
 #include "Util.h"
+#include "Structures.h"
+#include "Interfaces.h"
+#include "Macro.h"
+#include "Type.h"
 
 #endif
