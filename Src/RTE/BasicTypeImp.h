@@ -8,12 +8,12 @@ Provides basic type procedures
 */
 
 typedef enum{
-  eVoid,
-  eInt,
-  eUInt
+  _eVoid,
+  _eInt,
+  _eUInt
 }BasicTypeId;
 
-castable * getIntCastMethods();
+Object * _int2cast(Object *, Object *);
 
 
 #endif

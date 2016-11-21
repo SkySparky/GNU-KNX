@@ -48,8 +48,7 @@ void intitializeTypeRegistry(){
 }
 
 void initializeInterfaces(){
-  /*int (*registerObject)(char*, void*, castable *) = &_registerObject;*/
-  registerObject = &_registerObject;
+  registerObject = _registerObject;
 }
 
 bool registerNode(Node * node){

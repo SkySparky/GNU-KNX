@@ -16,7 +16,7 @@ typedef struct Object{
   LUI         hash;
   int         typeId;
   void     *  value;
-  castable *  castMethods;
+  castable    cast;
 } Object;
 
 

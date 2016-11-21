@@ -9,17 +9,17 @@ Object * copyTransferable(Object * obj){
   ret->typeId = obj->typeId;
   ret->hash = 0;
   ret->value = malloc(sizeof(*obj->value));
+  ret->cast = obj->cast;
 
   return ret;
 }
 
 
-//integer
+//integer conversion methods
 Object * _int2uint(Object* left, Object* right){
   Object * ret = copyTransferable(right);
 
   *((unsigned *)ret->value) = *(int *)right->value;
-  ret->castMethods = right->castMethods;
 
   return ret;
 }
@@ -28,17 +28,17 @@ Object * _int2long(Object * left, Object * right){
   Object * ret = copyTransferable(right);
 
   *((long *)ret->value) = *(int *)right->value;
-  ret->castMethods = right->castMethods;
 
   return ret;
 }
 
-castable * getIntCastMethods(){
-  castable * castMethods = malloc((sizeof(castable *) * 2) + sizeof(castable *));
+Object * _int2cast(Object * left, Object * right){
 
-  castMethods[0] = &_int2uint;
-  castMethods[1] = &_int2long;
-  castMethods[2] = NULL;
+  switch (right->typeId){
+    case _eUInt: return _int2uint(left, right);
 
-  return castMethods;
+    default: return NULL;
+  }
+
+  return NULL;
 }

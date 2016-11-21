@@ -1,6 +1,7 @@
 #include "Registry.h"
 #include "Util.h"
 #include "Interfaces.h"
+#include "Structures.h"
 #include "BasicTypeImp.h"
 #include "Type.h"
 
@@ -9,12 +10,12 @@
 #include <wchar.h>
 
 
-int _registerObject(char*name, void*value, castable * castMethods){
+int _registerObject(char*name, void*value, castable castMethod){
 
   Object * obj = malloc(sizeof(Object));
   obj->hash = _FNV_1A(name);
   obj->value = value;
-  obj->castMethods = castMethods;
+  obj->cast = castMethod;
 
   for(int i = 0; i < Config->maxObjCount; ++i){
     if (!TypeReg->objectMap[i]){
@@ -35,7 +36,7 @@ void registerBasicTypes(){
   int failCheck = 0;
 
   failCheck |= registerObject("void", malloc(sizeof(void)), NULL);
-  failCheck |= registerObject("int", malloc(sizeof(int)), getIntCastMethods());
+  failCheck |= registerObject("int", malloc(sizeof(int)), _int2cast);
   failCheck |= registerObject("long", malloc(sizeof(long)), NULL);
   failCheck |= registerObject("ulong", malloc(sizeof(unsigned long)), NULL);
   failCheck |= registerObject("real", malloc(sizeof(double)), NULL);
