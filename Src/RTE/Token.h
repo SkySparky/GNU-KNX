@@ -2,11 +2,13 @@
 #define KNX_TOKEN
 
 #include "Macro.h"
+#include "Node.h"
 
 typedef struct Token Token;
+typedef struct Node Node;
 
 typedef struct Token{
-  unsigned char lexeme;
+  int lexeme;
   char * word;
   LUI hash;
 
@@ -14,7 +16,7 @@ typedef struct Token{
   Token * prev;
 }Token;
 
-Token * makeToken(char *);
+Token * makeToken(char *, Node*);
 
 
 #endif

@@ -4,6 +4,7 @@
 #include "Token.h"
 #include "Node.h"
 
+typedef struct Token Token;
 typedef struct Node Node;
 
 Token * tokenize(char*, Node *);
