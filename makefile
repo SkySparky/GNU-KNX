@@ -25,3 +25,5 @@ clean:
 	for dir in $(SUBDIRS); do \
 	 $(MAKE) clean -C $$dir; \
 	done
+	 rm -f $@ _bin_/KNX
+	 rm -f $@ _bin_/*.so

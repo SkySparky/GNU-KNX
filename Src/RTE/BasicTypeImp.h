@@ -2,16 +2,11 @@
 #define KNX_BASIC_IMP
 
 #include "Interfaces.h"
+#include "Type.h"
 
 /*
 Provides basic type procedures
 */
-
-typedef enum{
-  _eVoid,
-  _eInt,
-  _eUInt
-}BasicTypeId;
 
 Object * _int2cast(Object *, Object *);
 

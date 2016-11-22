@@ -22,7 +22,7 @@ int _registerObject(char*name, void*value, castable castMethod){
       obj->typeId = i;
       TypeReg->objectMap[i] = obj;
 
-      printf("%s registered with id: %d :: %llu\r\n", name, i, obj->hash);
+      printf("%s registered with id: %d :: %llx\r\n", name, i, obj->hash);
 
       return i;
     }
@@ -37,6 +37,7 @@ void registerBasicTypes(){
 
   failCheck |= registerObject("void", malloc(sizeof(void)), NULL);
   failCheck |= registerObject("int", malloc(sizeof(int)), _int2cast);
+  failCheck |= registerObject("uint", malloc(sizeof(unsigned)), NULL);
   failCheck |= registerObject("long", malloc(sizeof(long)), NULL);
   failCheck |= registerObject("ulong", malloc(sizeof(unsigned long)), NULL);
   failCheck |= registerObject("real", malloc(sizeof(double)), NULL);

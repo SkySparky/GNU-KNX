@@ -7,6 +7,12 @@
 
 void initializeCore(){
   Core = malloc(sizeof(_core));
+
+  Core->oStreamOwner = NULL;
+  Core->iStreamOwner = NULL;
+
+  Core->defaultOStreamOwner = NULL;
+  Core->defaultIStreamOwner = NULL;
 }
 
 void initializeNodeRegistry(){
@@ -72,5 +78,24 @@ bool registerNode(Node * node){
 
   //TODO add error
 
+  return true;
+}
+
+
+bool allowStdOut(Node * caller){
+  return caller == Core->oStreamOwner;
+}
+
+bool allowStdIn(Node * caller){
+  return caller == Core->iStreamOwner;
+}
+
+bool requestOutPerm(Node * caller){
+  //TODO
+  return true;
+}
+
+bool requestInPerm(Node * caller){
+  //TODO
   return true;
 }

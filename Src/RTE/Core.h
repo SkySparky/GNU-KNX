@@ -29,6 +29,9 @@ typedef struct _core{
   Node * oStreamOwner;
   Node * iStreamOwner;
 
+  Node * defaultOStreamOwner;
+  Node * defaultIStreamOwner;
+
 }_core;
 
 //system configuration variables
@@ -57,5 +60,13 @@ void initializeInterfaces();
 
 //registration procedures
 bool registerNode(Node *);
+
+//management methods
+bool allowStdOut();
+bool allowStdIn();
+
+//TODO make enforced
+bool requestOutPerm();
+bool requestInPerm();
 
 #endif

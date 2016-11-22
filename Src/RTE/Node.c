@@ -3,6 +3,7 @@
 #include "Node.h"
 #include "Core.h"
 #include "Util.h"
+#include "LangProc.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -63,10 +64,20 @@ void * nodeProc(void * vnode){
   char * line;
   size_t len;
 
-  printf("%s(%u) | ", node->name, node->id);
-  getline(&line, &len, stdin);
+  //TODO add local node stack
+  char * instruction = NULL;
 
-  printf(">>%s\r\n", line);
+  while (instruction || requestInPerm(node)){
+    printf("%s(%u) | ", node->name, node->id);
+    getline(&line, &len, stdin);
+
+    tokenize(line, node);
+    //free(tkn);
+
+    printf(">>%s\r\n", line);
+  }
+
+
 
   printf("Node end: %d\r\n", node->id);
 

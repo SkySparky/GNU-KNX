@@ -5,6 +5,7 @@
 
 #include "Macro.h"
 #include "Memory.h"
+#include "LangProc.h"
 
 typedef struct Node Node;
 
