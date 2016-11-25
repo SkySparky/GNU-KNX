@@ -2,7 +2,7 @@
 
 #BINPATH="../../_bin_/"
 CC = gcc
-CFLAGS = -std=c11 -Wall -I../KDK -DNULL=0 -Dtrue=1 -Dfalse=0
+CFLAGS = -std=c11 -Wall -I../KDK -I../../../KNX_Libraries/headers -DNULL=0 -Dtrue=1 -Dfalse=0
 LFLAGS = -lm -ldl -lpthread -L$(BINPATH) -lKDK -Wl,-rpath=$(BINPATH)
 VERSION=-DRTEVERSION=\"0.0.1\"
 OUT = KNX
@@ -29,7 +29,7 @@ else
 endif
 
 all:
-	$(CC) $(SRC) $(OSMODE) $(CFLAGS) $(VERSION) $(PLATFORM) $(LFLAGS) -o $(RUNPATH)
+	$(CC) $(SRC) $(OSMODE) $(CFLAGS) $(KLIB) $(VERSION) $(PLATFORM) $(LFLAGS) -o $(RUNPATH)
 
 .PHONY: clean
 clean:

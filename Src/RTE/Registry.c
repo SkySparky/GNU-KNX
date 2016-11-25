@@ -13,7 +13,7 @@
 int _registerObject(char*name, void*value, castable castMethod){
 
   Object * obj = malloc(sizeof(Object));
-  obj->hash = _FNV_1A(name);
+  obj->hash = FNV_1a(name);
   obj->value = value;
   obj->cast = castMethod;
 

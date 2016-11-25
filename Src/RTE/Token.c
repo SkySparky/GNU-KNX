@@ -13,7 +13,7 @@ Token * makeToken(char * str, Node * scope){
   tkn->word = malloc(len);
   strncpy(tkn->word, str, len);
 
-  tkn->hash = _FNV_1A(str);
+  tkn->hash = FNV_1a(str);
   tkn->next=NULL;
   tkn->prev=NULL;
 

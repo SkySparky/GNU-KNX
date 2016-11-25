@@ -17,7 +17,7 @@ Node * buildNode(char * name, Node * parent){
   node->name = malloc(nameLen + 1);
   strncpy(node->name, name, nameLen + 1);
 
-  node->hash = _FNV_1A(name);
+  node->hash = FNV_1a(name);
 
   if (!registerNode(node)){
     return NULL;

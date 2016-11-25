@@ -4,8 +4,11 @@ SUBDIRS = Src/KDK/ Src/RTE/
 BITVRS=64
 BINPATH=$(shell pwd)/_bin_
 
+KLIB=-I../../../KNX_Libraries/headers -L../../../KNX_Libraries/_bin/$(BITVRS) -lKNX_Library
+
 export BITVRS
 export BINPATH
+export KLIB
 
 subdirs:
 	for dir in $(SUBDIRS); do \
