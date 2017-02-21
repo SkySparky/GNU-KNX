@@ -2,14 +2,14 @@
 
 #BINPATH="../../_bin_/"
 CC = gcc
-CFLAGS = -std=c11 -Wall -I../KDK -I../../../KNX_Libraries/headers -DNULL=0 -Dtrue=1 -Dfalse=0
-LFLAGS = -lm -ldl -lpthread -L$(BINPATH) -lKDK -Wl,-rpath=$(BINPATH)
+CFLAGS = -std=c11 -Wall -I../KDK/headers -Iheaders -I../../../KNX_Libraries/headers -DNULL=0 -Dtrue=1 -Dfalse=0
+LFLAGS = -lm -ldl -lpthread -L$(BINPATH) -l:libKDK.so -Wl,-rpath=$(BINPATH)
 VERSION=-DRTEVERSION=\"0.0.1\"
 OUT = KNX
 CLEANEXT = o a
 BITVRS=64
 DBGFLAG=
-SRC=Launcher.c Error.c Core.c Node.c CMD.c Registry.c BasicTypeImp.c Token.c Tokenizer.c
+SRC=Launcher.c CMD.c InitInterfaces.c
 
 ifeq ($(shell uname), Linux)
 	FixPath = $1

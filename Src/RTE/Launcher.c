@@ -1,38 +1,43 @@
 #include <stdio.h>
-#include <dlfcn.h>
 #include <stdlib.h>
 
 #include "KDK.h"
 
-#include "Core.h"
 #include "CMD.h"
+#include "Config.h"
+#include "Init.h"
 
-//initializes data tables and loads standard libraries
-//return false on fatal error
-bool systemInit(){
-  bool responseCode = true;
-  //from Core.h
-  initializeConfig();
-  initializeInterfaces();
-  initializeCore();
-  initializeNodeRegistry();
-  intitializeTypeRegistry();
+struct Config * _config = NULL;
+struct NodeRegistry * _nodeReg = NULL;
 
-  return responseCode;
+void InitConfig(){
+
+  _config = malloc(sizeof(Config));
+
+  _config->_suppressWarnings = 0;
+  _config->_fatalWarnings = 0;
+
+  _config->_verbose = 0;
+  _config->_maxNodes = 1000;
 }
 
-int main(int argc, char **argv)
-{
-  if (!systemInit()){
-    printf("Failed to start\r\n");
+int main(int argc, char ** argv, char ** argx){
+
+  InitConfig();
+
+  if (ExecuteCMD(argc, argv, argx) == -1)
+  {
+    printf("Errors found in option: terminating...\r\n");
     return -1;
   }
 
-  parseCMD(argc, argv);
+  //setup global structures
+  InitNodeReg(_config, _nodeReg);
 
-  //initialize root node
-  Node * root = buildNode("root", NULL);
-  registerNode(root);
+  InitInterfaces();
+  _nodeProc(NULL);
+
+  //create global node
 
   return 0;
 }

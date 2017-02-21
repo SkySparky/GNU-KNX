@@ -5,13 +5,13 @@ $(info [${FILES}])
 
 CC = gcc
 BITVRS=64
-CFLAGS = -std=c11 -Wall -fPIC
+CFLAGS = -std=c11 -Wall -fPIC -Iheaders
 LFLAGS = -lm
 VERSION = -DKDKVersion=\"0.0.1\"
 OUT = libKDK.so
 CLEANEXT = o a
 DBGFLAGS=
-SRC=Util.c Contract.c
+SRC=Error.c Node.c
 EXPORT_PTH=../../_bin_/
 
 ifeq ($(shell uname), Linux)
