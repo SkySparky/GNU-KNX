@@ -10,5 +10,6 @@
 #include "Memory.h"
 #include "Node.h"
 #include "Registry.h"
+#include "Prime.h"
 
 #endif

@@ -1,3 +1,5 @@
+//From KDK
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -7,20 +9,21 @@
 struct Config * _config;
 struct NodeRegistry * _nodeReg;
 
-void InitNodeReg(Config * config, NodeRegistry * nodeReg){
-  //TODO MOVE TO INDEPENDANT
-  _config = config;
-  _nodeReg = nodeReg;
-
+NodeRegistry * InitNodeReg(){
   _nodeReg = malloc(sizeof(NodeRegistry));
 
+  _nodeReg->recordCount = 0;
+
   _nodeReg->idList = malloc(sizeof(unsigned) * _config->_maxNodes);
+  _nodeReg->nodeList = malloc(sizeof(Node *));
+
+  return _nodeReg;
 }
 
 Node * BuildNode(Node * parent){
   Node * node = malloc(sizeof(Node));
 
-  if (node->global == NULL){
+  if (parent == NULL){
     node->global = malloc(sizeof(Scope));
   }else{
     node->global = parent->global;

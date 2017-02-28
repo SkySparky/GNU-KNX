@@ -7,17 +7,6 @@
 
 typedef enum {PUBLIC, } PrivacyMode;
 
-typedef struct NodeRegistry{
-
-unsigned * idList;
-
-
-}NodeRegistry;
-
-extern NodeRegistry * _nodeReg;
-
-void InitNodeReg(Config *, NodeRegistry *);
-
 typedef struct Node{
 
   Scope * local, * global;
@@ -34,8 +23,17 @@ typedef struct Node{
 
 } Node;
 
+typedef struct NodeRegistry{
+
+unsigned recordCount;
+unsigned * idList;
+Node ** nodeList;
+
+}NodeRegistry;
+
 Node * BuildNode(Node * parent);
 
-int (*_nodeProc)(Node*parent);
+extern NodeRegistry * _nodeReg;
+NodeRegistry * InitNodeReg();
 
 #endif

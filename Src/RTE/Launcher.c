@@ -4,26 +4,16 @@
 #include "KDK.h"
 
 #include "CMD.h"
-#include "Config.h"
 #include "Init.h"
+#include "KNode.h"
 
 struct Config * _config = NULL;
 struct NodeRegistry * _nodeReg = NULL;
-
-void InitConfig(){
-
-  _config = malloc(sizeof(Config));
-
-  _config->_suppressWarnings = 0;
-  _config->_fatalWarnings = 0;
-
-  _config->_verbose = 0;
-  _config->_maxNodes = 1000;
-}
+unsigned * _primeList = NULL;
 
 int main(int argc, char ** argv, char ** argx){
 
-  InitConfig();
+  _config = InitConfig();
 
   if (ExecuteCMD(argc, argv, argx) == -1)
   {
@@ -32,12 +22,22 @@ int main(int argc, char ** argv, char ** argx){
   }
 
   //setup global structures
-  InitNodeReg(_config, _nodeReg);
-
+  _nodeReg = InitNodeReg();
   InitInterfaces();
-  _nodeProc(NULL);
+  _primeList = GeneratePrimeList(_config->_maxNodes);
 
   //create global node
+  Node * global = BuildNode(NULL);
+  RegisterNode(global);
+
+  RegisterNode(BuildNode(global));
+  RegisterNode(BuildNode(global));
+  RegisterNode(BuildNode(global));
+  RegisterNode(BuildNode(global));
+  RegisterNode(BuildNode(global));
+  RegisterNode(BuildNode(global));
+  RegisterNode(BuildNode(global));
+  RegisterNode(BuildNode(global));
 
   return 0;
 }

@@ -14,4 +14,6 @@ int _maxNodes;
 
 extern Config * _config;
 
+Config * InitConfig();
+
 #endif

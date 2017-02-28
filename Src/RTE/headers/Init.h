@@ -4,8 +4,6 @@
 #include "Interfaces.h"
 #include "Node.h"
 
-int NodeProc(Node * parent);
-
 void InitInterfaces();
 
 #endif
