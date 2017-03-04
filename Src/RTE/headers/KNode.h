@@ -3,7 +3,7 @@
 
 #include "Node.h"
 
-int NodeProc(Node * parent);
+void * NodeProc(void * parent);
 int RegisterNode(Node * node);
 
 extern NodeRegistry * _nodeReg;

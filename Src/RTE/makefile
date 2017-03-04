@@ -9,7 +9,7 @@ OUT = KNX
 CLEANEXT = o a
 BITVRS=64
 DBGFLAG=
-SRC=Launcher.c CMD.c InitInterfaces.c Node.c
+SRC=Launcher.c CMD.c InitInterfaces.c Node.c Tokenizer.c
 
 ifeq ($(shell uname), Linux)
 	FixPath = $1

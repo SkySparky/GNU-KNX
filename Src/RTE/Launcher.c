@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 #include "KDK.h"
 
@@ -30,14 +31,8 @@ int main(int argc, char ** argv, char ** argx){
   Node * global = BuildNode(NULL);
   RegisterNode(global);
 
-  RegisterNode(BuildNode(global));
-  RegisterNode(BuildNode(global));
-  RegisterNode(BuildNode(global));
-  RegisterNode(BuildNode(global));
-  RegisterNode(BuildNode(global));
-  RegisterNode(BuildNode(global));
-  RegisterNode(BuildNode(global));
-  RegisterNode(BuildNode(global));
+  pthread_create(&global->pThread, NULL, NodeProc, (void*)global);
+  pthread_join(global->pThread, NULL);
 
   return 0;
 }

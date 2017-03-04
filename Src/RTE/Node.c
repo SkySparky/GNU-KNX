@@ -3,8 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <pthread.h>
+#include <string.h>
 
 #include "KNode.h"
+#include "Processing.h"
 
 struct NodeRegistry * _nodeReg;
 struct Config * _config;
@@ -43,7 +46,38 @@ int RegisterNode(Node * node){
   return 0;
 }
 
-int NodeProc(Node * node){
+void * NodeProc(void * vnode){
 
-  return 0;
+  Node * self = (Node *) vnode;
+
+  char * buffer = malloc(256);
+
+  while(self->isActive){
+
+    printf("<%u> ", self->id);
+
+    //reserve last two characters for NULL - simplifies operator select
+    if ((buffer = fgets(buffer, 254, stdin)) == NULL) continue;
+
+    size_t len = strlen(buffer);
+
+    //remove endline character
+    #ifdef __WINDOWS
+    buffer[len-1] = 0;
+    #else
+    buffer[len + 1]
+    #endif
+    Tokenize(self, buffer);
+
+    //continue in read mode when nested or expecting a terminating character
+    if (self->cache->nestLevel > 0 || ExpectsToken(self->cache->pMode)) continue;
+
+    //execute current cache
+    if (self->cache->head == NULL) continue;
+
+  }
+
+  free(buffer);
+
+  return NULL;
 }

@@ -37,6 +37,15 @@ Node * BuildNode(Node * parent){
   node->parent = parent;
   node->children = malloc(sizeof(Node*));
   node->children[0]=NULL;
+  node->isActive = 1;
+  node->pThread = NULL;
+
+  node->cache = malloc(sizeof(TCache));
+  node->cache->nestLevel = 0;
+  node->cache->nestType = malloc(256);
+  node->cache->current = NULL;
+  node->cache->head = NULL;
+  node->cache->pMode = _pNormal;
 
   return node;
 }
