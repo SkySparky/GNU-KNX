@@ -27,125 +27,125 @@ Token * BuildToken(char * raw_start, char * raw_end, Lexeme lx){
   strncpy(token->raw, raw_start, (raw_end - raw_start)+2);
   token->raw[(raw_end - raw_start) + 1] = 0;
 
-  printf("[%s]\r\n", token->raw);
+  printf("[%s %d]\r\n", token->raw, lx);
 
   return token;
 }
 
-int Tokenize(Node*node, char * raw){
+int Tokenize(Node*node, char * raw, size_t len){
 
-  size_t len = strlen(raw);
+  char * itr = raw;
 
-  //reset from single line comments
-  if (node->cache->pMode == _pSComment)
-    node->cache->pMode = _pNormal;
+  for (size_t x=0; x <= len; ++x){
 
-  char * iterator = raw;
-
-  for (size_t x = 0; x <= len; ++x){
     char c = raw[x];
 
-    //end of string
     if (c == 0){
-
+      if (itr != raw + x) AddToken(node->cache, BuildToken(itr, raw+x, _lNA));
       break;
     }
 
-    if (node->cache->pMode == _pSString){
-      if (c=='\''){
-        node->cache->pMode = _pNormal;
-        BuildToken(iterator + 1, raw + x - 1, _lChar);
+    if (node->cache->pMode != _pNormal){
+      if (node->cache->pMode == _pSString){
+        if (c=='\''){
+          //TODO throw warning if multi char
+          node->cache->pMode = _pNormal;
+          AddToken(node->cache, 
+            BuildToken(itr, raw+x-1, 
+              (raw+x) - itr == 1 ? 
+                _lChar :
+                _lText));
+          itr = raw + x + 1;
+        }
+      }else if (node->cache->pMode == _pDString){
+        if (c=='\"'){
+          node->cache->pMode = _pNormal;
+          AddToken(node->cache, 
+            BuildToken(itr, raw+x-1, _lText));
+          itr = raw + x + 1;
+        }
+      }else if (node->cache->pMode == _pMComment){
+        if (c=='*' && raw[x+1]=='#'){
+          node->cache->pMode = _pNormal;
+          ++x;
+          itr = raw + x + 1;
+        }
       }
-      continue;
-    }else if (node->cache->pMode == _pDString){
-      if (c=='\"'){
-        node->cache->pMode = _pNormal;
-        BuildToken(iterator + 1, raw + x - 1, _lText);
-      }
-      continue;
-    }else if (node->cache->pMode == _pMComment){
-      if (c == '*' && raw[x+1] == '#'){
-        ++x;
-        node->cache->pMode = _pNormal;
-      }
+
       continue;
     }
 
-    //pop current buffer if special found
-    if( (c < 'a' && c > 'z') && (c < 'A' && c > 'Z') && //Letters
-        (c < '0' && c > '9') && //Numbers
-        (c != '_')){  //Standard Characters
-          if (iterator == raw + x) continue;//empty buffer
-          AddToken(node->cache, BuildToken(iterator, raw+x-1, _lNA));
-          iterator = raw + x;
-        }
+    //regular characters
+    if (
+      (c>='a' && c<='z') ||
+      (c>='A' && c<='Z') ||
+      (c>='0' && c<='9') ||
+      (c=='_' || c=='.')){
+      continue;
+    } else if (itr != raw+x) { //pop current buffer
 
-    Lexeme lType = _lNA;
-    unsigned popSize = 1;
-
-    switch(c){
+      AddToken(node->cache, BuildToken(itr, raw+x-1, _lNA));
+      itr = raw + x + 1;
+    }
+    switch (c){
+      //whitespace
       case ' ':
       case '\t':
-      iterator = raw + x + 1;
+      itr = raw + x + 1;
       break;
+
       //strings
       case '\'':
+      itr = raw + x + 1;
       node->cache->pMode = _pSString;
-      iterator = raw + x;
       break;
       case '\"':
+      itr = raw + x + 1;
       node->cache->pMode = _pDString;
-      iterator = raw + x;
       break;
-      //operators : {} yourselves
-      case '+':
-        if (raw[x+1]=='=') {lType = _lSetAdd; popSize=2;}
-        else if (raw[x+1]=='+')//determine if pre or post inc based on last token
-        {lType = (node->cache->current == NULL || node->cache->current->lexeme == _lVariable)?
-        _lPreInc : _lPostInc; popSize=2;}
-        else lType = _lAdd;
-      break;
-      case '-':
 
-      break;
-      case '*':
-
-      break;
-      case '/':
-
-      break;
-      case '%':
-
-      break;
-      case '^':
-
-      break;
-      /*case -251://Implement root
-
-      break;*/
       //comments
       case '#':
-      if (raw[x+1] == '*') node->cache->pMode = _pMComment;
-      else return 0;//line is ended
+      if (raw[x+1]=='*') node->cache->pMode = _pMComment;
+      else return 0;//rest of line commented, ignore
+      break;
+      default:
+
+      //operators
+      case '+':
+      if (raw[x+1]=='+'){
+        AddToken(node->cache,
+          BuildToken(raw+x, 
+            raw+x+2, 
+            node->cache->current == NULL || node->cache->current->lexeme!=_lVariable ? _lPostInc : _lPreInc));
+        ++x;
+      } else if (raw[x+1]=='='){
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lSetAdd));
+        ++x;
+      } else {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lAdd));
+      }
+      break;
+      case '-':
+      if (raw[x+1]=='-'){
+        AddToken(node->cache,
+          BuildToken(raw+x, 
+            raw+x+2, 
+            node->cache->current == NULL || node->cache->current->lexeme!=_lVariable ? _lPostDec : _lPreDec));
+        ++x;
+      } else if (raw[x+1]=='='){
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lSetSub));
+        ++x;
+      } else {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lSub));
+      }
       break;
 
       default:
-      popSize = 0;
-      iterator = raw + x + 1;
       break;
     }
 
-    if (node->cache->pMode != _pNormal)
-      continue;
-
-    if (popSize > 0){
-      AddToken(node->cache, BuildToken(raw+x, iterator, lType));
-      printf("Added %s\r\n", node->cache->current->raw);
-    }else{
-      //TODO throw warning/error
-      printf("I don't understand, Dave\r\n");
-    }
-
+    itr = raw + x + 1;
   }
 
   return 0;

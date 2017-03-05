@@ -10,6 +10,6 @@ Return 0 if statement finished
 Return 1 if statement incomplete
 Return 2 if statement experienced error 
 */
-int Tokenize(Node*, char * raw);
+int Tokenize(Node*, char * raw, size_t len);
 
 #endif
