@@ -103,7 +103,7 @@ typedef struct Token{
 //statement cache for intermediate parsing
 typedef struct TCache{
   Token * current;
-  Token * head;
+  Token * head;//NOTE: Head is beginning
 
   unsigned nestLevel;//current () nest level open. Don't execute until 0
   char * nestType;
@@ -112,5 +112,6 @@ typedef struct TCache{
 } TCache;
 
 Token * BuildToken(char * raw_start, char * raw_end, Lexeme lx);
+void DeleteToken(Token *);
 
 #endif

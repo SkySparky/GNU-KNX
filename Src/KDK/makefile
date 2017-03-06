@@ -11,7 +11,7 @@ VERSION = -DKDKVersion=\"0.0.1\"
 OUT = libKDK.so
 CLEANEXT = o a
 DBGFLAGS=
-SRC=Error.c Node.c Prime.c Config.c
+SRC=Error.c Node.c Prime.c Config.c Token.c
 EXPORT_PTH=../../_bin_/
 
 ifeq ($(shell uname), Linux)

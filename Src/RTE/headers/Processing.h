@@ -12,4 +12,6 @@ Return 2 if statement experienced error
 */
 int Tokenize(Node*, char * raw, size_t len);
 
+void ExecuteInstructions(Node *);
+
 #endif

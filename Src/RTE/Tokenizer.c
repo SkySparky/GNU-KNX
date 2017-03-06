@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "KNode.h"
+#include "Processing.h"
 
 void AddToken(TCache * cache, Token * newToken){
 
@@ -17,23 +18,8 @@ void AddToken(TCache * cache, Token * newToken){
   cache->current = newToken;
 }
 
-Token * BuildToken(char * raw_start, char * raw_end, Lexeme lx){
-  Token * token = malloc(sizeof(Token));
-
-  token->next = NULL;
-  token->previous = NULL;
-  token->lexeme = lx;
-  token->raw = malloc((raw_end - raw_start)+2);
-  strncpy(token->raw, raw_start, (raw_end - raw_start)+2);
-  token->raw[(raw_end - raw_start) + 1] = 0;
-
-  printf("[%s %d]\r\n", token->raw, lx);
-
-  return token;
-}
-
 int Tokenize(Node*node, char * raw, size_t len){
-  printf("%d\r\n", raw[0]);
+
   char * itr = raw;
 
   for (size_t x=0; x <= len; ++x){
@@ -110,7 +96,7 @@ int Tokenize(Node*node, char * raw, size_t len){
       else return 0;//rest of line commented, ignore
       break;
 
-      //operators
+      //operators : prepare yourself.
       //math
       case '+':
       if (raw[x+1]=='+'){
@@ -309,5 +295,5 @@ int Tokenize(Node*node, char * raw, size_t len){
     itr = raw + x + 1;
   }
 
-  return 0;
+  return node->cache->nestLevel == 0 && node->cache->pMode != _pMComment;
 }

@@ -67,14 +67,12 @@ void * NodeProc(void * vnode){
     #else
     buffer[len + 1]
     #endif
-    Tokenize(self, buffer, len);
 
-    //continue in read mode when nested or expecting a terminating character
-    if (self->cache->nestLevel > 0 || ExpectsToken(self->cache->pMode)) continue;
+    if (Tokenize(self, buffer, len) != 0) continue;
 
     //execute current cache
     if (self->cache->head == NULL) continue;
-
+    ExecuteInstructions(self);
   }
 
   free(buffer);
