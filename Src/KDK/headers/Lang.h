@@ -25,8 +25,8 @@ typedef enum {
   _lSetOr,//A|=B
   _lSetAdd,//A+=B
   _lSetSub,//A-=B
-  _lSetMult,//A/=B
-  _lSetDiv,//A*=B
+  _lSetMult,//A*=B
+  _lSetDiv,//A/=B
   _lSetModu,//A%=B
   _lPreInc,//++A
   _lPostInc,//A++

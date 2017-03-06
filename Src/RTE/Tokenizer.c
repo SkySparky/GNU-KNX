@@ -33,7 +33,7 @@ Token * BuildToken(char * raw_start, char * raw_end, Lexeme lx){
 }
 
 int Tokenize(Node*node, char * raw, size_t len){
-
+  printf("%d\r\n", raw[0]);
   char * itr = raw;
 
   for (size_t x=0; x <= len; ++x){
@@ -109,9 +109,9 @@ int Tokenize(Node*node, char * raw, size_t len){
       if (raw[x+1]=='*') node->cache->pMode = _pMComment;
       else return 0;//rest of line commented, ignore
       break;
-      default:
 
       //operators
+      //math
       case '+':
       if (raw[x+1]=='+'){
         AddToken(node->cache,
@@ -138,6 +138,167 @@ int Tokenize(Node*node, char * raw, size_t len){
         ++x;
       } else {
         AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lSub));
+      }
+      break;
+      case '/':
+      if (raw[x+1]=='='){
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lSetDiv));
+        ++x;
+      } else {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lDiv));
+      }
+      break;
+      case '*':
+      if (raw[x+1]=='='){
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lSetMult));
+        ++x;
+      } else {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lMult));
+      }
+      break;
+      case '%':
+      if (raw[x+1]=='='){
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lSetModu));
+        ++x;
+      } else {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lModu));
+      }
+      break;
+      case '^':
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lPow));
+      break;
+      case -30://root
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lRoot));
+      break;
+
+      //logic
+      case '&':
+      if (raw[x+1]=='&'){
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lAnd));
+        ++x;
+      } else if (raw[x+1]=='=') {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lSetAnd));
+        ++x;
+      } else {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lBAnd));
+      }
+      break;
+      case '|':
+      if (raw[x+1]=='|'){
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lOr));
+        ++x;
+      } else if (raw[x+1]=='!') {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lXOr));
+        ++x;
+      } else if (raw[x+1]=='=') {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lSetOr));
+        ++x;
+      } else {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lBOr));
+      }
+      break;
+      case '!':
+      if (raw[x+1]=='='){
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lNEqu));
+        ++x;
+      } else if (raw[x+1]=='|') {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lNOr));
+        ++x;
+      } else {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lNot));
+      }
+      break;
+      case '=':
+      if (raw[x+1]=='='){
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lEqu));
+        ++x;
+      } else {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lSet));
+      }
+      break;
+      case '<':
+      if (raw[x+1]=='='){
+        if (raw[x+2]=='>'){
+          AddToken(node->cache, BuildToken(raw+x, raw+x+3, _lOutsideInc));
+          x+=2;
+        }else{
+          AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lLssEqu));
+          ++x;
+        }
+      } else if (raw[x+1]=='<') {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lLShift));
+        ++x;
+      } else if (raw[x+1]=='>') {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lOutsideEx));
+        ++x;
+      } else {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lLss));
+      }
+      break;
+      case '>':
+      if (raw[x+1]=='='){
+        if (raw[x+2]=='<'){
+          AddToken(node->cache, BuildToken(raw+x, raw+x+3, _lWithinInc));
+          x+=2;
+        } else {
+          AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lGtrEqu));
+          ++x;
+        }
+      } else if (raw[x+1]=='>') {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lRShift));
+        ++x;
+      } else if (raw[x+1]=='<') {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lWithinEx));
+        ++x;
+      } else {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lGtr));
+      }
+      break;
+
+      //indexing
+      case ':':
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lIndex));
+      break;
+      case ';':
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lList));
+      break;
+
+      //encapsulation
+      case '{':
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lOBrace));
+        node->cache->nestType[node->cache->nestLevel++] = '{';
+      break;
+      case '[':
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lOBrack));
+        node->cache->nestType[node->cache->nestLevel++] = '[';
+      break;
+      case '(':
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lOParan));
+        node->cache->nestType[node->cache->nestLevel++] = '(';
+      break;
+      case '}':
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lCBrace));
+        node->cache->nestType[--node->cache->nestLevel] = 0;
+      break;
+      case ']':
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lCBrack));
+        node->cache->nestType[--node->cache->nestLevel] = 0;
+      break;
+      case ')':
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lCParan));
+        node->cache->nestType[--node->cache->nestLevel] = 0;
+      break;
+
+      //Misc
+      case '$':
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lLambda));
+      break;
+      case '~':
+        if (raw[x+1]=='|'){
+        AddToken(node->cache, BuildToken(raw+x, raw+x+2, _lXNor));
+        ++x;
+      } else {
+        AddToken(node->cache, BuildToken(raw+x, raw+x+1, _lBNot));
       }
       break;
 
